@@ -30220,8 +30220,6 @@ var GPGPUContext = (function () {
         }
         webgl_util.callAndCheck(gl, function () { return gl.detachShader(program, vertexShader); });
         webgl_util.callAndCheck(gl, function () { return gl.deleteShader(vertexShader); });
-        webgl_util.callAndCheck(gl, function () { return gl.detachShader(program, fragmentShader); });
-        webgl_util.callAndCheck(gl, function () { return gl.deleteShader(fragmentShader); });
         return program;
     };
     GPGPUContext.prototype.deleteProgram = function (program) {
