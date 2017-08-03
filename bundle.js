@@ -11,12 +11,14 @@ __export(require("../src/index"));
 Object.defineProperty(exports, "__esModule", { value: true });
 var deeplearnjs_1 = require("../deeplearnjs");
 var cppn_1 = require("../nn-art/cppn");
+var inferenceCanvas = document.querySelector('#inference');
 try {
     var math = new deeplearnjs_1.NDArrayMathGPU();
     startCPPN();
 }
 catch (e) {
     document.getElementById('disabled-demo-overlay').style.display = '';
+    inferenceCanvas.style.display = 'none';
 }
 function startCPPN() {
     var MAX_Z_SCALE = 400;
@@ -24,7 +26,6 @@ function startCPPN() {
     var NUM_NEURONS = 30;
     var DEFAULT_NUM_LAYERS = 2;
     var WEIGHTS_STDEV = 0.6;
-    var inferenceCanvas = document.querySelector('#inference');
     var cppn = new cppn_1.CPPN(inferenceCanvas);
     cppn.setActivationFunction('tanh');
     cppn.setColorMode('rgb');
