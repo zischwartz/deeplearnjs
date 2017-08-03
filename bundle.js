@@ -4890,8 +4890,6 @@ var GPGPUContext = (function () {
         if (this.autoDebugValidate) {
             webgl_util.validateProgram(gl, program);
         }
-        webgl_util.callAndCheck(gl, function () { return gl.detachShader(program, vertexShader); });
-        webgl_util.callAndCheck(gl, function () { return gl.deleteShader(vertexShader); });
         return program;
     };
     GPGPUContext.prototype.deleteProgram = function (program) {
@@ -5898,7 +5896,7 @@ exports.uploadUnaryOpDownload = uploadUnaryOpDownload;
 },{"./gpgpu_context":35}],58:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var USE_WEBGL2_WHEN_AVAILABLE = false;
+var USE_WEBGL2_WHEN_AVAILABLE = true;
 var WEBGL2_ENABLED = null;
 var MAX_TEXTURE_SIZE = null;
 var util = require("../../util");
@@ -5912,19 +5910,19 @@ function createWebGLRenderingContext(attributes) {
 exports.createWebGLRenderingContext = createWebGLRenderingContext;
 function preferWebGL1() {
     USE_WEBGL2_WHEN_AVAILABLE = false;
-    WEBGL2_ENABLED = undefined;
+    WEBGL2_ENABLED = null;
 }
 exports.preferWebGL1 = preferWebGL1;
 function preferWebGL2() {
     USE_WEBGL2_WHEN_AVAILABLE = true;
-    WEBGL2_ENABLED = undefined;
+    WEBGL2_ENABLED = null;
 }
 exports.preferWebGL2 = preferWebGL2;
 function isWebGL2Enabled() {
     if (!USE_WEBGL2_WHEN_AVAILABLE) {
         return false;
     }
-    if (WEBGL2_ENABLED === undefined) {
+    if (WEBGL2_ENABLED == null) {
         var tempCanvas = document.createElement('canvas');
         var gl = tempCanvas.getContext('webgl2');
         if (gl != null) {
