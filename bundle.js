@@ -49,19 +49,19 @@ function startCPPN() {
     var layersSlider = document.querySelector('#layers-slider');
     var layersCountElement = document.querySelector('#layers-count');
     layersSlider.addEventListener('input', function (event) {
-        var numLayers = event.target.value;
+        var numLayers = parseInt(event.target.value, 10);
         layersCountElement.innerText = '' + numLayers;
         cppn.setNumLayers(numLayers);
     });
     layersCountElement.innerText = '' + DEFAULT_NUM_LAYERS;
     var z1Slider = document.querySelector('#z1-slider');
     z1Slider.addEventListener('input', function (event) {
-        var z1Scale = event.target.value;
+        var z1Scale = parseInt(event.target.value, 10);
         cppn.setZ1Scale(convertZScale(z1Scale));
     });
     var z2Slider = document.querySelector('#z2-slider');
     z2Slider.addEventListener('input', function (event) {
-        var z2Scale = event.target.value;
+        var z2Scale = parseInt(event.target.value, 10);
         cppn.setZ2Scale(convertZScale(z2Scale));
     });
     var randomizeButton = document.querySelector('#random');
