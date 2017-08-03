@@ -1,0 +1,10 @@
+node_modules/
+bower_components/
+demos/**/*.ts
+demos/**/*.js
+demos/**/*.css
+demos/homepage/
+scripts/
+coverage/
+_site/
+index.ts
