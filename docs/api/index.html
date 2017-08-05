@@ -78,14 +78,17 @@
 				<h4 id="from-javascript">From JavaScript</h4>
 				<p>Typescript is the preferred language of choice for <strong>deeplearn.js</strong>, however
 				you can use it with plain JavaScript.</p>
-				<p>For this use case, you can load the library directly from Google CDN:</p>
+				<p>For this use case, you can load the latest version of the library directly from
+				Google CDN:</p>
 				<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://storage.googleapis.com/learnjs-data/deeplearn.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </code></pre>
+				<p>To use a different version, see the
+				<a href="https://github.com/PAIR-code/deeplearnjs/releases">release</a> page on GitHub.</p>
 				<h4 id="from-typescript">From TypeScript</h4>
 				<p>To build <strong>deeplearn.js</strong> from source, we need to clone the project and prepare
 				the dev environment:</p>
-				<pre><code class="lang-bash">$ git <span class="hljs-built_in">clone</span> https://pair-code.github.com/learnjs
-$ <span class="hljs-built_in">cd</span> learnjs
+				<pre><code class="lang-bash">$ git <span class="hljs-built_in">clone</span> https://github.com/PAIR-code/deeplearnjs.git
+$ <span class="hljs-built_in">cd</span> deeplearnjs
 $ npm run prep <span class="hljs-comment"># Installs node modules and bower components.</span>
 </code></pre>
 				<p>To build a standalone library that can be used directly in the browser using a
