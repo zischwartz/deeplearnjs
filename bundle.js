@@ -13,7 +13,7 @@ var deeplearnjs_1 = require("../deeplearnjs");
 var cppn_1 = require("../nn-art/cppn");
 function isSafari() {
     var ua = navigator.userAgent.toLowerCase();
-    if (ua.indexOf('safari') != -1) {
+    if (ua.indexOf('safari') !== -1) {
         if (ua.indexOf('chrome') > -1) {
             return false;
         }
@@ -21,6 +21,7 @@ function isSafari() {
             return true;
         }
     }
+    return false;
 }
 function isMobile() {
     var a = navigator.userAgent || navigator.vendor || window.opera;
@@ -46,7 +47,6 @@ else {
     inferenceCanvas.style.display = 'none';
 }
 function startCPPN() {
-    var MAX_Z_SCALE = 400;
     var DEFAULT_Z_SCALE = 1;
     var NUM_NEURONS = 30;
     var DEFAULT_NUM_LAYERS = 2;
@@ -173,7 +173,6 @@ var CPPN = (function () {
         this.z1Counter = 0;
         this.z2Counter = 0;
         this.colorModeNames = ['rgb', 'rgba', 'hsv', 'hsva', 'yuv', 'yuva', 'bw'];
-        this.activationFunctionNames = ['tanh', 'sin', 'relu', 'step'];
         this.isInferring = false;
         this.gl = deeplearnjs_1.gpgpu_util.createWebGLContext(this.inferenceCanvas);
         this.gpgpu = new deeplearnjs_1.GPGPUContext(this.gl);
@@ -579,7 +578,7 @@ var InMemoryDataset = (function () {
 }());
 exports.InMemoryDataset = InMemoryDataset;
 
-},{"./math/ndarray":22,"./util":86}],7:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":79}],7:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -709,9 +708,9 @@ var Tensor = (function () {
         this.shape = shape;
         this.id = Tensor.nextID++;
     }
+    Tensor.nextID = 0;
     return Tensor;
 }());
-Tensor.nextID = 0;
 exports.Tensor = Tensor;
 var Node = (function () {
     function Node(graph, name, inputs, output) {
@@ -722,9 +721,9 @@ var Node = (function () {
         this.id = Node.nextID++;
         output.node = this;
     }
+    Node.nextID = 0;
     return Node;
 }());
-Node.nextID = 0;
 exports.Node = Node;
 var VariableNode = (function (_super) {
     __extends(VariableNode, _super);
@@ -779,9 +778,9 @@ var ReshapeNode = (function (_super) {
             this.name + '\' of shape (' + this.x.shape +
             ') does not match size of requested shape ' + this.shape + '.');
     };
+    ReshapeNode.X = 'x';
     return ReshapeNode;
 }(Node));
-ReshapeNode.X = 'x';
 exports.ReshapeNode = ReshapeNode;
 var FusedLinearCombinationNode = (function (_super) {
     __extends(FusedLinearCombinationNode, _super);
@@ -804,12 +803,12 @@ var FusedLinearCombinationNode = (function (_super) {
                 'shape: ' + this.c2.shape);
         }
     };
+    FusedLinearCombinationNode.T1 = 't1';
+    FusedLinearCombinationNode.T2 = 't2';
+    FusedLinearCombinationNode.C1 = 'c1';
+    FusedLinearCombinationNode.C2 = 'c2';
     return FusedLinearCombinationNode;
 }(Node));
-FusedLinearCombinationNode.T1 = 't1';
-FusedLinearCombinationNode.T2 = 't2';
-FusedLinearCombinationNode.C1 = 'c1';
-FusedLinearCombinationNode.C2 = 'c2';
 exports.FusedLinearCombinationNode = FusedLinearCombinationNode;
 var AddNode = (function (_super) {
     __extends(AddNode, _super);
@@ -826,10 +825,10 @@ var AddNode = (function (_super) {
             'shapes ' + this.t1.shape + ' and ' + this.t2.shape +
             ' must match.');
     };
+    AddNode.T1 = 't1';
+    AddNode.T2 = 't2';
     return AddNode;
 }(Node));
-AddNode.T1 = 't1';
-AddNode.T2 = 't2';
 exports.AddNode = AddNode;
 var SubtractNode = (function (_super) {
     __extends(SubtractNode, _super);
@@ -846,10 +845,10 @@ var SubtractNode = (function (_super) {
             'shapes ' + this.t1.shape + ' and ' + this.t2.shape +
             ' must match.');
     };
+    SubtractNode.T1 = 't1';
+    SubtractNode.T2 = 't2';
     return SubtractNode;
 }(Node));
-SubtractNode.T1 = 't1';
-SubtractNode.T2 = 't2';
 exports.SubtractNode = SubtractNode;
 var MultiplyNode = (function (_super) {
     __extends(MultiplyNode, _super);
@@ -866,10 +865,10 @@ var MultiplyNode = (function (_super) {
             'shapes ' + this.t1.shape + ' and ' + this.t2.shape +
             ' must match.');
     };
+    MultiplyNode.T1 = 't1';
+    MultiplyNode.T2 = 't2';
     return MultiplyNode;
 }(Node));
-MultiplyNode.T1 = 't1';
-MultiplyNode.T2 = 't2';
 exports.MultiplyNode = MultiplyNode;
 var DivideNode = (function (_super) {
     __extends(DivideNode, _super);
@@ -886,10 +885,10 @@ var DivideNode = (function (_super) {
             'shapes ' + this.t1.shape + ' and ' + this.t2.shape +
             ' must match.');
     };
+    DivideNode.T1 = 't1';
+    DivideNode.T2 = 't2';
     return DivideNode;
 }(Node));
-DivideNode.T1 = 't1';
-DivideNode.T2 = 't2';
 exports.DivideNode = DivideNode;
 var ReduceSumNode = (function (_super) {
     __extends(ReduceSumNode, _super);
@@ -897,9 +896,9 @@ var ReduceSumNode = (function (_super) {
         return _super.call(this, graph, 'ReduceSum', { x: x }, new Tensor([])) || this;
     }
     ReduceSumNode.prototype.validate = function () { };
+    ReduceSumNode.X = 'x';
     return ReduceSumNode;
 }(Node));
-ReduceSumNode.X = 'x';
 exports.ReduceSumNode = ReduceSumNode;
 var Concat3DNode = (function (_super) {
     __extends(Concat3DNode, _super);
@@ -913,11 +912,11 @@ var Concat3DNode = (function (_super) {
     Concat3DNode.prototype.validate = function () {
         concat3d_util.assertConcat3DShapesMatch(this.x1.shape, this.x2.shape, this.axis);
     };
+    Concat3DNode.X1 = 'x1';
+    Concat3DNode.X2 = 'x2';
+    Concat3DNode.AXIS = 'axis';
     return Concat3DNode;
 }(Node));
-Concat3DNode.X1 = 'x1';
-Concat3DNode.X2 = 'x2';
-Concat3DNode.AXIS = 'axis';
 exports.Concat3DNode = Concat3DNode;
 function getMatMulOutputShape(x1Shape, x2Shape) {
     if (x1Shape.length === 1 && x2Shape.length === 1) {
@@ -958,10 +957,10 @@ var MatMulNode = (function (_super) {
             throw new Error('Error adding matmul op: inputs must be vectors or matrices.');
         }
     };
+    MatMulNode.X1 = 'x1';
+    MatMulNode.X2 = 'x2';
     return MatMulNode;
 }(Node));
-MatMulNode.X1 = 'x1';
-MatMulNode.X2 = 'x2';
 exports.MatMulNode = MatMulNode;
 var Convolution2DNode = (function (_super) {
     __extends(Convolution2DNode, _super);
@@ -987,11 +986,11 @@ var Convolution2DNode = (function (_super) {
         util.assert(this.x.shape[2] === this.w.shape[2], 'Error adding conv2d op: depth of input (' + this.x.shape[2] +
             ') must match input depth for weights (' + this.w.shape[2] + ').');
     };
+    Convolution2DNode.X = 'x';
+    Convolution2DNode.W = 'w';
+    Convolution2DNode.B = 'b';
     return Convolution2DNode;
 }(Node));
-Convolution2DNode.X = 'x';
-Convolution2DNode.W = 'w';
-Convolution2DNode.B = 'b';
 exports.Convolution2DNode = Convolution2DNode;
 var MaxPoolNode = (function (_super) {
     __extends(MaxPoolNode, _super);
@@ -1008,9 +1007,9 @@ var MaxPoolNode = (function (_super) {
         util.assert(this.x.shape.length === 3, 'Error adding maxPool op: input must be of rank 3, but got shape: ' +
             this.x.shape + '.');
     };
+    MaxPoolNode.X = 'x';
     return MaxPoolNode;
 }(Node));
-MaxPoolNode.X = 'x';
 exports.MaxPoolNode = MaxPoolNode;
 var ReLUNode = (function (_super) {
     __extends(ReLUNode, _super);
@@ -1018,9 +1017,9 @@ var ReLUNode = (function (_super) {
         return _super.call(this, graph, 'ReLU', { x: x }, new Tensor(x.shape)) || this;
     }
     ReLUNode.prototype.validate = function () { };
+    ReLUNode.X = 'x';
     return ReLUNode;
 }(Node));
-ReLUNode.X = 'x';
 exports.ReLUNode = ReLUNode;
 var ExpNode = (function (_super) {
     __extends(ExpNode, _super);
@@ -1028,9 +1027,9 @@ var ExpNode = (function (_super) {
         return _super.call(this, graph, 'Exp', { x: x }, new Tensor(x.shape)) || this;
     }
     ExpNode.prototype.validate = function () { };
+    ExpNode.X = 'x';
     return ExpNode;
 }(Node));
-ExpNode.X = 'x';
 exports.ExpNode = ExpNode;
 var LogNode = (function (_super) {
     __extends(LogNode, _super);
@@ -1038,9 +1037,9 @@ var LogNode = (function (_super) {
         return _super.call(this, graph, 'Log', { x: x }, new Tensor(x.shape)) || this;
     }
     LogNode.prototype.validate = function () { };
+    LogNode.X = 'x';
     return LogNode;
 }(Node));
-LogNode.X = 'x';
 exports.LogNode = LogNode;
 var TanHNode = (function (_super) {
     __extends(TanHNode, _super);
@@ -1048,9 +1047,9 @@ var TanHNode = (function (_super) {
         return _super.call(this, graph, 'TanH', { x: x }, new Tensor(x.shape)) || this;
     }
     TanHNode.prototype.validate = function () { };
+    TanHNode.X = 'x';
     return TanHNode;
 }(Node));
-TanHNode.X = 'x';
 exports.TanHNode = TanHNode;
 var SigmoidNode = (function (_super) {
     __extends(SigmoidNode, _super);
@@ -1058,9 +1057,9 @@ var SigmoidNode = (function (_super) {
         return _super.call(this, graph, 'Sigmoid', { x: x }, new Tensor(x.shape)) || this;
     }
     SigmoidNode.prototype.validate = function () { };
+    SigmoidNode.X = 'x';
     return SigmoidNode;
 }(Node));
-SigmoidNode.X = 'x';
 exports.SigmoidNode = SigmoidNode;
 var SquareNode = (function (_super) {
     __extends(SquareNode, _super);
@@ -1068,9 +1067,9 @@ var SquareNode = (function (_super) {
         return _super.call(this, graph, 'Square', { x: x }, new Tensor(x.shape)) || this;
     }
     SquareNode.prototype.validate = function () { };
+    SquareNode.X = 'x';
     return SquareNode;
 }(Node));
-SquareNode.X = 'x';
 exports.SquareNode = SquareNode;
 var SoftmaxCrossEntropyCostNode = (function (_super) {
     __extends(SoftmaxCrossEntropyCostNode, _super);
@@ -1084,10 +1083,10 @@ var SoftmaxCrossEntropyCostNode = (function (_super) {
         util.assert(util.arraysEqual(this.x.shape, this.target.shape), 'Error adding softmaxCrossEntropyCost op: x shape (' + this.x.shape +
             ') must match target shape (' + this.target.shape + ').');
     };
+    SoftmaxCrossEntropyCostNode.X = 'x';
+    SoftmaxCrossEntropyCostNode.TARGET = 'target';
     return SoftmaxCrossEntropyCostNode;
 }(Node));
-SoftmaxCrossEntropyCostNode.X = 'x';
-SoftmaxCrossEntropyCostNode.TARGET = 'target';
 exports.SoftmaxCrossEntropyCostNode = SoftmaxCrossEntropyCostNode;
 var SoftmaxNode = (function (_super) {
     __extends(SoftmaxNode, _super);
@@ -1100,9 +1099,9 @@ var SoftmaxNode = (function (_super) {
         util.assert(this.x.shape.length === 1, 'The input to a softmax must be a 1-D tensor');
         util.assert(this.x.shape[0] >= 2, 'The input to a softmax must have at least 2 values');
     };
+    SoftmaxNode.X = 'x';
     return SoftmaxNode;
 }(Node));
-SoftmaxNode.X = 'x';
 exports.SoftmaxNode = SoftmaxNode;
 var MeanSquaredCostNode = (function (_super) {
     __extends(MeanSquaredCostNode, _super);
@@ -1116,10 +1115,10 @@ var MeanSquaredCostNode = (function (_super) {
         util.assert(util.arraysEqual(this.label.shape, this.prediction.shape), 'Error adding meanSquaredCost op: label shape (' + this.label.shape +
             ') must match prediction shape (' + this.prediction.shape + ').');
     };
+    MeanSquaredCostNode.LABEL = 'label';
+    MeanSquaredCostNode.PREDICTION = 'prediction';
     return MeanSquaredCostNode;
 }(Node));
-MeanSquaredCostNode.LABEL = 'label';
-MeanSquaredCostNode.PREDICTION = 'prediction';
 exports.MeanSquaredCostNode = MeanSquaredCostNode;
 var ArgMaxNode = (function (_super) {
     __extends(ArgMaxNode, _super);
@@ -1131,9 +1130,9 @@ var ArgMaxNode = (function (_super) {
     ArgMaxNode.prototype.validate = function () {
         util.assert(util.sizeFromShape(this.x.shape) > 0, 'Error adding argmax op: input tensor must have at least one entry.');
     };
+    ArgMaxNode.X = 'x';
     return ArgMaxNode;
 }(Node));
-ArgMaxNode.X = 'x';
 exports.ArgMaxNode = ArgMaxNode;
 var ArgMaxEqualsNode = (function (_super) {
     __extends(ArgMaxEqualsNode, _super);
@@ -1147,10 +1146,10 @@ var ArgMaxEqualsNode = (function (_super) {
         util.assert(util.arraysEqual(this.x1.shape, this.x2.shape), 'Error adding ArgMaxEquals op: x1 shape (' + this.x1.shape +
             ') must match x2 shape (' + this.x2.shape + ').');
     };
+    ArgMaxEqualsNode.X1 = 'x1';
+    ArgMaxEqualsNode.X2 = 'x2';
     return ArgMaxEqualsNode;
 }(Node));
-ArgMaxEqualsNode.X1 = 'x1';
-ArgMaxEqualsNode.X2 = 'x2';
 exports.ArgMaxEqualsNode = ArgMaxEqualsNode;
 var SplitNode = (function (_super) {
     __extends(SplitNode, _super);
@@ -1166,12 +1165,12 @@ var SplitNode = (function (_super) {
         return output;
     };
     SplitNode.prototype.validate = function () { };
+    SplitNode.X = 'x';
     return SplitNode;
 }(Node));
-SplitNode.X = 'x';
 exports.SplitNode = SplitNode;
 
-},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":86}],8:[function(require,module,exports){
+},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":79}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var initializers_1 = require("./initializers");
@@ -1421,7 +1420,7 @@ var GraphRunner = (function () {
 }());
 exports.GraphRunner = GraphRunner;
 
-},{"./math/ndarray":22,"./session":82}],10:[function(require,module,exports){
+},{"./math/ndarray":22,"./session":75}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -1498,7 +1497,7 @@ function isPassthroughNode(node, map) {
 }
 exports.isPassthroughNode = isPassthroughNode;
 
-},{"./graph":7,"./priority_queue":81}],11:[function(require,module,exports){
+},{"./graph":7,"./priority_queue":74}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("./math/conv_util");
@@ -1557,7 +1556,7 @@ exports.Session = session_1.Session;
 var sgd_optimizer_1 = require("./sgd_optimizer");
 exports.SGDOptimizer = sgd_optimizer_1.SGDOptimizer;
 
-},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":35,"./math/webgl/gpgpu_util":36,"./math/webgl/render_ndarray_gpu_util":48,"./math/webgl/webgl_util":58,"./optimizer":80,"./session":82,"./sgd_optimizer":84,"./util":86}],12:[function(require,module,exports){
+},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":33,"./math/webgl/gpgpu_util":35,"./math/webgl/render_ndarray_gpu_util":44,"./math/webgl/webgl_util":51,"./optimizer":73,"./session":75,"./sgd_optimizer":77,"./util":79}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1784,7 +1783,7 @@ var InGPUMemoryShuffledInputProviderBuilder = (function (_super) {
 }(InMemoryShuffledInputProviderBuilder));
 exports.InGPUMemoryShuffledInputProviderBuilder = InGPUMemoryShuffledInputProviderBuilder;
 
-},{"./math/ndarray":22,"./util":86}],14:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":79}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./ndarray");
@@ -1832,7 +1831,7 @@ var SigmoidFunc = (function () {
     SigmoidFunc.prototype.der = function (math, x, y) {
         return math.scope(function () {
             var ySquared = math.elementWiseMul(y, y);
-            return math.sub(y, ySquared);
+            return math.subStrict(y, ySquared);
         });
     };
     return SigmoidFunc;
@@ -1880,7 +1879,7 @@ function computeConcat3DOutputShape(x1Shape, x2Shape, axis) {
 }
 exports.computeConcat3DOutputShape = computeConcat3DOutputShape;
 
-},{"../util":86}],16:[function(require,module,exports){
+},{"../util":79}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -1926,7 +1925,7 @@ function computeDilatedRC(rc, origStride) {
 }
 exports.computeDilatedRC = computeDilatedRC;
 
-},{"../util":86}],17:[function(require,module,exports){
+},{"../util":79}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function validateShapes(sourceSize, destSize) {
@@ -1950,7 +1949,7 @@ var SquareCostFunc = (function () {
         this.halfOne = ndarray_1.Scalar.new(0.5);
     }
     SquareCostFunc.prototype.cost = function (math, x1, x2) {
-        var diff = math.sub(x1, x2);
+        var diff = math.subStrict(x1, x2);
         var diffSquared = math.elementWiseMul(diff, diff);
         var result = math.scalarTimesArray(this.halfOne, diffSquared);
         diff.dispose();
@@ -1958,7 +1957,7 @@ var SquareCostFunc = (function () {
         return result;
     };
     SquareCostFunc.prototype.der = function (math, x1, x2) {
-        return math.sub(x1, x2);
+        return math.subStrict(x1, x2);
     };
     SquareCostFunc.prototype.dispose = function () {
         this.halfOne.dispose();
@@ -1980,6 +1979,7 @@ var NDArrayMath = (function () {
         this.ndarrayScopes = [];
         this.ndarraysToKeep = [];
         this.activeScopeNDArraysToKeep = [];
+        this.debugMode = false;
     }
     NDArrayMath.prototype.scope = function (scopeFn) {
         var _this = this;
@@ -1989,6 +1989,12 @@ var NDArrayMath = (function () {
         var result = scopeFn(keepFn, trackFn);
         this.endScope(result);
         return result;
+    };
+    NDArrayMath.prototype.enableDebugMode = function () {
+        this.debugMode = true;
+        console.warn('Debugging mode is ON. The output of every math call will ' +
+            'be downloaded to CPU and checked for NaNs. ' +
+            'This significantly impacts performance.');
     };
     NDArrayMath.prototype.startScope = function () {
         var newScope = [];
@@ -2000,11 +2006,13 @@ var NDArrayMath = (function () {
     };
     NDArrayMath.prototype.endScope = function (result) {
         var _this = this;
+        var arraysToKeep = this.activeScopeNDArraysToKeep;
+        if (result != null) {
+            arraysToKeep = arraysToKeep.concat(result);
+        }
         for (var i = 0; i < this.activeScope.length; i++) {
             var ndarray = this.activeScope[i];
-            if (this.isNDArrayDataInList(ndarray, this.activeScopeNDArraysToKeep) ||
-                (result != null && result instanceof ndarray_1.NDArray &&
-                    ndarray.getData() === result.getData())) {
+            if (this.isNDArrayDataInList(ndarray, arraysToKeep)) {
                 continue;
             }
             ndarray.dispose();
@@ -2051,7 +2059,18 @@ var NDArrayMath = (function () {
         this.activeScopeNDArraysToKeep.push(result);
         return result;
     };
+    NDArrayMath.prototype.checkForNaN = function (arr) {
+        var vals = arr.getValues();
+        for (var i = 0; i < vals.length; i++) {
+            if (isNaN(vals[i])) {
+                throw Error('The result NDArray of the last math call has NaNs.');
+            }
+        }
+    };
     NDArrayMath.prototype.track = function (result) {
+        if (this.debugMode) {
+            this.checkForNaN(result);
+        }
         if (this.activeScope == null) {
             if (this.safeMode) {
                 throw new Error('You are using math in safe mode. Enclose all ' +
@@ -2185,46 +2204,65 @@ var NDArrayMath = (function () {
     NDArrayMath.prototype.scalarPlusArray = function (c, a) {
         util.assert(c.size === 1, "Error in scalarPlusArray: first argument must be rank 0, but got " +
             ("rank " + c.rank + "."));
-        return this.track(this.scalarPlusArrayInternal(c, a));
+        return this.add(c, a);
     };
     NDArrayMath.prototype.scalarMinusArray = function (c, a) {
         util.assert(c.size === 1, "Error in scalarMinusArray: first argument must be rank 0, but got " +
             ("rank " + c.rank + "."));
-        return this.track(this.scalarMinusArrayInternal(c, a));
+        return this.sub(c, a);
     };
     NDArrayMath.prototype.arrayMinusScalar = function (a, c) {
         util.assert(c.size === 1, "Error in arrayMinusScalar: second argument must be rank 0, but " +
             ("got rank " + c.rank + "."));
-        return this.track(this.arrayMinusScalarInternal(a, c));
+        return this.sub(a, c);
     };
     NDArrayMath.prototype.neg = function (a) {
         return this.track(this.negInternal(a));
     };
     NDArrayMath.prototype.add = function (a, b) {
-        util.assertShapesMatch(a.shape, b.shape, 'Error in add: ');
+        util.assertAndGetBroadcastedShape(a.shape, b.shape);
         return this.track(this.addInternal(a, b));
     };
+    NDArrayMath.prototype.addStrict = function (a, b) {
+        util.assertShapesMatch(a.shape, b.shape, 'Error in addStrict: ');
+        return this.add(a, b);
+    };
     NDArrayMath.prototype.sub = function (a, b) {
-        util.assertShapesMatch(a.shape, b.shape, 'Error in sub: ');
+        util.assertAndGetBroadcastedShape(a.shape, b.shape);
         return this.track(this.subInternal(a, b));
     };
+    NDArrayMath.prototype.subStrict = function (a, b) {
+        util.assertShapesMatch(a.shape, b.shape, 'Error in subStrict: ');
+        return this.sub(a, b);
+    };
+    NDArrayMath.prototype.multiply = function (a, b) {
+        util.assertAndGetBroadcastedShape(a.shape, b.shape);
+        return this.track(this.multiplyInternal(a, b));
+    };
     NDArrayMath.prototype.elementWiseMul = function (a, b) {
-        util.assertShapesMatch(a.shape, b.shape, 'Error in elementWiseMul: ');
-        return this.track(this.elementWiseMulInternal(a, b));
+        return this.multiplyStrict(a, b);
+    };
+    NDArrayMath.prototype.multiplyStrict = function (a, b) {
+        util.assertShapesMatch(a.shape, b.shape, 'Error in multiplyStrict: ');
+        return this.multiply(a, b);
     };
     NDArrayMath.prototype.divide = function (a, b) {
-        util.assertShapesMatch(a.shape, b.shape, 'Error in divide: ');
+        util.assertAndGetBroadcastedShape(a.shape, b.shape);
         return this.track(this.divideInternal(a, b));
+    };
+    NDArrayMath.prototype.divideStrict = function (a, b) {
+        util.assertShapesMatch(a.shape, b.shape, 'Error in divideStrict: ');
+        return this.divide(a, b);
     };
     NDArrayMath.prototype.scalarDividedByArray = function (c, a) {
         util.assert(c.size === 1, "Error in scalarDividedByArray: first argument must be rank 0, but " +
             ("got NDArray of rank " + c.rank + "."));
-        return this.track(this.scalarDividedByArrayInternal(c, a));
+        return this.divide(c, a);
     };
     NDArrayMath.prototype.arrayDividedByScalar = function (a, c) {
         util.assert(c.size === 1, "Error in arrayDividedByScalar: second argument must be rank 0, " +
             ("but got NDArray of rank " + c.rank + "."));
-        return this.track(this.arrayDividedByScalarInternal(a, c));
+        return this.divide(a, c);
     };
     NDArrayMath.prototype.exp = function (ndarray) {
         return this.track(this.expInternal(ndarray));
@@ -2258,14 +2296,14 @@ var NDArrayMath = (function () {
     NDArrayMath.prototype.scalarTimesArray = function (c, a) {
         util.assert(c.size === 1, "Error in arrayDividedByScalar: first argument must be rank 0, but " +
             ("got rank " + c.rank + "."));
-        return this.track(this.scalarTimesArrayInternal(c, a));
+        return this.multiply(c, a);
     };
     NDArrayMath.prototype.elementWiseMulBroadcast = function (a, b) {
         util.assert(a.rank === 2, "Error in elementWiseMulBroadcast: first argument must be " +
             ("rank 2, but got rank " + a.rank + "."));
         util.assert(b.rank === 2, "Error in elementWiseMulBroadcast: second argument must be " +
             ("rank 2, but got rank " + b.rank + "."));
-        return this.track(this.elementWiseMulBroadcastInternal(a, b));
+        return this.multiply(a, b);
     };
     NDArrayMath.prototype.conv2d = function (x, weights, biases, stride, zeroPad) {
         util.assert(x.rank === 3, "Error in conv2d: x must be rank 3, but got rank " + x.rank + ".");
@@ -2361,7 +2399,7 @@ var MatrixOrientation;
     MatrixOrientation[MatrixOrientation["TRANSPOSED"] = 1] = "TRANSPOSED";
 })(MatrixOrientation = exports.MatrixOrientation || (exports.MatrixOrientation = {}));
 
-},{"../util":86,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
+},{"../util":79,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -2414,7 +2452,7 @@ var NDArrayMathCPU = (function (_super) {
     };
     NDArrayMathCPU.prototype.concat3DInternal = function (x1, x2, axis) {
         var outputShape = concat3d_util.computeConcat3DOutputShape(x1.shape, x2.shape, axis);
-        var values = ndarray_1.NDArray.zeros(outputShape);
+        var values = ndarray_1.Array3D.zeros(outputShape);
         for (var i = 0; i < outputShape[0]; i++) {
             for (var j = 0; j < outputShape[1]; j++) {
                 for (var k = 0; k < outputShape[2]; k++) {
@@ -2434,49 +2472,20 @@ var NDArrayMathCPU = (function (_super) {
         }
         return values;
     };
-    NDArrayMathCPU.prototype.scalarPlusArrayInternal = function (c, a) {
-        var resultValues = new Float32Array(a.size);
-        var aValues = a.getValues();
-        var cVal = c.get();
-        for (var i = 0; i < resultValues.length; ++i) {
-            resultValues[i] = cVal + aValues[i];
-        }
-        return ndarray_1.NDArray.make(a.shape, { values: resultValues });
-    };
     NDArrayMathCPU.prototype.scaledArrayAddInternal = function (c1, a, c2, b) {
-        var cValues = new Float32Array(a.size);
+        var newShape = util.assertAndGetBroadcastedShape(a.shape, b.shape);
+        var newValues = new Float32Array(util.sizeFromShape(newShape));
         var aValues = a.getValues();
         var bValues = b.getValues();
         var c1Val = c1.get();
         var c2Val = c2.get();
-        for (var i = 0; i < cValues.length; ++i) {
-            cValues[i] = c1Val * aValues[i] + c2Val * bValues[i];
+        for (var i = 0; i < newValues.length; ++i) {
+            newValues[i] = c1Val * aValues[i % a.size] + c2Val * bValues[i % b.size];
         }
-        return ndarray_1.NDArray.make(a.shape, { values: cValues });
-    };
-    NDArrayMathCPU.prototype.scalarTimesArrayInternal = function (c, a) {
-        var newValues = new Float32Array(a.size);
-        var aValues = a.getValues();
-        var cVal = c.get();
-        for (var i = 0; i < aValues.length; ++i) {
-            newValues[i] = cVal * aValues[i];
-        }
-        return ndarray_1.NDArray.make(a.shape, { values: newValues });
-    };
-    NDArrayMathCPU.prototype.scalarMinusArrayInternal = function (c, a) {
-        var negA = this.negInternal(a);
-        var result = this.scalarPlusArrayInternal(c, negA);
-        negA.dispose();
-        return result;
-    };
-    NDArrayMathCPU.prototype.arrayMinusScalarInternal = function (a, c) {
-        var negC = this.negInternal(c);
-        var result = this.scalarPlusArrayInternal(negC, a);
-        negC.dispose();
-        return result;
+        return ndarray_1.NDArray.make(newShape, { values: newValues });
     };
     NDArrayMathCPU.prototype.negInternal = function (a) {
-        return this.scalarTimesArrayInternal(ndarray_1.Scalar.NEG_ONE, a);
+        return this.scalarTimesArray(ndarray_1.Scalar.NEG_ONE, a);
     };
     NDArrayMathCPU.prototype.addInternal = function (a, b) {
         return this.scaledArrayAddInternal(ndarray_1.Scalar.ONE, a, ndarray_1.Scalar.ONE, b);
@@ -2515,54 +2524,25 @@ var NDArrayMathCPU = (function (_super) {
         }
         return ndarray_1.Array2D.new([leftDim, rightDim], values);
     };
-    NDArrayMathCPU.prototype.elementWiseMulInternal = function (a, b) {
-        var newValues = new Float32Array(a.size);
+    NDArrayMathCPU.prototype.multiplyInternal = function (a, b) {
+        var newShape = util.assertAndGetBroadcastedShape(a.shape, b.shape);
+        var newValues = new Float32Array(util.sizeFromShape(newShape));
         var aValues = a.getValues();
         var bValues = b.getValues();
-        for (var i = 0; i < aValues.length; ++i) {
-            newValues[i] = aValues[i] * bValues[i];
+        for (var i = 0; i < newValues.length; ++i) {
+            newValues[i] = aValues[i % a.size] * bValues[i % b.size];
         }
-        return ndarray_1.NDArray.make(a.shape, { values: newValues });
-    };
-    NDArrayMathCPU.prototype.elementWiseMulBroadcastInternal = function (a, b) {
-        var maxRow = Math.max(a.shape[0], b.shape[0]);
-        var maxCol = Math.max(a.shape[1], b.shape[1]);
-        var values = new Float32Array(maxRow * maxCol);
-        var index = 0;
-        for (var row = 0; row < maxRow; row++) {
-            for (var col = 0; col < maxCol; col++) {
-                values[index++] = a.get(row % a.shape[0], col % a.shape[1]) *
-                    b.get(row % b.shape[0], col % b.shape[1]);
-            }
-        }
-        return ndarray_1.Array2D.new([maxRow, maxCol], values);
+        return ndarray_1.NDArray.make(newShape, { values: newValues });
     };
     NDArrayMathCPU.prototype.divideInternal = function (a, b) {
-        var newValues = new Float32Array(a.size);
+        var newShape = util.assertAndGetBroadcastedShape(a.shape, b.shape);
+        var newValues = new Float32Array(util.sizeFromShape(newShape));
         var aValues = a.getValues();
         var bValues = b.getValues();
-        for (var i = 0; i < aValues.length; ++i) {
-            newValues[i] = aValues[i] / bValues[i];
+        for (var i = 0; i < newValues.length; ++i) {
+            newValues[i] = aValues[i % a.size] / bValues[i % b.size];
         }
-        return ndarray_1.NDArray.make(a.shape, { values: newValues });
-    };
-    NDArrayMathCPU.prototype.scalarDividedByArrayInternal = function (c, a) {
-        var newValues = new Float32Array(a.size);
-        var aValues = a.getValues();
-        var cValue = c.get();
-        for (var i = 0; i < aValues.length; ++i) {
-            newValues[i] = cValue / aValues[i];
-        }
-        return ndarray_1.NDArray.make(a.shape, { values: newValues });
-    };
-    NDArrayMathCPU.prototype.arrayDividedByScalarInternal = function (a, c) {
-        var newValues = new Float32Array(a.size);
-        var aValues = a.getValues();
-        var cValue = c.get();
-        for (var i = 0; i < aValues.length; ++i) {
-            newValues[i] = aValues[i] / cValue;
-        }
-        return ndarray_1.NDArray.make(a.shape, { values: newValues });
+        return ndarray_1.NDArray.make(newShape, { values: newValues });
     };
     NDArrayMathCPU.prototype.sumInternal = function (ndarray) {
         var sum = 0;
@@ -2775,7 +2755,8 @@ var NDArrayMathCPU = (function (_super) {
         var pad = fSize - 1 - origPad;
         var origInputDepth = weights.shape[2];
         var origOutputDepth = weights.shape[3];
-        var _a = x.shape, xRows = _a[0], xCols = _a[1], xDepth = _a[2];
+        var xRows = x.shape[0];
+        var xCols = x.shape[1];
         var xRowsDilated = (xRows - 1) * origStride + 1;
         var xColsDilated = (xCols - 1) * origStride + 1;
         var outputShape = conv_util.computeOutputShape3D([xRowsDilated, xColsDilated, origOutputDepth], fSize, origInputDepth, 1, pad);
@@ -2813,7 +2794,8 @@ var NDArrayMathCPU = (function (_super) {
         var pad = fSize - 1 - origPad;
         var origInputDepth = origWeights.shape[2];
         var origOutputDepth = origWeights.shape[3];
-        var _a = x.shape, xRows = _a[0], xCols = _a[1], xDepth = _a[2];
+        var xRows = x.shape[0];
+        var xCols = x.shape[1];
         var xRowsDilated = (xRows - 1) * origStride + 1;
         var xColsDilated = (xCols - 1) * origStride + 1;
         var outputShape = conv_util.computeOutputShape3D([xRowsDilated, xColsDilated, origOutputDepth], fSize, origInputDepth, 1, pad);
@@ -2931,9 +2913,7 @@ var NDArrayMathCPU = (function (_super) {
                         Number.POSITIVE_INFINITY);
                     var avgValue = 0;
                     for (var xR = xRMin; xR < xRMax; ++xR) {
-                        var wR = xR - xRCorner;
                         for (var xC = xCMin; xC < xCMax; ++xC) {
-                            var wC = xC - xCCorner;
                             var pixel = x.get(xR, xC, d);
                             if (isNaN(pixel)) {
                                 minMaxValue = NaN;
@@ -3089,7 +3069,7 @@ var NDArrayMathCPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathCPU = NDArrayMathCPU;
 
-},{"../math/conv_util":16,"../util":86,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":79,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3109,60 +3089,36 @@ var math_1 = require("./math");
 var ndarray = require("./ndarray");
 var ndarray_1 = require("./ndarray");
 var addscaledmat_gpu = require("./webgl/addscaledmat_gpu");
-var addsubmuldiv_gpu = require("./webgl/addsubmuldiv_gpu");
-var addsubmuldiv_gpu_1 = require("./webgl/addsubmuldiv_gpu");
-var argmaxequals_gpu = require("./webgl/argmaxequals_gpu");
-var argminmax_gpu = require("./webgl/argminmax_gpu");
+var argmaxequals_gpu_1 = require("./webgl/argmaxequals_gpu");
+var argminmax_gpu_1 = require("./webgl/argminmax_gpu");
 var avg_pool_gpu = require("./webgl/avg_pool_gpu");
 var batchnorm_gpu = require("./webgl/batchnorm_gpu");
 var concat3d_gpu = require("./webgl/concat3d_gpu");
 var conv_backprop_gpu = require("./webgl/conv_backprop_gpu");
 var conv_gpu = require("./webgl/conv_gpu");
 var copy_gpu = require("./webgl/copy_gpu");
-var exp_gpu = require("./webgl/exp_gpu");
 var gpgpu_context_1 = require("./webgl/gpgpu_context");
+var binaryop_gpu_1 = require("./webgl/binaryop_gpu");
+var gpgpu_math = require("./webgl/gpgpu_math");
 var gpgpu_util = require("./webgl/gpgpu_util");
-var log_gpu = require("./webgl/log_gpu");
-var logsumexp_gpu = require("./webgl/logsumexp_gpu");
+var logsumexp_gpu_1 = require("./webgl/logsumexp_gpu");
 var max_pool_backprop_gpu = require("./webgl/max_pool_backprop_gpu");
 var max_pool_gpu = require("./webgl/max_pool_gpu");
 var min_pool_gpu = require("./webgl/min_pool_gpu");
-var minmax_gpu = require("./webgl/minmax_gpu");
-var mulmat_gpu = require("./webgl/mulmat_gpu");
-var neg_gpu = require("./webgl/neg_gpu");
+var minmax_gpu_1 = require("./webgl/minmax_gpu");
+var mulmat_gpu_1 = require("./webgl/mulmat_gpu");
 var pool_gpu = require("./webgl/pool_gpu");
-var reducesum_gpu = require("./webgl/reducesum_gpu");
-var relu_gpu = require("./webgl/relu_gpu");
+var reducesum_gpu_1 = require("./webgl/reducesum_gpu");
 var reshape_gpu = require("./webgl/reshape_gpu");
 var resize_bilinear_gpu = require("./webgl/resize_bilinear_gpu");
-var shader_compiler = require("./webgl/shader_compiler");
-var sigmoid_gpu = require("./webgl/sigmoid_gpu");
-var step_gpu = require("./webgl/step_gpu");
 var texture_manager_1 = require("./webgl/texture_manager");
-var trig_gpu = require("./webgl/trig_gpu");
 var webgl_util = require("./webgl/webgl_util");
-var ARGMAX_PROG = 'argmax';
-var ARGMAX_EQUALS_PROG = 'argmaxequals';
-var ARGMIN_PROG = 'argmin';
+var unaryop_gpu_1 = require("./webgl/unaryop_gpu");
 var BATCHNORM_PROG = 'batchnorm';
 var COPY_PROG = 'copy';
 var CONCAT_PROG = 'concat';
 var ADD_SCALED_MAT_PROG = 'addscaledmat';
-var MATMUL_PROG = 'matmul';
-var RELU_PROG = 'relu';
-var TANH_PROG = 'tanh';
-var SIN_PROG = 'sin';
-var SIGMOID_PROG = 'sigmoid';
-var MAX_PROG = 'max';
-var MIN_PROG = 'min';
-var NEG_PROG = 'neg';
-var EXP_PROG = 'exp';
-var LOG_PROG = 'log';
-var SUM_PROG = 'sum';
-var STEP_PROG = 'step';
-var LOGSUMEXP_PROG = 'logsumexp';
 var RESHAPE_PROG = 'reshape';
-var ADD_SUM_MUL_DIV_PROG = 'addsummuldiv';
 var CONV2D_PROG = 'conv';
 var CONV2D_TRANSPOSE_PROG = 'conv_transpose';
 var CONV2D_DERW_PROG = 'conv_derw';
@@ -3185,6 +3141,7 @@ var NDArrayMathGPU = (function (_super) {
         if (safeMode === void 0) { safeMode = true; }
         var _this = _super.call(this, safeMode) || this;
         _this.programCache = {};
+        _this.binaryCache = {};
         if (gpgpu == null) {
             var gl = gpgpu_util.createWebGLContext();
             _this.gpgpu = new gpgpu_context_1.GPGPUContext(gl);
@@ -3279,15 +3236,6 @@ var NDArrayMathGPU = (function (_super) {
         }
         return ndarray_1.NDArray.make(resultShapeRCD, { texture: resultTex, textureShapeRC: resultTexShape });
     };
-    NDArrayMathGPU.prototype.scalarPlusArrayInternal = function (c, a) {
-        return this.addSubMulDiv(c, a, a.shape, addsubmuldiv_gpu_1.OperandType.SCALAR, '+', addsubmuldiv_gpu_1.OperandType.MATRIX);
-    };
-    NDArrayMathGPU.prototype.arrayMinusScalarInternal = function (a, c) {
-        return this.addSubMulDiv(a, c, a.shape, addsubmuldiv_gpu_1.OperandType.MATRIX, '-', addsubmuldiv_gpu_1.OperandType.SCALAR);
-    };
-    NDArrayMathGPU.prototype.scalarMinusArrayInternal = function (c, a) {
-        return this.addSubMulDiv(c, a, a.shape, addsubmuldiv_gpu_1.OperandType.SCALAR, '-', addsubmuldiv_gpu_1.OperandType.MATRIX);
-    };
     NDArrayMathGPU.prototype.scaledArrayAddInternal = function (c1, a, c2, b) {
         var cleanupB = false;
         if (!this.doGPUShapesMatch(a, b)) {
@@ -3303,15 +3251,24 @@ var NDArrayMathGPU = (function (_super) {
         }
         return ndarray_1.NDArray.make(a.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
     };
-    NDArrayMathGPU.prototype.scalarTimesArrayInternal = function (c, a) {
-        return this.addSubMulDiv(c, a, a.shape, addsubmuldiv_gpu_1.OperandType.SCALAR, '*', addsubmuldiv_gpu_1.OperandType.MATRIX);
-    };
     NDArrayMathGPU.prototype.negInternal = function (a) {
-        var program = this.getAndSaveProgram(NEG_PROG, function () { return neg_gpu.getFragmentShaderSource(); });
-        var textureShapeRC = a.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        neg_gpu.neg(this.gpgpu, program, a.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(a.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.NEG);
+        return this.compileAndRun(program, [a]);
+    };
+    NDArrayMathGPU.prototype.makeOutputArray = function (shape) {
+        var textureShapeRC = webgl_util.getTextureShapeFromLogicalShape(this.gpgpu.gl, shape);
+        var texture = this.textureManager.acquireTexture(textureShapeRC);
+        return ndarray_1.NDArray.make(shape, { texture: texture, textureShapeRC: textureShapeRC });
+    };
+    NDArrayMathGPU.prototype.compileAndRun = function (program, inputs) {
+        var _this = this;
+        var output = this.makeOutputArray(program.outputShape);
+        var key = gpgpu_math.makeShaderKey(program, inputs, output);
+        var binary = this.getAndSaveBinary(key, function () {
+            return gpgpu_math.compileProgram(_this.gpgpu, program, inputs, output);
+        });
+        gpgpu_math.runProgram(binary, inputs, output);
+        return output;
     };
     NDArrayMathGPU.prototype.reshapeTexture = function (a, newTextureShape) {
         var aTexShape = a.getTextureShapeRC();
@@ -3321,23 +3278,12 @@ var NDArrayMathGPU = (function (_super) {
         return ndarray_1.NDArray.make(a.shape, { texture: resultTexture, textureShapeRC: newTextureShape });
     };
     NDArrayMathGPU.prototype.matMulInternal = function (a, b, aOrientation, bOrientation) {
-        var sharedDim = (aOrientation === math_1.MatrixOrientation.REGULAR) ? a.shape[1] : a.shape[0];
-        var outerShapeA = (aOrientation === math_1.MatrixOrientation.REGULAR) ? a.shape[0] : a.shape[1];
-        var outerShapeB = (bOrientation === math_1.MatrixOrientation.REGULAR) ? b.shape[1] : b.shape[0];
-        var outShape = [outerShapeA, outerShapeB];
-        var outTexShape = webgl_util.getTextureShapeFromLogicalShape(this.gpgpu.gl, outShape);
-        var outTexture = this.textureManager.acquireTexture(outTexShape);
-        var out = new ndarray_1.Array2D(outShape, { texture: outTexture, textureShapeRC: outTexShape });
-        var key = shader_compiler.makeShaderKey([a, b], out);
-        var program = this.getAndSaveProgram(MATMUL_PROG + "_" + key + "_" + aOrientation + "_" + bOrientation, function () { return mulmat_gpu.getFragmentShader(a, b, out, aOrientation, bOrientation); });
-        mulmat_gpu.multiplyMatrix(this.gpgpu, program, a.getTexture(), b.getTexture(), outTexture, outTexShape);
-        return out;
+        var program = new mulmat_gpu_1.MatMulProgram(a.shape, b.shape, aOrientation, bOrientation);
+        return this.compileAndRun(program, [a, b]);
     };
-    NDArrayMathGPU.prototype.elementWiseMulInternal = function (a, b) {
-        return this.addSubMulDiv(a, b, a.shape, addsubmuldiv_gpu_1.OperandType.MATRIX, '*', addsubmuldiv_gpu_1.OperandType.MATRIX);
-    };
-    NDArrayMathGPU.prototype.elementWiseMulBroadcastInternal = function (a, b) {
-        throw new Error('Not yet implemented!');
+    NDArrayMathGPU.prototype.multiplyInternal = function (a, b) {
+        var program = new binaryop_gpu_1.BinaryOpProgram('*', a.shape, b.shape);
+        return this.compileAndRun(program, [a, b]);
     };
     NDArrayMathGPU.prototype.batchNormalization3DInternal = function (x, mean, variance, varianceEpsilon, scale, offset) {
         var xTexShape = x.getTextureShapeRC();
@@ -3401,137 +3347,76 @@ var NDArrayMathGPU = (function (_super) {
     NDArrayMathGPU.prototype.switchDimInternal = function (a, newDim) {
         throw new Error('Not yet implemented!');
     };
-    NDArrayMathGPU.prototype.sumInternal = function (ndarray) {
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var numRows = textureShapeRC[0], numColumns = textureShapeRC[1];
-        var program = this.getAndSaveProgram(SUM_PROG + "_" + numRows + "_" + numColumns, function () { return reducesum_gpu.getFragmentShaderSource(numRows, numColumns); });
-        var resultTexture = this.textureManager.acquireTexture([1, 1]);
-        reducesum_gpu.reduceSum(this.gpgpu, program, ndarray.getTexture(), numRows, numColumns, resultTexture);
-        return new ndarray_1.Scalar({ texture: resultTexture });
+    NDArrayMathGPU.prototype.sumInternal = function (a) {
+        var program = new reducesum_gpu_1.ReduceSumProgram(a.size);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.argMinInternal = function (ndarray) {
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var numRows = textureShapeRC[0], numColumns = textureShapeRC[1];
-        var program = this.getAndSaveProgram(ARGMIN_PROG + "_" + numRows + "_" + numColumns, function () { return argminmax_gpu.getArgMinFragmentShaderSource(numRows, numColumns); });
-        var resultTexture = this.textureManager.acquireTexture([1, 1]);
-        argminmax_gpu.argMinMax(this.gpgpu, program, ndarray.getTexture(), numRows, numColumns, resultTexture);
-        return new ndarray_1.Scalar({ texture: resultTexture });
+    NDArrayMathGPU.prototype.argMinInternal = function (a) {
+        var program = new argminmax_gpu_1.ArgMinMaxProgram(a.size, 'min');
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.argMaxInternal = function (ndarray) {
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var numRows = textureShapeRC[0], numColumns = textureShapeRC[1];
-        var program = this.getAndSaveProgram(ARGMAX_PROG + "_" + numRows + "_" + numColumns, function () { return argminmax_gpu.getArgMaxFragmentShaderSource(numRows, numColumns); });
-        var resultTexture = this.textureManager.acquireTexture([1, 1]);
-        argminmax_gpu.argMinMax(this.gpgpu, program, ndarray.getTexture(), numRows, numColumns, resultTexture);
-        return new ndarray_1.Scalar({ texture: resultTexture });
+    NDArrayMathGPU.prototype.argMaxInternal = function (a) {
+        var program = new argminmax_gpu_1.ArgMinMaxProgram(a.size, 'max');
+        return this.compileAndRun(program, [a]);
     };
     NDArrayMathGPU.prototype.argMaxEqualsInternal = function (x1, x2) {
-        var actualX1TexShape = x1.getTextureShapeRC();
-        var actualX2TexShape = x2.getTextureShapeRC();
-        var cleanupX2 = false;
-        if (!util.arraysEqual(actualX1TexShape, actualX2TexShape)) {
-            x2 = this.reshapeTexture(x2, actualX1TexShape);
-            cleanupX2 = true;
-        }
-        var textureShapeRC = x1.getTextureShapeRC();
-        var numRows = textureShapeRC[0], numColumns = textureShapeRC[1];
-        var program = this.getAndSaveProgram(ARGMAX_EQUALS_PROG + "_" + numRows + "_" + numColumns, function () { return argmaxequals_gpu.getArgMaxEqualsFragmentShaderSource(numRows, numColumns); });
-        var resultTexture = this.textureManager.acquireTexture([1, 1]);
-        argmaxequals_gpu.argMaxEquals(this.gpgpu, program, x1.getTexture(), x2.getTexture(), numRows, numColumns, resultTexture);
-        if (cleanupX2) {
-            x2.dispose();
-        }
-        return new ndarray_1.Scalar({ texture: resultTexture });
+        var program = new argmaxequals_gpu_1.ArgMaxEqualsProgram(x1.size, x2.size);
+        return this.compileAndRun(program, [x1, x2]);
     };
     NDArrayMathGPU.prototype.topKInternal = function (ndarray, k) {
         throw new Error('topK GPU not yet implemented!');
     };
-    NDArrayMathGPU.prototype.minInternal = function (ndarray) {
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var numRows = textureShapeRC[0], numColumns = textureShapeRC[1];
-        var program = this.getAndSaveProgram(MIN_PROG + "_" + numRows + "_" + numColumns, function () { return minmax_gpu.getMinFragmentShaderSource(numRows, numColumns); });
-        var resultTexture = this.textureManager.acquireTexture([1, 1]);
-        minmax_gpu.minMax(this.gpgpu, program, ndarray.getTexture(), numRows, numColumns, resultTexture);
-        return new ndarray_1.Scalar({ texture: resultTexture });
+    NDArrayMathGPU.prototype.minInternal = function (a) {
+        var program = new minmax_gpu_1.MinMaxProgram(a.size, 'min');
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.maxInternal = function (ndarray) {
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var numRows = textureShapeRC[0], numColumns = textureShapeRC[1];
-        var program = this.getAndSaveProgram(MAX_PROG + "_" + numRows + "_" + numColumns, function () { return minmax_gpu.getMaxFragmentShaderSource(numRows, numColumns); });
-        var resultTexture = this.textureManager.acquireTexture([1, 1]);
-        minmax_gpu.minMax(this.gpgpu, program, ndarray.getTexture(), numRows, numColumns, resultTexture);
-        return new ndarray_1.Scalar({ texture: resultTexture });
+    NDArrayMathGPU.prototype.maxInternal = function (a) {
+        var program = new minmax_gpu_1.MinMaxProgram(a.size, 'max');
+        return this.compileAndRun(program, [a]);
     };
     NDArrayMathGPU.prototype.divideInternal = function (a, b) {
-        return this.addSubMulDiv(a, b, a.shape, addsubmuldiv_gpu_1.OperandType.MATRIX, '/', addsubmuldiv_gpu_1.OperandType.MATRIX);
-    };
-    NDArrayMathGPU.prototype.scalarDividedByArrayInternal = function (c, a) {
-        return this.addSubMulDiv(c, a, a.shape, addsubmuldiv_gpu_1.OperandType.SCALAR, '/', addsubmuldiv_gpu_1.OperandType.MATRIX);
-    };
-    NDArrayMathGPU.prototype.arrayDividedByScalarInternal = function (a, c) {
-        return this.addSubMulDiv(a, c, a.shape, addsubmuldiv_gpu_1.OperandType.MATRIX, '/', addsubmuldiv_gpu_1.OperandType.SCALAR);
+        var program = new binaryop_gpu_1.BinaryOpProgram('/', a.shape, b.shape);
+        return this.compileAndRun(program, [a, b]);
     };
     NDArrayMathGPU.prototype.addInternal = function (a, b) {
-        return this.addSubMulDiv(a, b, a.shape, addsubmuldiv_gpu_1.OperandType.MATRIX, '+', addsubmuldiv_gpu_1.OperandType.MATRIX);
+        var program = new binaryop_gpu_1.BinaryOpProgram('+', a.shape, b.shape);
+        return this.compileAndRun(program, [a, b]);
     };
     NDArrayMathGPU.prototype.subInternal = function (a, b) {
-        return this.addSubMulDiv(a, b, a.shape, addsubmuldiv_gpu_1.OperandType.MATRIX, '-', addsubmuldiv_gpu_1.OperandType.MATRIX);
+        var program = new binaryop_gpu_1.BinaryOpProgram('-', a.shape, b.shape);
+        return this.compileAndRun(program, [a, b]);
     };
-    NDArrayMathGPU.prototype.logSumExpInternal = function (ndarray) {
-        var _a = ndarray.getTextureShapeRC(), numRows = _a[0], numColumns = _a[1];
-        var program = this.getAndSaveProgram(LOGSUMEXP_PROG + "_" + numRows + "_" + numColumns, function () { return logsumexp_gpu.getFragmentShaderSource(numRows, numColumns); });
-        var result = new ndarray_1.Scalar({ texture: this.textureManager.acquireTexture([1, 1]) });
-        reducesum_gpu.reduceSum(this.gpgpu, program, ndarray.getTexture(), numRows, numColumns, result.getTexture());
-        return result;
+    NDArrayMathGPU.prototype.logSumExpInternal = function (a) {
+        var program = new logsumexp_gpu_1.LogSumExpProgram(a.size);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.expInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(EXP_PROG, function () { return exp_gpu.getFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        exp_gpu.exp(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.expInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.EXP);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.logInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(LOG_PROG, function () { return log_gpu.getFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        log_gpu.log(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.logInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.LOG);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.reluInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(RELU_PROG, function () { return relu_gpu.getFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        relu_gpu.relu(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.reluInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.RELU);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.sigmoidInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(SIGMOID_PROG, function () { return sigmoid_gpu.getSigmoidFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        sigmoid_gpu.sigmoid(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.sigmoidInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.SIGMOID);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.tanhInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(TANH_PROG, function () { return trig_gpu.getTanhFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        trig_gpu.tanh(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.tanhInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.TANH);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.sinInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(SIN_PROG, function () { return trig_gpu.getSinFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        trig_gpu.sin(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.sinInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.SIN);
+        return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.stepInternal = function (ndarray) {
-        var program = this.getAndSaveProgram(STEP_PROG, function () { return step_gpu.getFragmentShaderSource(); });
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        step_gpu.step(this.gpgpu, program, ndarray.getTexture(), textureShapeRC[0], textureShapeRC[1], resultTexture);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+    NDArrayMathGPU.prototype.stepInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.STEP);
+        return this.compileAndRun(program, [a]);
     };
     NDArrayMathGPU.prototype.conv2dInternal = function (x, weights, biases, stride, zeroPad) {
         var fieldSize = weights.shape[0];
@@ -3821,62 +3706,18 @@ var NDArrayMathGPU = (function (_super) {
         resize_bilinear_gpu.resizeBilinear(this.gpgpu, program, x.getTexture(), resultTexture, resultTexShape);
         return ndarray_1.NDArray.make(newShapeRCD, { texture: resultTexture, textureShapeRC: resultTexShape });
     };
+    NDArrayMathGPU.prototype.getAndSaveBinary = function (key, getBinary) {
+        if (!(key in this.binaryCache)) {
+            this.binaryCache[key] = getBinary();
+        }
+        return this.binaryCache[key];
+    };
     NDArrayMathGPU.prototype.getAndSaveProgram = function (programKey, getShaderSource) {
         if (!(programKey in this.programCache)) {
             this.programCache[programKey] =
                 this.gpgpu.createProgram(getShaderSource());
         }
         return this.programCache[programKey];
-    };
-    NDArrayMathGPU.prototype.addSubMulDiv = function (a, b, resultShape, operandA, opType, operandB) {
-        var cleanupB = false;
-        var aOrientation = math_1.MatrixOrientation.REGULAR;
-        var bOrientation = math_1.MatrixOrientation.REGULAR;
-        var logicalBTexShape;
-        if (operandA === addsubmuldiv_gpu_1.OperandType.MATRIX && operandB === addsubmuldiv_gpu_1.OperandType.MATRIX) {
-            util.assertShapesMatch(a.shape, b.shape);
-            if (a.inGPU()) {
-                b.getTextureShapeRC(a.getTextureShapeRC());
-            }
-            else if (b.inGPU()) {
-                a.getTextureShapeRC(b.getTextureShapeRC());
-            }
-            var aTexShape_1 = a.getTextureShapeRC();
-            var bTexShape_1 = b.getTextureShapeRC();
-            logicalBTexShape = bTexShape_1;
-            if (a.rank === 1) {
-                if (!util.arraysEqual(bTexShape_1, aTexShape_1)) {
-                    bOrientation = math_1.MatrixOrientation.TRANSPOSED;
-                    logicalBTexShape = [bTexShape_1[1], bTexShape_1[0]];
-                }
-            }
-            if (!util.arraysEqual(aTexShape_1, logicalBTexShape)) {
-                b = this.reshapeTexture(b, aTexShape_1);
-                bOrientation = math_1.MatrixOrientation.REGULAR;
-                logicalBTexShape = b.getTextureShapeRC();
-                cleanupB = true;
-            }
-        }
-        else {
-            logicalBTexShape = b.getTextureShapeRC();
-        }
-        var aTexShape = a.getTextureShapeRC();
-        var bTexShape = b.getTextureShapeRC();
-        var programKey = [
-            ADD_SUM_MUL_DIV_PROG, operandA, aOrientation, opType, operandB,
-            bOrientation
-        ].join('_');
-        var program = this.getAndSaveProgram(programKey, function () { return addsubmuldiv_gpu.getFragmentShaderSource(operandA, aOrientation, opType, operandB, bOrientation); });
-        var resultTextureShape = [
-            Math.max(aTexShape[0], logicalBTexShape[0]),
-            Math.max(aTexShape[1], logicalBTexShape[1])
-        ];
-        var resultTexture = this.textureManager.acquireTexture(resultTextureShape);
-        addsubmuldiv_gpu.addSubMulDiv(this.gpgpu, program, a.getTexture(), aTexShape, b.getTexture(), bTexShape, resultTexture, resultTextureShape);
-        if (cleanupB) {
-            b.dispose();
-        }
-        return ndarray_1.NDArray.make(resultShape, { texture: resultTexture, textureShapeRC: resultTextureShape });
     };
     NDArrayMathGPU.prototype.doGPUShapesMatch = function (a, b) {
         util.assertShapesMatch(a.shape, b.shape);
@@ -3897,6 +3738,9 @@ var NDArrayMathGPU = (function (_super) {
                 this.gpgpu.deleteProgram(this.programCache[programKey]);
             }
         }
+        for (var key in this.binaryCache) {
+            this.gpgpu.deleteProgram(this.binaryCache[key].webGLProgram);
+        }
         this.textureManager.dispose();
         if (this.gpgpuCreatedLocally) {
             this.gpgpu.dispose();
@@ -3906,7 +3750,7 @@ var NDArrayMathGPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathGPU = NDArrayMathGPU;
 
-},{"../util":86,"./concat3d_util":15,"./conv_util":16,"./math":19,"./ndarray":22,"./webgl/addscaledmat_gpu":23,"./webgl/addsubmuldiv_gpu":24,"./webgl/argmaxequals_gpu":25,"./webgl/argminmax_gpu":26,"./webgl/avg_pool_gpu":27,"./webgl/batchnorm_gpu":28,"./webgl/concat3d_gpu":30,"./webgl/conv_backprop_gpu":31,"./webgl/conv_gpu":32,"./webgl/copy_gpu":33,"./webgl/exp_gpu":34,"./webgl/gpgpu_context":35,"./webgl/gpgpu_util":36,"./webgl/log_gpu":37,"./webgl/logsumexp_gpu":38,"./webgl/max_pool_backprop_gpu":39,"./webgl/max_pool_gpu":40,"./webgl/min_pool_gpu":41,"./webgl/minmax_gpu":42,"./webgl/mulmat_gpu":43,"./webgl/neg_gpu":44,"./webgl/pool_gpu":45,"./webgl/reducesum_gpu":46,"./webgl/relu_gpu":47,"./webgl/reshape_gpu":49,"./webgl/resize_bilinear_gpu":50,"./webgl/shader_compiler":51,"./webgl/sigmoid_gpu":52,"./webgl/step_gpu":53,"./webgl/texture_manager":55,"./webgl/trig_gpu":56,"./webgl/webgl_util":58}],22:[function(require,module,exports){
+},{"../util":79,"./concat3d_util":15,"./conv_util":16,"./math":19,"./ndarray":22,"./webgl/addscaledmat_gpu":23,"./webgl/argmaxequals_gpu":24,"./webgl/argminmax_gpu":25,"./webgl/avg_pool_gpu":26,"./webgl/batchnorm_gpu":27,"./webgl/binaryop_gpu":28,"./webgl/concat3d_gpu":29,"./webgl/conv_backprop_gpu":30,"./webgl/conv_gpu":31,"./webgl/copy_gpu":32,"./webgl/gpgpu_context":33,"./webgl/gpgpu_math":34,"./webgl/gpgpu_util":35,"./webgl/logsumexp_gpu":36,"./webgl/max_pool_backprop_gpu":37,"./webgl/max_pool_gpu":38,"./webgl/min_pool_gpu":39,"./webgl/minmax_gpu":40,"./webgl/mulmat_gpu":41,"./webgl/pool_gpu":42,"./webgl/reducesum_gpu":43,"./webgl/reshape_gpu":45,"./webgl/resize_bilinear_gpu":46,"./webgl/texture_manager":49,"./webgl/unaryop_gpu":50,"./webgl/webgl_util":51}],22:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -4158,12 +4002,12 @@ var Scalar = (function (_super) {
     Scalar.prototype.add = function (value) {
         this.getValues()[0] += value;
     };
+    Scalar.ZERO = Scalar.new(0);
+    Scalar.ONE = Scalar.new(1);
+    Scalar.TWO = Scalar.new(2);
+    Scalar.NEG_ONE = Scalar.new(-1);
     return Scalar;
 }(NDArray));
-Scalar.ZERO = Scalar.new(0);
-Scalar.ONE = Scalar.new(1);
-Scalar.TWO = Scalar.new(2);
-Scalar.NEG_ONE = Scalar.new(-1);
 exports.Scalar = Scalar;
 var Array1D = (function (_super) {
     __extends(Array1D, _super);
@@ -4341,7 +4185,7 @@ function toTypedArray(a) {
     return (a instanceof Float32Array) ? a : new Float32Array(util.flatten(a));
 }
 
-},{"../util":86,"./webgl/webgl_util":58}],23:[function(require,module,exports){
+},{"../util":79,"./webgl/webgl_util":51}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var gpgpu_context_1 = require("./gpgpu_context");
@@ -4384,143 +4228,44 @@ function uploadAddScaledMatricesDownload(a, b, rows, columns, aScalar, bScalar) 
 }
 exports.uploadAddScaledMatricesDownload = uploadAddScaledMatricesDownload;
 
-},{"./gpgpu_context":35}],24:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = require("../math");
-var binaryop_gpu = require("./binaryop_gpu");
-var OperandType;
-(function (OperandType) {
-    OperandType[OperandType["MATRIX"] = 0] = "MATRIX";
-    OperandType[OperandType["SCALAR"] = 1] = "SCALAR";
-})(OperandType = exports.OperandType || (exports.OperandType = {}));
-function getFragmentShaderSource(aType, aOrientation, op, bType, bOrientation) {
-    var aUV = operandToShaderSnippet(aType, aOrientation);
-    var bUV = operandToShaderSnippet(bType, bOrientation);
-    var resultOp = "gl_FragColor = vec4(a " + op + " b, 0, 0, 0);";
-    return binaryop_gpu.getFragmentShaderSource(aUV, bUV, resultOp);
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function operandToShaderSnippet(operand, orientation) {
-    switch (operand) {
-        case OperandType.MATRIX:
-            return 'resultUV' +
-                (orientation === math_1.MatrixOrientation.REGULAR ? '.st' : '.ts');
-        case OperandType.SCALAR:
-            return 'vec2(0.5, 0.5)';
-        default:
-            throw new Error('Unknown operand type');
-    }
-}
-function addSubMulDiv(gpgpu, program, a, aShapeRowCol, b, bShapeRowCol, result, resultShapeRowCol) {
-    return binaryop_gpu.binaryOp(gpgpu, program, a, aShapeRowCol, b, bShapeRowCol, result, resultShapeRowCol);
-}
-exports.addSubMulDiv = addSubMulDiv;
-function uploadScalarPlusMatrixDownload(a, b, bShape, bOrientation) {
-    if (bOrientation === void 0) { bOrientation = math_1.MatrixOrientation.REGULAR; }
-    var src = getFragmentShaderSource(OperandType.SCALAR, math_1.MatrixOrientation.REGULAR, '+', OperandType.MATRIX, bOrientation);
-    return binaryop_gpu.uploadBinaryOpDownload(new Float32Array([a]), [1, 1], b, bShape, src);
-}
-exports.uploadScalarPlusMatrixDownload = uploadScalarPlusMatrixDownload;
-function uploadMatrixMinusScalarDownload(a, aShape, b, aOrientation) {
-    if (aOrientation === void 0) { aOrientation = math_1.MatrixOrientation.REGULAR; }
-    var src = getFragmentShaderSource(OperandType.MATRIX, aOrientation, '-', OperandType.SCALAR, math_1.MatrixOrientation.REGULAR);
-    return binaryop_gpu.uploadBinaryOpDownload(a, aShape, new Float32Array([b]), [1, 1], src);
-}
-exports.uploadMatrixMinusScalarDownload = uploadMatrixMinusScalarDownload;
-function uploadScalarMinusMatrixDownload(a, b, bShape, bOrientation) {
-    if (bOrientation === void 0) { bOrientation = math_1.MatrixOrientation.REGULAR; }
-    var src = getFragmentShaderSource(OperandType.SCALAR, math_1.MatrixOrientation.REGULAR, '-', OperandType.MATRIX, bOrientation);
-    return binaryop_gpu.uploadBinaryOpDownload(new Float32Array([a]), [1, 1], b, bShape, src);
-}
-exports.uploadScalarMinusMatrixDownload = uploadScalarMinusMatrixDownload;
-function uploadScalarTimesMatrixDownload(a, b, bShape, bOrientation) {
-    if (bOrientation === void 0) { bOrientation = math_1.MatrixOrientation.REGULAR; }
-    var src = getFragmentShaderSource(OperandType.SCALAR, math_1.MatrixOrientation.REGULAR, '*', OperandType.MATRIX, bOrientation);
-    return binaryop_gpu.uploadBinaryOpDownload(new Float32Array([a]), [1, 1], b, bShape, src);
-}
-exports.uploadScalarTimesMatrixDownload = uploadScalarTimesMatrixDownload;
-function uploadMatrixTimesMatrixDownload(a, b, shape, aOrientation, bOrientation) {
-    if (aOrientation === void 0) { aOrientation = math_1.MatrixOrientation.REGULAR; }
-    if (bOrientation === void 0) { bOrientation = math_1.MatrixOrientation.REGULAR; }
-    var src = getFragmentShaderSource(OperandType.MATRIX, aOrientation, '*', OperandType.MATRIX, bOrientation);
-    return binaryop_gpu.uploadBinaryOpDownload(a, shape, b, shape, src);
-}
-exports.uploadMatrixTimesMatrixDownload = uploadMatrixTimesMatrixDownload;
-function uploadMatrixPlusMatrixDownload(a, b, shape, aOrientation, bOrientation) {
-    if (aOrientation === void 0) { aOrientation = math_1.MatrixOrientation.REGULAR; }
-    if (bOrientation === void 0) { bOrientation = math_1.MatrixOrientation.REGULAR; }
-    var src = getFragmentShaderSource(OperandType.MATRIX, aOrientation, '+', OperandType.MATRIX, bOrientation);
-    return binaryop_gpu.uploadBinaryOpDownload(a, shape, b, shape, src);
-}
-exports.uploadMatrixPlusMatrixDownload = uploadMatrixPlusMatrixDownload;
-
-},{"../math":19,"./binaryop_gpu":29}],25:[function(require,module,exports){
+},{"./gpgpu_context":33}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var argminmax_gpu = require("./argminmax_gpu");
-function getFragmentShaderPrologueSource() {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    uniform sampler2D matrixB;\n    varying vec2 resultUV;";
-}
-function getFragmentShaderMainSource() {
-    return "\n    void main() {\n      float argMaxA = getArgMinMax(matrixA);\n      float argMaxB = getArgMinMax(matrixB);\n      float value;\n      if (isNaN(argMaxA)) {\n        value = argMaxA;\n      } else if (isNaN(argMaxB)) {\n        value = argMaxB;\n      } else {\n        value = float(argMaxA == argMaxB);\n      }\n      gl_FragColor = vec4(value, 0, 0, 0);\n    }";
-}
-function getArgMaxEqualsFragmentShaderSource(rows, columns) {
-    return [
-        getFragmentShaderPrologueSource(),
-        argminmax_gpu.getFragmentShaderGetArgMinMaxSource('>', rows, columns),
-        getFragmentShaderMainSource()
-    ].join('\n');
-}
-exports.getArgMaxEqualsFragmentShaderSource = getArgMaxEqualsFragmentShaderSource;
-function argMaxEquals(gpgpu, maxEqualsProgram, a, b, numRows, numCols, result) {
-    gpgpu.setOutputMatrixTexture(result, 1, 1);
-    gpgpu.setProgram(maxEqualsProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.setInputMatrixTexture(b, 'matrixB', 1);
-    gpgpu.executeProgram();
-}
-exports.argMaxEquals = argMaxEquals;
+var ArgMaxEqualsProgram = (function () {
+    function ArgMaxEqualsProgram(aSize, bSize) {
+        this.variableNames = ['A', 'B'];
+        this.outputShape = [];
+        this.params = [];
+        var aSnippet = argminmax_gpu.getArgMinMaxSnippet('max', 'A', aSize);
+        var bSnippet = argminmax_gpu.getArgMinMaxSnippet('max', 'B', bSize);
+        this.userCode = "\n      " + aSnippet + "\n      " + bSnippet + "\n\n      void main() {\n        float argMaxA = getArgMinMaxA();\n        float argMaxB = getArgMinMaxB();\n\n        float value;\n        if (isNaN(argMaxA)) {\n          value = argMaxA;\n        } else if (isNaN(argMaxB)) {\n          value = argMaxB;\n        } else {\n          value = float(argMaxA == argMaxB);\n        }\n\n        setOutput(value);\n      }\n    ";
+    }
+    return ArgMaxEqualsProgram;
+}());
+exports.ArgMaxEqualsProgram = ArgMaxEqualsProgram;
 
-},{"./argminmax_gpu":26}],26:[function(require,module,exports){
+},{"./argminmax_gpu":25}],25:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var webgl_util_1 = require("./webgl_util");
-function getFragmentShaderPrologueSource() {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    varying vec2 resultUV;";
+function getArgMinMaxSnippet(op, texName, size) {
+    var compOp = (op === 'min') ? '<' : '>';
+    return "\n    float getArgMinMax" + texName + "() {\n      float bestIndex = 0.0;\n      float bestValue = get" + texName + "Flat(0.0);\n\n      for (int i = 0; i < " + size + "; i++) {\n        float i_float = float(i);\n        float candidate = get" + texName + "Flat(i_float);\n        if (isNaN(candidate)) {\n          return candidate;\n        }\n        if (candidate " + compOp + " bestValue) {\n          bestValue = candidate;\n          bestIndex = i_float;\n        }\n      }\n      return bestIndex;\n    }\n  ";
 }
-exports.getFragmentShaderPrologueSource = getFragmentShaderPrologueSource;
-function getFragmentShaderMainSource() {
-    return "\n    void main() {\n      gl_FragColor = vec4(getArgMinMax(matrixA), 0, 0, 0);\n    }";
-}
-function getArgMinMaxFragmentShaderSource(rows, columns, compOp) {
-    return [
-        getFragmentShaderPrologueSource(),
-        getFragmentShaderGetArgMinMaxSource(compOp, rows, columns),
-        getFragmentShaderMainSource()
-    ].join('\n');
-}
-function getArgMinFragmentShaderSource(rows, columns) {
-    return getArgMinMaxFragmentShaderSource(rows, columns, '<');
-}
-exports.getArgMinFragmentShaderSource = getArgMinFragmentShaderSource;
-function getArgMaxFragmentShaderSource(rows, columns) {
-    return getArgMinMaxFragmentShaderSource(rows, columns, '>');
-}
-exports.getArgMaxFragmentShaderSource = getArgMaxFragmentShaderSource;
-function getFragmentShaderGetArgMinMaxSource(compOp, rows, columns) {
-    return "\n    const vec2 dimCR = vec2(" + columns + ".0, " + rows + ".0);\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    " + webgl_util_1.IS_NAN_SHADER_FUNC + "\n\n    float getArgMinMax(in sampler2D matrix) {\n      vec2 bestCR = vec2(0, 0);\n      float bestValue = texture2D(matrix, bestCR).r;\n\n      for (int c = 0; c < " + columns + "; c++) {\n        for (int r = 0; r < " + rows + "; r++) {\n          vec2 cr = vec2(c, r);\n          vec2 uv = (cr + halfCR) / dimCR;\n          float value = texture2D(matrix, uv).r;\n          if (isNaN(value)) {\n            return value;\n          }\n          if (value " + compOp + " bestValue) {\n            bestValue = value;\n            bestCR = cr;\n          }\n        }\n      }\n      return bestCR.x + (bestCR.y * dimCR.x);\n    }\n  ";
-}
-exports.getFragmentShaderGetArgMinMaxSource = getFragmentShaderGetArgMinMaxSource;
-function argMinMax(gpgpu, minMaxProgram, a, aNumRows, aNumCols, result) {
-    gpgpu.setOutputMatrixTexture(result, 1, 1);
-    gpgpu.setProgram(minMaxProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.executeProgram();
-}
-exports.argMinMax = argMinMax;
+exports.getArgMinMaxSnippet = getArgMinMaxSnippet;
+var ArgMinMaxProgram = (function () {
+    function ArgMinMaxProgram(aSize, opType) {
+        this.variableNames = ['A'];
+        this.outputShape = [];
+        this.params = [opType];
+        var aSnippet = getArgMinMaxSnippet(opType, 'A', aSize);
+        this.userCode = "\n      " + aSnippet + "\n\n      void main() {\n        setOutput(getArgMinMaxA());\n      }\n    ";
+    }
+    return ArgMinMaxProgram;
+}());
+exports.ArgMinMaxProgram = ArgMinMaxProgram;
 
-},{"./webgl_util":58}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var pool_gpu = require("./pool_gpu");
@@ -4533,7 +4278,7 @@ function avgPool(gpgpu, program, x, result, resultShapeRowCol) {
 }
 exports.avgPool = avgPool;
 
-},{"./pool_gpu":45}],28:[function(require,module,exports){
+},{"./pool_gpu":42}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getFragmentShaderSource(xTexShapeRC, meanTexShapeRC, varianceTexShapeRC, offsetTexShapeRC, scaleTexShapeRC, varianceEpsilon) {
@@ -4588,43 +4333,23 @@ function batchNormalization(gpgpu, program, x, xShapeRowCol, mean, meanShapeRowC
 }
 exports.batchNormalization = batchNormalization;
 
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var gpgpu_context_1 = require("./gpgpu_context");
-function getFragmentShaderSource(aResultUV, bResultUV, op) {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    uniform sampler2D matrixB;\n    varying vec2 resultUV;\n\n    void main() {\n      float a = texture2D(matrixA, " + aResultUV + ").r;\n      float b = texture2D(matrixB, " + bResultUV + ").r;\n      " + op + "\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function binaryOp(gpgpu, program, a, aShapeRowCol, b, bShapeRowCol, result, resultShapeRowCol) {
-    gpgpu.setOutputMatrixTexture(result, resultShapeRowCol[0], resultShapeRowCol[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.setInputMatrixTexture(b, 'matrixB', 1);
-    gpgpu.executeProgram();
-}
-exports.binaryOp = binaryOp;
-function uploadBinaryOpDownload(a, aShape, b, bShape, fragmentShaderSource) {
-    var gpgpu = new gpgpu_context_1.GPGPUContext();
-    var program = gpgpu.createProgram(fragmentShaderSource);
-    var aTexture = gpgpu.createMatrixTexture(aShape[0], aShape[1]);
-    var bTexture = gpgpu.createMatrixTexture(bShape[0], bShape[1]);
-    var resultShape = [Math.max(aShape[0], bShape[0]), Math.max(aShape[1], bShape[1])];
-    var resultTexture = gpgpu.createMatrixTexture(resultShape[0], resultShape[1]);
-    gpgpu.uploadMatrixToTexture(aTexture, aShape[0], aShape[1], a);
-    gpgpu.uploadMatrixToTexture(bTexture, bShape[0], bShape[1], b);
-    binaryOp(gpgpu, program, aTexture, aShape, bTexture, bShape, resultTexture, resultShape);
-    var result = gpgpu.downloadMatrixFromTexture(resultTexture, resultShape[0], resultShape[1]);
-    gpgpu.deleteMatrixTexture(aTexture);
-    gpgpu.deleteMatrixTexture(bTexture);
-    gpgpu.deleteMatrixTexture(resultTexture);
-    gpgpu.deleteProgram(program);
-    gpgpu.dispose();
-    return result;
-}
-exports.uploadBinaryOpDownload = uploadBinaryOpDownload;
+var util = require("../../util");
+var BinaryOpProgram = (function () {
+    function BinaryOpProgram(op, aShape, bShape) {
+        this.variableNames = ['A', 'B'];
+        this.supportsBroadcasting = true;
+        this.params = [op];
+        this.outputShape = util.assertAndGetBroadcastedShape(aShape, bShape);
+        this.userCode = "\n      void main() {\n        float a = getAAtOutCoords();\n        float b = getBAtOutCoords();\n        setOutput(a " + op + " b);\n      }\n    ";
+    }
+    return BinaryOpProgram;
+}());
+exports.BinaryOpProgram = BinaryOpProgram;
 
-},{"./gpgpu_context":35}],30:[function(require,module,exports){
+},{"../../util":79}],29:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
@@ -4645,7 +4370,7 @@ function concat3D(gpgpu, program, x1, x2, result, resultShapeRC) {
 }
 exports.concat3D = concat3D;
 
-},{"../conv_util":16}],31:[function(require,module,exports){
+},{"../conv_util":16}],30:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
@@ -4661,7 +4386,7 @@ function getFragmentShaderDerWeightsSource(xShapeRowColDepth, fSize, outputDepth
     var fSizeTimesInputDepth = fSize * inputDepth;
     var prologue = "\n    precision highp float;\n    uniform sampler2D x;\n    uniform sampler2D dy;\n  ";
     return prologue + '\n' + getMatrixValueOrZeroPad + '\n' +
-        ("\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 dyShapeCR = vec2(" + yTexShapeRC[1] + ", " + yTexShapeRC[0] + ");\n\n    void main() {\n      vec2 wTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (wTexR, wTexC) to 4D (wR, wC, d1, d2).\n      float wR = floor(wTexCR.y / " + fSizeTimesInputDepth + ".0);\n      float wTexRLeftover = wTexCR.y - wR * " + fSizeTimesInputDepth + ".0;\n      float wC = floor(wTexRLeftover / " + inputDepth + ".0);\n      float d1 = mod(wTexRLeftover, " + inputDepth + ".0);\n      float d2 = wTexCR.x;\n\n      // Convolve x(?, ?, d1) with dy(:, :, d2) to get dw(wR, wC, d1, d2).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int yR = 0; yR < " + yNumRows + "; yR++) {\n        float yTexR = float(yR);\n        float xR = wR + yTexR * " + stride + ".0 - " + zeroPad + ".0;\n        float xTexR = xR;\n\n        for (int yC = 0; yC < " + yNumCols + "; yC++) {\n          float yC_float = float(yC);\n          float xC = wC + yC_float * " + stride + ".0 - " + zeroPad + ".0;\n\n          // Map from 3D (xR, xC, d1) to 2D (xTexR, xTexC).\n          // Map from 3D (yR, yC, d2) to 2D (yTexR, yTexC).\n          vec2 xyTexC = vec2(xC, yC_float) * vec2(" + inputDepth + ".0, " + outputDepth + ".0) +\n                        vec2(d1, d2);\n          float xTexC = xyTexC.x;\n          float yTexC = xyTexC.y;\n\n          // Read dy(yR, yC, d2).\n          vec2 dyUV = (vec2(yTexC, yTexR) + halfCR) / dyShapeCR;\n          float dyValue = texture2D(dy, dyUV).r;\n\n          // Read x(xR, xC, d1) (potentially zero-padded).\n          float xValue =\n            getMatrixValueOrZeroPad(x, xShapeCR, vec2(xTexC, xTexR));\n\n          dotProd += (xValue * dyValue);\n        }\n      }\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }");
+        ("\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 dyShapeCR = vec2(" + yTexShapeRC[1] + ", " + yTexShapeRC[0] + ");\n\n    void main() {\n      vec2 wTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (wTexR, wTexC) to 4D (wR, wC, d1, d2).\n      float wR = floor(wTexCR.y / " + fSizeTimesInputDepth + ".0);\n      float wTexRLeftover = wTexCR.y - wR * " + fSizeTimesInputDepth + ".0;\n      float wC = floor(wTexRLeftover / " + inputDepth + ".0);\n      float d1 = mod(wTexRLeftover, " + inputDepth + ".0);\n      float d2 = wTexCR.x;\n\n      // Convolve x(?, ?, d1) with dy(:, :, d2) to get dw(wR, wC, d1, d2).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int yR = 0; yR < " + yNumRows + "; yR++) {\n        float yTexR = float(yR);\n        float xR = wR + yTexR * " + stride + ".0 - " + zeroPad + ".0;\n        float xTexR = xR;\n\n        for (int yC = 0; yC < " + yNumCols + "; yC++) {\n          float yC_float = float(yC);\n          float xC = wC + yC_float * " + stride + ".0 - " + zeroPad + ".0;\n\n          // Map from 3D (xR, xC, d1) to 2D (xTexR, xTexC).\n          // Map from 3D (yR, yC, d2) to 2D (yTexR, yTexC).\n          vec2 xyTexC =\n              vec2(xC, yC_float) * vec2(" + inputDepth + ".0, " + outputDepth + ".0) +\n              vec2(d1, d2);\n          float xTexC = xyTexC.x;\n          float yTexC = xyTexC.y;\n\n          // Read dy(yR, yC, d2).\n          vec2 dyUV = (vec2(yTexC, yTexR) + halfCR) / dyShapeCR;\n          float dyValue = texture2D(dy, dyUV).r;\n\n          // Read x(xR, xC, d1) (potentially zero-padded).\n          float xValue =\n            getMatrixValueOrZeroPad(x, xShapeCR, vec2(xTexC, xTexR));\n\n          dotProd += (xValue * dyValue);\n        }\n      }\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }");
 }
 exports.getFragmentShaderDerWeightsSource = getFragmentShaderDerWeightsSource;
 function getFragmentShaderConvTransposeSource(xShapeRCD, fSize, origInputDepth, origStride, origPad, hasBias) {
@@ -4712,7 +4437,7 @@ function convTranspose(gpgpu, program, xTex, weightsTex, biasesTex, resultTex, r
 }
 exports.convTranspose = convTranspose;
 
-},{"../conv_util":16,"./conv_gpu":32}],32:[function(require,module,exports){
+},{"../conv_util":16,"./conv_gpu":31}],31:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
@@ -4725,7 +4450,7 @@ function getFragmentShaderGetMatrixValueOrZeroPadSource() {
 }
 exports.getFragmentShaderGetMatrixValueOrZeroPadSource = getFragmentShaderGetMatrixValueOrZeroPadSource;
 function getFragmentShaderConvolveSource(xShapeRCD, fSize, outputDepth, stride, pad, hasBias) {
-    var xRows = xShapeRCD[0], xCols = xShapeRCD[1], inputDepth = xShapeRCD[2];
+    var inputDepth = xShapeRCD[2];
     var xTexShapeRC = conv_util.computeTexShapeFrom3D(xShapeRCD);
     var wTexShapeRC = conv_util.computeWeightsTexShape(inputDepth, outputDepth, fSize);
     return "\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 wShapeCR = vec2(" + wTexShapeRC[1] + ", " + wTexShapeRC[0] + ");\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d2).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + outputDepth + ".0);\n      float d2 = mod(yTexCR.x, " + outputDepth + ".0);\n      float wTexC = d2;\n\n      vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ", " + stride + ") -\n          vec2(" + pad + ".0, " + pad + ".0);\n      float xRCorner = xRCCorner.x;\n      float xCCorner = xRCCorner.y;\n\n      // Convolve x(?, ?, d1) with w(:, :, d1, d2) to get y(yR, yC, d2).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float xR = xRCorner + wR_float;\n        float xTexR = xR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float xC = xCCorner + wC_float;\n\n          for (int d1 = 0; d1 < " + inputDepth + "; d1++) {\n            float d1_float = float(d1);\n            float xTexC = xC * " + inputDepth + ".0 + d1_float;\n            float wTexR = wR_float * " + fSize * inputDepth + ".0 +\n                wC_float * " + inputDepth + ".0 + d1_float;\n\n            float xValue =\n                getMatrixValueOrZeroPad(x, xShapeCR, vec2(xTexC, xTexR));\n\n            // Read w(wR, wC, d1, d2).\n            vec2 wUV = (vec2(wTexC, wTexR) + halfCR) / wShapeCR;\n            float wValue = texture2D(weights, wUV).r;\n\n            dotProd += xValue * wValue;\n          }\n        }\n      }\n      if (" + hasBias + ") {\n        dotProd += getBiasValue(biases, d2);\n      }\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }";
@@ -4736,8 +4461,6 @@ function getFragmentShaderGetBiasValueSource(outputDepth) {
 }
 exports.getFragmentShaderGetBiasValueSource = getFragmentShaderGetBiasValueSource;
 function getFragmentShaderSource(aShapeRowColDepth, resultDepth, fieldSize, stride, zeroPad, hasBias) {
-    var aShapeRC = conv_util.computeTexShapeFrom3D(aShapeRowColDepth);
-    var weightShapeRC = conv_util.computeWeightsTexShape(aShapeRowColDepth[2], resultDepth, fieldSize);
     var prologue = getFragmentShaderPrologueSource();
     var getMatrixValueOrZeroPad = getFragmentShaderGetMatrixValueOrZeroPadSource();
     var convolve = getFragmentShaderConvolveSource(aShapeRowColDepth, fieldSize, resultDepth, stride, zeroPad, hasBias);
@@ -4762,7 +4485,7 @@ function convolve(gpgpu, program, a, weights, biases, result, resultShapeRowCol)
 }
 exports.convolve = convolve;
 
-},{"../conv_util":16}],33:[function(require,module,exports){
+},{"../conv_util":16}],32:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getFragmentShaderSource(sourceShapeRowCol, sourceSizeRowCol, destSizeRowCol) {
@@ -4782,27 +4505,7 @@ function copy(gpgpu, program, source, sourceShapeRowCol, sourceStartRowCol, sour
 }
 exports.copy = copy;
 
-},{}],34:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getExpUnaryOp() {
-    return 'gl_FragColor = vec4(exp(value), 0, 0, 0);';
-}
-function getFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getExpUnaryOp());
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function exp(gpgpu, expProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, expProgram, a, rows, columns, result);
-}
-exports.exp = exp;
-function uploadExpDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getExpUnaryOp());
-}
-exports.uploadExpDownload = uploadExpDownload;
-
-},{"./unaryop_gpu":57}],35:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var gpgpu_util = require("./gpgpu_util");
@@ -5026,7 +4729,79 @@ var GPGPUContext = (function () {
 }());
 exports.GPGPUContext = GPGPUContext;
 
-},{"./gpgpu_util":36,"./tex_util":54,"./webgl_util":58}],36:[function(require,module,exports){
+},{"./gpgpu_util":35,"./tex_util":48,"./webgl_util":51}],34:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var shader_compiler = require("./shader_compiler");
+var util = require("../../util");
+function compileProgram(gpgpu, program, inputs, output) {
+    var userCode = program.userCode;
+    var inputInfos = program.variableNames.map(function (x, i) {
+        var shapeInfo = {
+            logicalShape: inputs[i].shape,
+            texShape: inputs[i].getTextureShapeRC()
+        };
+        return { name: x, shapeInfo: shapeInfo };
+    });
+    var inShapeInfos = inputInfos.map(function (x) { return x.shapeInfo; });
+    var outShapeInfo = {
+        logicalShape: output.shape,
+        texShape: output.getTextureShapeRC()
+    };
+    var source = shader_compiler.makeShader(inputInfos, outShapeInfo, userCode, program.supportsBroadcasting === true);
+    return {
+        program: program,
+        source: source,
+        webGLProgram: gpgpu.createProgram(source),
+        gpgpu: gpgpu,
+        inShapeInfos: inShapeInfos,
+        outShapeInfo: outShapeInfo
+    };
+}
+exports.compileProgram = compileProgram;
+function validateBinaryAndProgram(shapeInfos, bArrays) {
+    shapeInfos.forEach(function (s, i) {
+        var shapeA = s.logicalShape;
+        var texShapeA = s.texShape;
+        var shapeB = bArrays[i].shape;
+        var texShapeB = bArrays[i].getTextureShapeRC();
+        if (!util.arraysEqual(shapeA, shapeB)) {
+            throw Error("Binary was compiled with different shapes than " +
+                ("the current args. Shapes " + shapeA + " and " + shapeB + " must match"));
+        }
+        if (!util.arraysEqual(texShapeA, texShapeB)) {
+            throw Error("Binary was compiled with different texture shapes than the" +
+                (" current args. Shape " + texShapeA + " and " + texShapeB + " must match"));
+        }
+    });
+}
+function runProgram(binary, inputs, output) {
+    validateBinaryAndProgram(binary.inShapeInfos, inputs);
+    validateBinaryAndProgram([binary.outShapeInfo], [output]);
+    var outTex = output.getTexture();
+    var outTexShape = output.getTextureShapeRC();
+    var gpgpu = binary.gpgpu;
+    gpgpu.setOutputMatrixTexture(outTex, outTexShape[0], outTexShape[1]);
+    gpgpu.setProgram(binary.webGLProgram);
+    inputs.forEach(function (input, i) {
+        var tex = input.getTexture();
+        gpgpu.setInputMatrixTexture(tex, binary.program.variableNames[i], i);
+    });
+    gpgpu.executeProgram();
+}
+exports.runProgram = runProgram;
+function makeShaderKey(program, inputs, output) {
+    var params = program.params;
+    var keyStart = inputs.concat(output).map(function (x) { return x.shape + '_' + x.getTextureShapeRC(); });
+    var keyEnd = params.map(function (p) { return p.toString(); });
+    var key = [program.constructor.name];
+    key.push((program.supportsBroadcasting === true).toString());
+    key = key.concat(keyStart, keyEnd);
+    return key.join('_');
+}
+exports.makeShaderKey = makeShaderKey;
+
+},{"../../util":79,"./shader_compiler":47}],35:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tex_util = require("./tex_util");
@@ -5178,7 +4953,6 @@ function downloadMatrixFromOutputTexture(gl, rows, columns) {
     var _a = tex_util.getUnpackedMatrixTextureShapeWidthHeight(rows, columns), w = _a[0], h = _a[1];
     var channelsPerTexture = 4;
     var unpackedArray = new Float32Array(tex_util.getUnpackedArraySizeFromMatrixSize(rows * columns, channelsPerTexture));
-    var textureFormat = getTextureFormat(gl, channelsPerTexture);
     webgl_util.callAndCheck(gl, function () { return gl.readPixels(0, 0, w, h, gl.RGBA, gl.FLOAT, unpackedArray); });
     var matrix = new Float32Array(rows * columns);
     tex_util.decodeMatrixFromUnpackedArray(unpackedArray, matrix, channelsPerTexture);
@@ -5194,58 +4968,21 @@ function downloadMatrixFromPackedOutputTexture(gl, rows, columns) {
 }
 exports.downloadMatrixFromPackedOutputTexture = downloadMatrixFromPackedOutputTexture;
 
-},{"./tex_util":54,"./webgl_util":58}],37:[function(require,module,exports){
+},{"./tex_util":48,"./webgl_util":51}],36:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getLogUnaryOp() {
-    return 'gl_FragColor = vec4(log(value), 0, 0, 0);';
-}
-function getFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getLogUnaryOp());
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function log(gpgpu, logProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, logProgram, a, rows, columns, result);
-}
-exports.log = log;
-function uploadLogDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getLogUnaryOp());
-}
-exports.uploadLogDownload = uploadLogDownload;
+var LogSumExpProgram = (function () {
+    function LogSumExpProgram(aSize) {
+        this.variableNames = ['A'];
+        this.params = [];
+        this.outputShape = [];
+        this.userCode = "\n      void main() {\n        float aMax = getAFlat(0.0);\n        for (int i = 0; i < " + aSize + "; i++) {\n          aMax = max(aMax, getAFlat(float(i)));\n        }\n\n        float expSum = 0.0;\n        for (int i = 0; i < " + aSize + "; i++) {\n          expSum += exp(getAFlat(float(i)) - aMax);\n        }\n\n        setOutput(aMax + log(expSum));\n      }\n    ";
+    }
+    return LogSumExpProgram;
+}());
+exports.LogSumExpProgram = LogSumExpProgram;
 
-},{"./unaryop_gpu":57}],38:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var gpgpu_context_1 = require("./gpgpu_context");
-function getFragmentShaderSource(rows, columns) {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    varying vec2 resultUV;\n\n    const vec2 aDimCR = vec2(" + columns + ".0, " + rows + ".0);\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    void main() {\n      float aMax = texture2D(matrixA, halfCR / aDimCR).r;\n      for (int r = 0; r < " + rows + "; r++) {\n        for (int c = 0; c < " + columns + "; c++) {\n          vec2 uv = (vec2(c, r) + halfCR) / aDimCR;\n          float aCur = texture2D(matrixA, uv).r;\n          aMax = max(aMax, aCur);\n        }\n      }\n\n      float expSum = 0.0;\n      for (int r = 0; r < " + rows + "; r++) {\n        for (int c = 0; c < " + columns + "; c++) {\n          vec2 uv = (vec2(c, r) + halfCR) / aDimCR;\n          float aCur = texture2D(matrixA, uv).r;\n          expSum += exp(aCur - aMax);\n        }\n      }\n\n      gl_FragColor = vec4(aMax + log(expSum), 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function logSumExp(gpgpu, logSumExpProgram, a, rows, columns, result) {
-    gpgpu.setOutputMatrixTexture(result, 1, 1);
-    gpgpu.setProgram(logSumExpProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.executeProgram();
-}
-exports.logSumExp = logSumExp;
-function uploadLogSumExpDownload(a, rows, columns) {
-    var gpgpu = new gpgpu_context_1.GPGPUContext();
-    var program = gpgpu.createProgram(getFragmentShaderSource(rows, columns));
-    var aTexture = gpgpu.createMatrixTexture(rows, columns);
-    var resultTexture = gpgpu.createMatrixTexture(1, 1);
-    gpgpu.uploadMatrixToTexture(aTexture, rows, columns, a);
-    logSumExp(gpgpu, program, aTexture, rows, columns, resultTexture);
-    var result = gpgpu.downloadMatrixFromTexture(resultTexture, 1, 1);
-    gpgpu.deleteMatrixTexture(aTexture);
-    gpgpu.deleteMatrixTexture(resultTexture);
-    gpgpu.deleteProgram(program);
-    gpgpu.dispose();
-    return result[0];
-}
-exports.uploadLogSumExpDownload = uploadLogSumExpDownload;
-
-},{"./gpgpu_context":35}],39:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
@@ -5266,7 +5003,7 @@ function maxPoolBackprop(gpgpu, program, dyTex, maxPositionsTex, resultTex, resu
 }
 exports.maxPoolBackprop = maxPoolBackprop;
 
-},{"../conv_util":16}],40:[function(require,module,exports){
+},{"../conv_util":16}],38:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var pool_gpu = require("./pool_gpu");
@@ -5286,7 +5023,7 @@ function maxPoolCommon(gpgpu, program, x, result, resultShapeRowCol) {
 }
 exports.maxPoolCommon = maxPoolCommon;
 
-},{"./pool_gpu":45}],41:[function(require,module,exports){
+},{"./pool_gpu":42}],39:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var pool_gpu = require("./pool_gpu");
@@ -5299,79 +5036,48 @@ function minPool(gpgpu, program, x, result, resultShapeRowCol) {
 }
 exports.minPool = minPool;
 
-},{"./pool_gpu":45}],42:[function(require,module,exports){
+},{"./pool_gpu":42}],40:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var webgl_util_1 = require("./webgl_util");
-function getFragmentShaderSource(rows, columns, compOp) {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    varying vec2 outputColumnRow;\n\n    const vec2 aDimCR = vec2(" + columns + ".0, " + rows + ".0);\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    " + webgl_util_1.IS_NAN_SHADER_FUNC + "\n\n    void main() {\n      float value = texture2D(matrixA, halfCR / aDimCR).r;\n      for (int r = 0; r < " + rows + "; r++) {\n        for (int c = 0; c < " + columns + "; c++) {\n          vec2 cr = vec2(c, r);\n          vec2 uv = (cr + halfCR) / aDimCR;\n          float candidate = texture2D(matrixA, uv).r;\n          if (isNaN(candidate)) {\n            gl_FragColor = vec4(candidate, 0, 0, 0);\n            return;\n          }\n          value = " + compOp + "(value, candidate);\n        }\n      }\n      gl_FragColor = vec4(value, 0, 0, 0);\n    }";
-}
-function getMinFragmentShaderSource(rows, columns) {
-    return getFragmentShaderSource(rows, columns, 'min');
-}
-exports.getMinFragmentShaderSource = getMinFragmentShaderSource;
-function getMaxFragmentShaderSource(rows, columns) {
-    return getFragmentShaderSource(rows, columns, 'max');
-}
-exports.getMaxFragmentShaderSource = getMaxFragmentShaderSource;
-function minMax(gpgpu, minMaxProgram, a, rows, columns, result) {
-    gpgpu.setOutputMatrixTexture(result, 1, 1);
-    gpgpu.setProgram(minMaxProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.executeProgram();
-}
-exports.minMax = minMax;
+var MinMaxProgram = (function () {
+    function MinMaxProgram(aSize, opType) {
+        this.variableNames = ['A'];
+        this.outputShape = [];
+        this.params = [opType];
+        this.userCode = "\n      void main() {\n        float value = getAFlat(0.0);\n        for (int i = 0; i < " + aSize + "; i++) {\n          float candidate = getAFlat(float(i));\n          if (isNaN(candidate)) {\n            setOutput(candidate);\n            return;\n          }\n          value = " + opType + "(value, candidate);\n        }\n        setOutput(value);\n      }\n    ";
+    }
+    return MinMaxProgram;
+}());
+exports.MinMaxProgram = MinMaxProgram;
 
-},{"./webgl_util":58}],43:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = require("../math");
-var shader_compiler = require("./shader_compiler");
-function getFragmentShader(a, b, out, aOrientation, bOrientation) {
-    var sharedDim = (aOrientation === math_1.MatrixOrientation.REGULAR ? a.shape[1] : a.shape[0]);
-    var aSnippet = (aOrientation === math_1.MatrixOrientation.REGULAR) ?
-        'aRow, i_float' : 'i_float, aRow';
-    var bSnippet = (bOrientation === math_1.MatrixOrientation.REGULAR) ?
-        'i_float, bCol' : 'bCol, i_float';
-    var inputs = [{ name: 'matrixA', array: a }, { name: 'matrixB', array: b }];
-    var userCode = "\n    const int sharedDim = " + sharedDim + ";\n\n    float dotARowBCol(float aRow, float bCol) {\n      float result = 0.0;\n      for (int i = 0; i < sharedDim; i++) {\n        float i_float = float(i);\n        float a = getMatrixA(" + aSnippet + ");\n        float b = getMatrixB(" + bSnippet + ");\n        result += (a * b);\n      }\n      return result;\n    }\n\n    void main() {\n      vec2 resRC = getOutputCoords();\n      setOutput(dotARowBCol(resRC.x, resRC.y));\n    }\n  ";
-    return shader_compiler.makeShader(inputs, out, userCode);
-}
-exports.getFragmentShader = getFragmentShader;
-function multiplyMatrix(gpgpu, multiplyProgram, a, b, result, outTexShape) {
-    gpgpu.setOutputMatrixTexture(result, outTexShape[0], outTexShape[1]);
-    gpgpu.setProgram(multiplyProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.setInputMatrixTexture(b, 'matrixB', 1);
-    gpgpu.executeProgram();
-}
-exports.multiplyMatrix = multiplyMatrix;
+var MatMulProgram = (function () {
+    function MatMulProgram(aShape, bShape, aOrient, bOrient) {
+        if (aOrient === void 0) { aOrient = math_1.MatrixOrientation.REGULAR; }
+        if (bOrient === void 0) { bOrient = math_1.MatrixOrientation.REGULAR; }
+        this.variableNames = ['matrixA', 'matrixB'];
+        this.params = [aOrient, bOrient];
+        var outerShapeA = (aOrient === math_1.MatrixOrientation.REGULAR) ? aShape[0] : aShape[1];
+        var outerShapeB = (bOrient === math_1.MatrixOrientation.REGULAR) ? bShape[1] : bShape[0];
+        this.outputShape = [outerShapeA, outerShapeB];
+        var sharedDim = (aOrient === math_1.MatrixOrientation.REGULAR ? aShape[1] : aShape[0]);
+        var aSnippet = (aOrient === math_1.MatrixOrientation.REGULAR) ?
+            'aRow, i_float' : 'i_float, aRow';
+        var bSnippet = (bOrient === math_1.MatrixOrientation.REGULAR) ?
+            'i_float, bCol' : 'bCol, i_float';
+        this.userCode = "\n      const int sharedDim = " + sharedDim + ";\n\n      float dotARowBCol(float aRow, float bCol) {\n        float result = 0.0;\n        for (int i = 0; i < sharedDim; i++) {\n          float i_float = float(i);\n          float a = getMatrixA(" + aSnippet + ");\n          float b = getMatrixB(" + bSnippet + ");\n          result += (a * b);\n        }\n        return result;\n      }\n\n      void main() {\n        vec2 resRC = getOutputCoords();\n        setOutput(dotARowBCol(resRC.x, resRC.y));\n      }\n    ";
+    }
+    return MatMulProgram;
+}());
+exports.MatMulProgram = MatMulProgram;
 
-},{"../math":19,"./shader_compiler":51}],44:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getNegUnaryOp() {
-    return 'gl_FragColor = vec4(-value, 0, 0, 0);';
-}
-function getFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getNegUnaryOp());
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function neg(gpgpu, program, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, program, a, rows, columns, result);
-}
-exports.neg = neg;
-function uploadNegDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getNegUnaryOp());
-}
-exports.uploadNegDownload = uploadNegDownload;
-
-},{"./unaryop_gpu":57}],45:[function(require,module,exports){
+},{"../math":19}],42:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
-var webgl_util_1 = require("./webgl_util");
 function getFragmentShaderPoolCommonSource(xShapeRCD, fSize, stride, pad, poolType, computePositions) {
     if (poolType === 'avg' && computePositions) {
         throw new Error('Cannot compute positions for average pool.');
@@ -5385,7 +5091,7 @@ function getFragmentShaderPoolCommonSource(xShapeRCD, fSize, stride, pad, poolTy
     else if (poolType === 'avg') {
         returnValue = 'avgValue';
     }
-    return "\n    precision highp float;\n    uniform sampler2D x;\n    varying vec2 resultUV;\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n\n    " + webgl_util_1.IS_NAN_SHADER_FUNC + "\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d2).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + depth + ".0);\n      float d = mod(yTexCR.x, " + depth + ".0);\n\n      vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ", " + stride + ") -\n          vec2(" + pad + ".0, " + pad + ".0);\n      float xRCorner = xRCCorner.x;\n      float xCCorner = xRCCorner.y;\n\n      // max/min x(?, ?, d) to get y(yR, yC, d).\n      // ? = to be determined\n      float minMaxValue = 0.0;\n      float minMaxValueFound = 0.0;\n      float minMaxPosition = 0.0;\n      float avgValue = 0.0;\n\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float xR = xRCorner + wR_float;\n        float xTexR = xR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float xC = xCCorner + wC_float;\n          float xTexC = xC * " + depth + ".0 + d;\n\n          vec2 texCR = vec2(xTexC, xTexR);\n\n          // Check if the requested UV is invalid.\n          vec2 uv = (texCR + halfCR) / xShapeCR;\n          bool lessThanZero = any(lessThan(uv, vec2(0, 0)));\n          bool greaterThanOne = any(greaterThan(uv, vec2(1, 1)));\n          bool outside = lessThanZero || greaterThanOne;\n          if (outside) {\n            continue;\n          }\n\n          float value = texture2D(x, uv).r;\n          if (isNaN(value)) {\n            gl_FragColor = vec4(value, 0, 0, 0);\n            return;\n          }\n          if (" + (poolType === 'avg') + ") {\n            avgValue += value / " + fSize * fSize + ".0;\n          } else {\n            // If a min / max value has already been found, use it. If not, use\n            // the current value.\n            float currentMinMaxValue = mix(\n                value, minMaxValue, minMaxValueFound);\n            if (value " + (poolType === 'min' ? '<=' : '>=') + " currentMinMaxValue) {\n              minMaxValue = value;\n              minMaxValueFound = 1.0;\n              if (" + computePositions + ") {\n                minMaxPosition = wR_float * " + fSize + ".0 + wC_float;\n              }\n            }\n          }\n        }\n      }\n      gl_FragColor = vec4(" + returnValue + ", 0, 0, 0);\n    }";
+    return "\n    precision highp float;\n    uniform sampler2D x;\n    varying vec2 resultUV;\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n\n    bool isNaN(float val) {\n      return val == val ? false : true;\n    }\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d2).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + depth + ".0);\n      float d = mod(yTexCR.x, " + depth + ".0);\n\n      vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ", " + stride + ") -\n          vec2(" + pad + ".0, " + pad + ".0);\n      float xRCorner = xRCCorner.x;\n      float xCCorner = xRCCorner.y;\n\n      // max/min x(?, ?, d) to get y(yR, yC, d).\n      // ? = to be determined\n      float minMaxValue = 0.0;\n      float minMaxValueFound = 0.0;\n      float minMaxPosition = 0.0;\n      float avgValue = 0.0;\n\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float xR = xRCorner + wR_float;\n        float xTexR = xR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float xC = xCCorner + wC_float;\n          float xTexC = xC * " + depth + ".0 + d;\n\n          vec2 texCR = vec2(xTexC, xTexR);\n\n          // Check if the requested UV is invalid.\n          vec2 uv = (texCR + halfCR) / xShapeCR;\n          bool lessThanZero = any(lessThan(uv, vec2(0, 0)));\n          bool greaterThanOne = any(greaterThan(uv, vec2(1, 1)));\n          bool outside = lessThanZero || greaterThanOne;\n          if (outside) {\n            continue;\n          }\n\n          float value = texture2D(x, uv).r;\n          if (isNaN(value)) {\n            gl_FragColor = vec4(value, 0, 0, 0);\n            return;\n          }\n          if (" + (poolType === 'avg') + ") {\n            avgValue += value / " + fSize * fSize + ".0;\n          } else {\n            // If a min / max value has already been found, use it. If not, use\n            // the current value.\n            float currentMinMaxValue = mix(\n                value, minMaxValue, minMaxValueFound);\n            if (value " + (poolType === 'min' ? '<=' : '>=') + " currentMinMaxValue) {\n              minMaxValue = value;\n              minMaxValueFound = 1.0;\n              if (" + computePositions + ") {\n                minMaxPosition = wR_float * " + fSize + ".0 + wC_float;\n              }\n            }\n          }\n        }\n      }\n      gl_FragColor = vec4(" + returnValue + ", 0, 0, 0);\n    }";
 }
 exports.getFragmentShaderPoolCommonSource = getFragmentShaderPoolCommonSource;
 function poolCommon(gpgpu, program, x, result, resultShapeRowCol) {
@@ -5396,58 +5102,22 @@ function poolCommon(gpgpu, program, x, result, resultShapeRowCol) {
 }
 exports.poolCommon = poolCommon;
 
-},{"../conv_util":16,"./webgl_util":58}],46:[function(require,module,exports){
+},{"../conv_util":16}],43:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var gpgpu_context_1 = require("./gpgpu_context");
-function getFragmentShaderSource(rows, columns) {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    varying vec2 resultUV;\n\n    const vec2 aDimCR = vec2(" + columns + ".0, " + rows + ".0);\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    void main() {\n      float sum = 0.0;\n      for (int r = 0; r < " + rows + "; r++) {\n        for (int c = 0; c < " + columns + "; c++) {\n          vec2 uv = (vec2(c, r) + halfCR) / aDimCR;\n          sum += texture2D(matrixA, uv).r;\n        }\n      }\n      gl_FragColor = vec4(sum, 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function reduceSum(gpgpu, reduceSumProgram, a, aNumRows, aNumCols, result) {
-    gpgpu.setOutputMatrixTexture(result, 1, 1);
-    gpgpu.setProgram(reduceSumProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.executeProgram();
-}
-exports.reduceSum = reduceSum;
-function uploadReduceSumDownload(a, rows, columns) {
-    var gpgpu = new gpgpu_context_1.GPGPUContext();
-    var program = gpgpu.createProgram(getFragmentShaderSource(rows, columns));
-    var aTexture = gpgpu.createMatrixTexture(rows, columns);
-    var resultTexture = gpgpu.createMatrixTexture(1, 1);
-    gpgpu.uploadMatrixToTexture(aTexture, rows, columns, a);
-    reduceSum(gpgpu, program, aTexture, rows, columns, resultTexture);
-    var result = gpgpu.downloadMatrixFromTexture(resultTexture, 1, 1)[0];
-    gpgpu.deleteMatrixTexture(aTexture);
-    gpgpu.deleteMatrixTexture(resultTexture);
-    gpgpu.deleteProgram(program);
-    gpgpu.dispose();
-    return result;
-}
-exports.uploadReduceSumDownload = uploadReduceSumDownload;
+var ReduceSumProgram = (function () {
+    function ReduceSumProgram(aSize) {
+        this.aSize = aSize;
+        this.variableNames = ['A'];
+        this.params = [];
+        this.outputShape = [];
+        this.userCode = "\n      void main() {\n        float sum = 0.0;\n        for (int i = 0; i < " + aSize + "; i++) {\n          sum += getAFlat(float(i));\n        }\n        setOutput(sum);\n      }\n    ";
+    }
+    return ReduceSumProgram;
+}());
+exports.ReduceSumProgram = ReduceSumProgram;
 
-},{"./gpgpu_context":35}],47:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getReluUnaryOp() {
-    return "\n    float result = (value < 0.0 ? 0.0 : value);\n    gl_FragColor = vec4(result, 0, 0, 0);\n  ";
-}
-function getFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getReluUnaryOp());
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function relu(gpgpu, reluProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, reluProgram, a, rows, columns, result);
-}
-exports.relu = relu;
-function uploadReluDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getReluUnaryOp());
-}
-exports.uploadReluDownload = uploadReluDownload;
-
-},{"./unaryop_gpu":57}],48:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var webgl_util = require("./webgl_util");
@@ -5468,7 +5138,7 @@ function renderToFramebuffer(gpgpu, renderShader, sourceTex) {
 }
 exports.renderToFramebuffer = renderToFramebuffer;
 
-},{"./webgl_util":58}],49:[function(require,module,exports){
+},{"./webgl_util":51}],45:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -5492,7 +5162,7 @@ function reshape(gpgpu, reshapeProgram, a, aNumRows, aNumCols, result, resultNum
 }
 exports.reshape = reshape;
 
-},{"../../util":86}],50:[function(require,module,exports){
+},{"../../util":79}],46:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
@@ -5516,53 +5186,138 @@ function resizeBilinear(gpgpu, resizeBilinearProgram, a, result, resultShapeRowC
 }
 exports.resizeBilinear = resizeBilinear;
 
-},{"../conv_util":16}],51:[function(require,module,exports){
+},{"../conv_util":16}],47:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
-function makeShaderKey(inputs, output) {
-    var ins = inputs.map(function (x) { return x.shape + '_' + x.getTextureShapeRC(); });
-    return ins.join('_') + '_' + output.shape + '_' + output.getTextureShapeRC();
-}
-exports.makeShaderKey = makeShaderKey;
-function makeShader(inputs, output, userCode) {
-    var inputPrefixSnippet = inputs.map(function (x) { return "uniform sampler2D " + x.name + ";"; }).join('\n');
-    var inputSamplingSnippet = inputs.map(function (x) { return getInputSamplingSnippet(x); }).join('\n');
-    var outTexShape = output.getTextureShapeRC();
-    var outputSamplingSnippet = getOutputSamplingSnippet(output.shape, outTexShape);
+function makeShader(inputsInfo, outputShape, userCode, broadcast) {
+    var inputPrefixSnippet = inputsInfo.map(function (x) { return "uniform sampler2D " + x.name + ";"; }).join('\n');
+    var inputSamplingSnippet = inputsInfo.map(function (x) { return getInputSamplingSnippet(x, outputShape, broadcast); })
+        .join('\n');
+    var outTexShape = outputShape.texShape;
+    var outputSamplingSnippet = getOutputSamplingSnippet(outputShape.logicalShape, outTexShape);
     var source = [
-        SHADER_PREFIX, inputPrefixSnippet, SAMPLE_2D_SNIPPET, inputSamplingSnippet,
+        SHADER_PREFIX, inputPrefixSnippet, SAMPLE_1D_SNIPPET, SAMPLE_2D_SNIPPET,
+        SAMPLE_3D_SNIPPET, SAMPLE_4D_SNIPPET, inputSamplingSnippet,
         outputSamplingSnippet, userCode
     ].join('\n');
     return source;
 }
 exports.makeShader = makeShader;
-function getInputSamplingSnippet(input) {
-    var arr = input.array;
-    var shape = arr.shape;
-    var texShape = arr.getTextureShapeRC(shape);
+function getInputSamplingSnippet(inInfo, outShapeInfo, broadcast) {
+    var shape = inInfo.shapeInfo.logicalShape;
+    var texShape = inInfo.shapeInfo.texShape;
+    var outTexShape = outShapeInfo.texShape;
+    var res = '';
     switch (shape.length) {
+        case 0:
+            res += getSamplerScalar(inInfo.name);
+            break;
+        case 1:
+            res += getSampler1D(inInfo.name, texShape);
+            break;
         case 2:
-            return getSampler2D(input.name, shape, texShape);
+            res += getSampler2D(inInfo.name, shape, texShape);
+            break;
+        case 3:
+            res += getSampler3D(inInfo.name, shape, texShape);
+            break;
+        case 4:
+            res += getSampler4D(inInfo.name, shape, texShape);
+            break;
         default:
-            throw new Error(arr.rank + "-D input sampling is not yet supported");
+            throw new Error(shape.length + "-D input sampling" +
+                " is not yet supported");
     }
+    if (broadcast || util.arraysEqual(inInfo.shapeInfo.logicalShape, outShapeInfo.logicalShape)) {
+        res +=
+            getSamplerAtOutputCoords(inInfo.name, texShape, outTexShape, broadcast);
+    }
+    res += getSamplerFlat(inInfo.name, texShape);
+    return res;
 }
 function getOutputSamplingSnippet(outShape, outTexShape) {
     switch (outShape.length) {
+        case 0:
+            return '';
+        case 1:
+            return getOutput1DCoords(outShape, outTexShape);
         case 2:
             return getOutput2DCoords(outShape, outTexShape);
+        case 3:
+            return getOutput3DCoords(outShape, outTexShape);
+        case 4:
+            return getOutput4DCoords(outShape, outTexShape);
         default:
             throw new Error(outShape.length + "-D output sampling is not yet supported");
     }
 }
-var SHADER_PREFIX = "\n  precision highp float;\n  varying vec2 resultUV;\n  const vec2 halfCR = vec2(0.5, 0.5);\n\n  void setOutput(float val) {\n    gl_FragColor = vec4(val, 0, 0, 0);\n  }\n";
+var SHADER_PREFIX = "\n  precision highp float;\n  varying vec2 resultUV;\n  const vec2 halfCR = vec2(0.5, 0.5);\n\n  void setOutput(float val) {\n    gl_FragColor = vec4(val, 0, 0, 0);\n  }\n\n  bool isNaN(float val) {\n    return val == val ? false : true;\n  }\n";
+var SAMPLE_1D_SNIPPET = "\n  float sample1D(sampler2D texture, float texNumR, float texNumC, float index) {\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
 var SAMPLE_2D_SNIPPET = "\n  float sample2D(sampler2D texture, float texNumR, float texNumC, float numC,\n      float row, float col) {\n    float index = dot(vec2(row, col), vec2(numC, 1.0));\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
+var SAMPLE_3D_SNIPPET = "\n  float sample3D(sampler2D texture, float texNumR, float texNumC, float stride0,\n      float stride1, float row, float col, float depth) {\n    float index = dot(vec3(row, col, depth), vec3(stride0, stride1, 1.0));\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
+var SAMPLE_4D_SNIPPET = "\n  float sample4D(sampler2D texture, float texNumR, float texNumC, float stride0,\n      float stride1, float stride2, float row, float col, float depth,\n      float depth2) {\n    float index = dot(vec4(row, col, depth, depth2),\n                      vec4(stride0, stride1, stride2, 1.0));\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
+function getOutput1DCoords(shape, texShape) {
+    if (texShape[0] === 1) {
+        return "\n      float getOutputCoords() {\n        return floor(gl_FragCoord.x);\n      }\n    ";
+    }
+    if (texShape[1] === 1) {
+        return "\n      float getOutputCoords() {\n        return floor(gl_FragCoord.y);\n      }\n    ";
+    }
+    return "\n    float getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      return dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n    }\n  ";
+}
+function getOutput3DCoords(shape, texShape) {
+    var stride0 = shape[1] * shape[2];
+    var stride1 = shape[2];
+    return "\n    vec3 getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n      float r = floor(index / " + stride0 + ".0);\n      index -= r * " + stride0 + ".0;\n      float c = floor(index / " + stride1 + ".0);\n      float d = mod(index, " + stride1 + ".0);\n      return vec3(r, c, d);\n    }\n  ";
+}
+function getOutput4DCoords(shape, texShape) {
+    var stride2 = shape[3];
+    var stride1 = shape[2] * stride2;
+    var stride0 = shape[1] * stride1;
+    return "\n    vec4 getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n\n      float r = floor(index / " + stride0 + ".0);\n      index -= r * " + stride0 + ".0;\n\n      float c = floor(index / " + stride1 + ".0);\n      index -= c * " + stride1 + ".0;\n\n      float d = floor(index / " + stride2 + ".0);\n      float d2 = mod(index, " + stride2 + ".0);\n\n      return vec4(r, c, d, d2);\n    }\n  ";
+}
 function getOutput2DCoords(shape, texShape) {
     if (util.arraysEqual(shape, texShape)) {
         return "\n      vec2 getOutputCoords() {\n        return floor(gl_FragCoord.yx);\n      }\n    ";
     }
     return "\n    vec2 getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n      float r = floor(index / " + shape[1] + ".0);\n      float c = mod(index, " + shape[1] + ".0);\n      return vec2(r, c);\n    }\n  ";
+}
+function getSamplerScalar(texName) {
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
+    return "\n    float " + funcName + "() {\n      return texture2D(" + texName + ", halfCR).r;\n    }\n  ";
+}
+function getSampler1D(texName, texShape) {
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
+    var tR = texShape[0];
+    var tC = texShape[1];
+    if (texShape[0] === 1 && texShape[1] === 1) {
+        return "\n      float " + funcName + "(float index) {\n        return texture2D(" + texName + ", halfCR).r;\n      }\n    ";
+    }
+    if (texShape[1] === 1) {
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tR + ".0);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+    }
+    if (texShape[0] === 1) {
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tC + ".0, 0.5);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+    }
+    return "\n    float " + funcName + "(float index) {\n      return sample1D(" + texName + ", " + tR + ".0, " + tC + ".0, index);\n    }\n  ";
+}
+function getSampler3D(texName, shape, texShape) {
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
+    var tR = texShape[0];
+    var tC = texShape[1];
+    var stride0 = shape[1] * shape[2];
+    var stride1 = shape[2];
+    return "\n    float " + funcName + "(float row, float col, float depth) {\n      return sample3D(" + texName + ", " + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0,\n          row, col, depth);\n    }\n  ";
+}
+function getSampler4D(texName, shape, texShape) {
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
+    var tR = texShape[0];
+    var tC = texShape[1];
+    var stride2 = shape[3];
+    var stride1 = shape[2] * stride2;
+    var stride0 = shape[1] * stride1;
+    return "\n  float " + funcName + "(float row, float col, float depth, float depth2) {\n    return sample4D(" + texName + ", " + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0,\n        " + stride2 + ".0, row, col, depth, depth2);\n  }\n";
 }
 function getSampler2D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
@@ -5573,48 +5328,34 @@ function getSampler2D(texName, shape, texShape) {
     }
     return "\n    float " + funcName + "(float row, float col) {\n      return sample2D(" + texName + ", " + tR + ".0, " + tC + ".0, " + shape[1] + ".0, row, col);\n    }\n  ";
 }
+function getSamplerFlat(texName, texShape) {
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) +
+        'Flat';
+    var tNumR = texShape[0];
+    var tNumC = texShape[1];
+    if (tNumC === 1 && tNumR === 1) {
+        return "\n      float " + funcName + "(float index) {\n        return texture2D(" + texName + ", halfCR).r;\n      }\n    ";
+    }
+    if (tNumC === 1) {
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tNumR + ".0);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+    }
+    if (tNumR === 1) {
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tNumC + ".0, 0.5);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+    }
+    return "\n    float " + funcName + "(float index) {\n      float texR = floor(index / " + tNumC + ".0);\n      float texC = mod(index, " + tNumC + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tNumC + ".0, " + tNumR + ".0);\n      return texture2D(" + texName + ", uv).r;\n    }\n  ";
+}
+function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) +
+        'AtOutCoords';
+    if (util.arraysEqual(inTexShape, outTexShape)) {
+        return "\n      float " + funcName + "() {\n        return texture2D(" + texName + ", resultUV).r;\n      }\n    ";
+    }
+    var inSize = util.sizeFromShape(inTexShape);
+    var broadcastSnippet = broadcast ? "index = mod(index, " + inSize + ".0);" : '';
+    return "\n    float " + funcName + "() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + outTexShape[1] + ".0, 1.0));\n      " + broadcastSnippet + "\n      float texR = floor(index / " + inTexShape[1] + ".0);\n      float texC = mod(index, " + inTexShape[1] + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return texture2D(" + texName + ", uv).r;\n    }\n  ";
+}
 
-},{"../../util":86}],52:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getSigmoidUnaryOp() {
-    return 'gl_FragColor = vec4(1.0 / (1.0 + exp(-1.0 * value)), 0, 0, 0);';
-}
-function getSigmoidFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getSigmoidUnaryOp());
-}
-exports.getSigmoidFragmentShaderSource = getSigmoidFragmentShaderSource;
-function sigmoid(gpgpu, sigmoidProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, sigmoidProgram, a, rows, columns, result);
-}
-exports.sigmoid = sigmoid;
-function uploadSigmoidDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getSigmoidUnaryOp());
-}
-exports.uploadSigmoidDownload = uploadSigmoidDownload;
-
-},{"./unaryop_gpu":57}],53:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getStepUnaryOp() {
-    return "\n    float res = value == value ? (value > 0.0 ? 1.0 : 0.0) : value;\n    gl_FragColor = vec4(res, 0, 0, 0);\n  ";
-}
-function getFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getStepUnaryOp());
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function step(gpgpu, stepProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, stepProgram, a, rows, columns, result);
-}
-exports.step = step;
-function uploadStepDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getStepUnaryOp());
-}
-exports.uploadStepDownload = uploadStepDownload;
-
-},{"./unaryop_gpu":57}],54:[function(require,module,exports){
+},{"../../util":79}],48:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getUnpackedMatrixTextureShapeWidthHeight(rows, columns) {
@@ -5782,7 +5523,7 @@ function decodeMatrixFromPackedRGBA(packedRGBA, rows, columns, matrix) {
 }
 exports.decodeMatrixFromPackedRGBA = decodeMatrixFromPackedRGBA;
 
-},{}],55:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TextureManager = (function () {
@@ -5853,81 +5594,60 @@ function getKeyFromTextureShape(shapeRowsCol) {
     return shapeRowsCol[0] + '_' + shapeRowsCol[1];
 }
 
-},{}],56:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var unaryop_gpu = require("./unaryop_gpu");
-function getSinUnaryOp() {
-    return "\n    gl_FragColor = vec4(sin(value), 0, 0, 0);\n  ";
+var UnaryOp;
+(function (UnaryOp) {
+    UnaryOp[UnaryOp["EXP"] = 0] = "EXP";
+    UnaryOp[UnaryOp["LOG"] = 1] = "LOG";
+    UnaryOp[UnaryOp["NEG"] = 2] = "NEG";
+    UnaryOp[UnaryOp["RELU"] = 3] = "RELU";
+    UnaryOp[UnaryOp["SIGMOID"] = 4] = "SIGMOID";
+    UnaryOp[UnaryOp["STEP"] = 5] = "STEP";
+    UnaryOp[UnaryOp["SIN"] = 6] = "SIN";
+    UnaryOp[UnaryOp["TANH"] = 7] = "TANH";
+})(UnaryOp = exports.UnaryOp || (exports.UnaryOp = {}));
+var UnaryOpProgram = (function () {
+    function UnaryOpProgram(aShape, op) {
+        this.variableNames = ['A'];
+        this.outputShape = aShape;
+        this.params = [op];
+        this.userCode = "\n      void main() {\n        float v = getAAtOutCoords();\n        " + getOpSnippet(op) + "\n        setOutput(r);\n      }\n    ";
+    }
+    return UnaryOpProgram;
+}());
+exports.UnaryOpProgram = UnaryOpProgram;
+function getOpSnippet(op) {
+    switch (op) {
+        case UnaryOp.EXP:
+            return 'float r = exp(v);';
+        case UnaryOp.LOG:
+            return 'float r = log(v);';
+        case UnaryOp.NEG:
+            return 'float r = -v;';
+        case UnaryOp.RELU:
+            return 'float r = (v < 0.0) ? 0.0 : v;';
+        case UnaryOp.SIGMOID:
+            return 'float r = 1.0 / (1.0 + exp(-1.0 * v));';
+        case UnaryOp.STEP:
+            return 'float r = (v == v) ? (v > 0.0 ? 1.0 : 0.0) : v;';
+        case UnaryOp.SIN:
+            return 'float r = sin(v);';
+        case UnaryOp.TANH:
+            return "float e2x = exp(-2.0 * abs(v));\n              float r = sign(v) * (1.0 - e2x) / (1.0 + e2x);";
+        default:
+            throw Error('Unrecognized unary op type ' + op);
+    }
 }
-function getSinFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getSinUnaryOp());
-}
-exports.getSinFragmentShaderSource = getSinFragmentShaderSource;
-function sin(gpgpu, sinProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, sinProgram, a, rows, columns, result);
-}
-exports.sin = sin;
-function uploadSinDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getSinUnaryOp());
-}
-exports.uploadSinDownload = uploadSinDownload;
-function getTanhUnaryOp() {
-    return "\n    float e2x = exp(-2.0 * value);\n    gl_FragColor = vec4((1.0 - e2x) / (1.0 + e2x), 0, 0, 0);\n  ";
-}
-function getTanhFragmentShaderSource() {
-    return unaryop_gpu.getFragmentShaderSource(getTanhUnaryOp());
-}
-exports.getTanhFragmentShaderSource = getTanhFragmentShaderSource;
-function tanh(gpgpu, tanhProgram, a, rows, columns, result) {
-    unaryop_gpu.unaryOp(gpgpu, tanhProgram, a, rows, columns, result);
-}
-exports.tanh = tanh;
-function uploadTanhDownload(a, rows, columns) {
-    return unaryop_gpu.uploadUnaryOpDownload(a, rows, columns, getTanhUnaryOp());
-}
-exports.uploadTanhDownload = uploadTanhDownload;
 
-},{"./unaryop_gpu":57}],57:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var gpgpu_context_1 = require("./gpgpu_context");
-function getFragmentShaderSource(resultOp) {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    varying vec2 resultUV;\n\n    void main() {\n      float value = texture2D(matrixA, resultUV).r;\n      " + resultOp + "\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function unaryOp(gpgpu, unaryOpProgram, a, rows, columns, result) {
-    gpgpu.setOutputMatrixTexture(result, rows, columns);
-    gpgpu.setProgram(unaryOpProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.executeProgram();
-}
-exports.unaryOp = unaryOp;
-function uploadUnaryOpDownload(a, rows, columns, resultOp) {
-    var gpgpu = new gpgpu_context_1.GPGPUContext();
-    var fragmentShaderSrc = getFragmentShaderSource(resultOp);
-    var program = gpgpu.createProgram(fragmentShaderSrc);
-    var aTexture = gpgpu.createMatrixTexture(rows, columns);
-    var resultTexture = gpgpu.createMatrixTexture(rows, columns);
-    gpgpu.uploadMatrixToTexture(aTexture, rows, columns, a);
-    unaryOp(gpgpu, program, aTexture, rows, columns, resultTexture);
-    var result = gpgpu.downloadMatrixFromTexture(resultTexture, rows, columns);
-    gpgpu.deleteMatrixTexture(aTexture);
-    gpgpu.deleteMatrixTexture(resultTexture);
-    gpgpu.deleteProgram(program);
-    gpgpu.dispose();
-    return result;
-}
-exports.uploadUnaryOpDownload = uploadUnaryOpDownload;
-
-},{"./gpgpu_context":35}],58:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var USE_WEBGL2_WHEN_AVAILABLE = true;
 var WEBGL2_ENABLED = null;
 var MAX_TEXTURE_SIZE = null;
 var util = require("../../util");
-exports.IS_NAN_SHADER_FUNC = "\nbool isNaN(float val) {\n  return val == val ? false : true;\n}\n";
 function createWebGLRenderingContext(attributes) {
     var canvas = document.createElement('canvas');
     canvas.width = 1;
@@ -6234,7 +5954,7 @@ function getTextureShapeFromLogicalShape(gl, logicalShape, preferredTexShape) {
 }
 exports.getTextureShapeFromLogicalShape = getTextureShapeFromLogicalShape;
 
-},{"../../util":86}],59:[function(require,module,exports){
+},{"../../util":79}],52:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -6352,7 +6072,7 @@ function emitOpFromNode(node) {
     }
 }
 
-},{"./graph":7,"./graph_util":10,"./ops/add":60,"./ops/argmax":61,"./ops/argmaxequals":62,"./ops/concat3d":63,"./ops/convolution":64,"./ops/divide":65,"./ops/element_wise_activation":66,"./ops/element_wise_cost":67,"./ops/exp":68,"./ops/linear_combination":69,"./ops/log":70,"./ops/matmul":71,"./ops/max_pool":72,"./ops/multiply":73,"./ops/reduce_sum":75,"./ops/reshape":76,"./ops/softmax":77,"./ops/split":78,"./ops/subtract":79}],60:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./ops/add":53,"./ops/argmax":54,"./ops/argmaxequals":55,"./ops/concat3d":56,"./ops/convolution":57,"./ops/divide":58,"./ops/element_wise_activation":59,"./ops/element_wise_cost":60,"./ops/exp":61,"./ops/linear_combination":62,"./ops/log":63,"./ops/matmul":64,"./ops/max_pool":65,"./ops/multiply":66,"./ops/reduce_sum":68,"./ops/reshape":69,"./ops/softmax":70,"./ops/split":71,"./ops/subtract":72}],53:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6402,8 +6122,6 @@ var Add = (function (_super) {
     };
     Add.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
         var _this = this;
-        var x1 = inferenceArrays.get(this.x1Tensor);
-        var x2 = inferenceArrays.get(this.x2Tensor);
         var dy = gradientArrays.get(this.yTensor);
         math.scope(function (keep) {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
@@ -6441,7 +6159,7 @@ var Add = (function (_super) {
 }(op_1.Operation));
 exports.Add = Add;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":86,"./op":74}],61:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":79,"./op":67}],54:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6477,7 +6195,7 @@ var ArgMax = (function (_super) {
 }(op_1.Operation));
 exports.ArgMax = ArgMax;
 
-},{"./op":74}],62:[function(require,module,exports){
+},{"./op":67}],55:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6515,7 +6233,7 @@ var ArgMaxEquals = (function (_super) {
 }(op_1.Operation));
 exports.ArgMaxEquals = ArgMaxEquals;
 
-},{"./op":74}],63:[function(require,module,exports){
+},{"./op":67}],56:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6557,7 +6275,7 @@ var Concat3D = (function (_super) {
 }(op_1.Operation));
 exports.Concat3D = Concat3D;
 
-},{"../math/concat3d_util":15,"./op":74}],64:[function(require,module,exports){
+},{"../math/concat3d_util":15,"./op":67}],57:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6626,7 +6344,7 @@ var Convolution2D = (function (_super) {
 }(op_1.Operation));
 exports.Convolution2D = Convolution2D;
 
-},{"../math/conv_util":16,"../util":86,"./op":74}],65:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":79,"./op":67}],58:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6721,7 +6439,7 @@ var Divide = (function (_super) {
 }(op_1.Operation));
 exports.Divide = Divide;
 
-},{"../graph_util":10,"../util":86,"./op":74}],66:[function(require,module,exports){
+},{"../graph_util":10,"../util":79,"./op":67}],59:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6799,7 +6517,7 @@ var Square = (function (_super) {
 }(ElementWiseActivation));
 exports.Square = Square;
 
-},{"../math/activation_functions":14,"./op":74}],67:[function(require,module,exports){
+},{"../math/activation_functions":14,"./op":67}],60:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6868,7 +6586,7 @@ var MeanSquaredCost = (function (_super) {
 }(ElementWiseCost));
 exports.MeanSquaredCost = MeanSquaredCost;
 
-},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":86,"./op":74}],68:[function(require,module,exports){
+},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":79,"./op":67}],61:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6912,7 +6630,7 @@ var Exp = (function (_super) {
 }(op_1.Operation));
 exports.Exp = Exp;
 
-},{"../graph_util":10,"./op":74}],69:[function(require,module,exports){
+},{"../graph_util":10,"./op":67}],62:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6976,7 +6694,7 @@ var LinearCombination = (function (_super) {
 }(op_1.Operation));
 exports.LinearCombination = LinearCombination;
 
-},{"../graph_util":10,"./op":74}],70:[function(require,module,exports){
+},{"../graph_util":10,"./op":67}],63:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7020,7 +6738,7 @@ var Log = (function (_super) {
 }(op_1.Operation));
 exports.Log = Log;
 
-},{"../graph_util":10,"./op":74}],71:[function(require,module,exports){
+},{"../graph_util":10,"./op":67}],64:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7089,7 +6807,7 @@ var MatMul = (function (_super) {
 }(op_1.Operation));
 exports.MatMul = MatMul;
 
-},{"../graph_util":10,"../math/math":19,"./op":74}],72:[function(require,module,exports){
+},{"../graph_util":10,"../math/math":19,"./op":67}],65:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7143,7 +6861,7 @@ var MaxPool = (function (_super) {
 }(op_1.Operation));
 exports.MaxPool = MaxPool;
 
-},{"../math/conv_util":16,"../util":86,"./op":74}],73:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":79,"./op":67}],66:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7226,7 +6944,7 @@ var Multiply = (function (_super) {
 }(op_1.Operation));
 exports.Multiply = Multiply;
 
-},{"../graph_util":10,"../util":86,"./op":74}],74:[function(require,module,exports){
+},{"../graph_util":10,"../util":79,"./op":67}],67:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Operation = (function () {
@@ -7238,7 +6956,7 @@ var Operation = (function () {
 }());
 exports.Operation = Operation;
 
-},{}],75:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7290,7 +7008,7 @@ var ReduceSum = (function (_super) {
 }(op_1.Operation));
 exports.ReduceSum = ReduceSum;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":86,"./op":74}],76:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":79,"./op":67}],69:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7334,7 +7052,7 @@ var Reshape = (function (_super) {
 }(op_1.Operation));
 exports.Reshape = Reshape;
 
-},{"../util":86,"./op":74}],77:[function(require,module,exports){
+},{"../util":79,"./op":67}],70:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7422,7 +7140,7 @@ function crossEntropyCost(math, y, target, epsilon) {
 }
 exports.crossEntropyCost = crossEntropyCost;
 
-},{"../graph":7,"../math/ndarray":22,"../util":86,"./op":74}],78:[function(require,module,exports){
+},{"../graph":7,"../math/ndarray":22,"../util":79,"./op":67}],71:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7472,7 +7190,7 @@ var Split = (function (_super) {
 }(op_1.Operation));
 exports.Split = Split;
 
-},{"../graph_util":10,"../util":86,"./op":74}],79:[function(require,module,exports){
+},{"../graph_util":10,"../util":79,"./op":67}],72:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7522,8 +7240,6 @@ var Subtract = (function (_super) {
     };
     Subtract.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
         var _this = this;
-        var t1 = inferenceArrays.get(this.t1);
-        var t2 = inferenceArrays.get(this.t2);
         var dy = gradientArrays.get(this.outTensor);
         math.scope(function (keep) {
             if (graph_util.shouldBackProp(_this.t1)) {
@@ -7562,7 +7278,7 @@ var Subtract = (function (_super) {
 }(op_1.Operation));
 exports.Subtract = Subtract;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":86,"./op":74}],80:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":79,"./op":67}],73:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Optimizer = (function () {
@@ -7575,7 +7291,7 @@ var Optimizer = (function () {
 }());
 exports.Optimizer = Optimizer;
 
-},{}],81:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function defaultCompare(a, b) {
@@ -7706,7 +7422,7 @@ var PriorityQueue = (function () {
 }());
 exports.PriorityQueue = PriorityQueue;
 
-},{}],82:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -7733,7 +7449,6 @@ var CostReduction;
 })(CostReduction = exports.CostReduction || (exports.CostReduction = {}));
 var Session = (function () {
     function Session(graph, math) {
-        this.graph = graph;
         this.math = math;
         this.activationArrayMap = new tensor_array_map_1.TensorArrayMap();
         this.gradientArrayMap = new tensor_array_map_1.TensorArrayMap();
@@ -7845,7 +7560,7 @@ var Session = (function () {
 }());
 exports.Session = Session;
 
-},{"./math/ndarray":22,"./operation_emitter":59,"./session_util":83,"./tensor_array_map":85,"./util":86}],83:[function(require,module,exports){
+},{"./math/ndarray":22,"./operation_emitter":52,"./session_util":76,"./tensor_array_map":78,"./util":79}],76:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -8010,7 +7725,7 @@ function addSplitNodes(nodes) {
 }
 exports.addSplitNodes = addSplitNodes;
 
-},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":86}],84:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":79}],77:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -8086,7 +7801,7 @@ var SGDOptimizer = (function (_super) {
 }(optimizer_1.Optimizer));
 exports.SGDOptimizer = SGDOptimizer;
 
-},{"./math/ndarray":22,"./optimizer":80,"./session_util":83,"./tensor_array_map":85}],85:[function(require,module,exports){
+},{"./math/ndarray":22,"./optimizer":73,"./session_util":76,"./tensor_array_map":78}],78:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TensorArrayMap = (function () {
@@ -8144,7 +7859,7 @@ var TensorArrayMap = (function () {
 }());
 exports.TensorArrayMap = TensorArrayMap;
 
-},{}],86:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function shuffle(array) {
@@ -8292,5 +8007,35 @@ function createShuffledIndices(n) {
     return shuffledIndices;
 }
 exports.createShuffledIndices = createShuffledIndices;
+function assertAndGetBroadcastedShape(shapeA, shapeB) {
+    var result = [];
+    var nextADimMustBeOne = false;
+    var nextBDimMustBeOne = false;
+    var errMsg = "Operands could not be broadcast together with shapes " +
+        (shapeA + " and " + shapeB + ". Currently, we only support a ") +
+        "stricter version of broadcasting than numpy.";
+    var l = Math.max(shapeA.length, shapeB.length);
+    shapeA = shapeA.slice().reverse();
+    shapeB = shapeB.slice().reverse();
+    for (var i = 0; i < l; i++) {
+        var a = shapeA[i] || 1;
+        var b = shapeB[i] || 1;
+        if ((b > 1 && nextBDimMustBeOne) || (a > 1 && nextADimMustBeOne)) {
+            throw Error(errMsg);
+        }
+        if (a > 1 && b === 1) {
+            nextBDimMustBeOne = true;
+        }
+        if (b > 1 && a === 1) {
+            nextADimMustBeOne = true;
+        }
+        if (a > 1 && b > 1 && a !== b) {
+            throw Error(errMsg);
+        }
+        result.push(Math.max(a, b));
+    }
+    return result.reverse();
+}
+exports.assertAndGetBroadcastedShape = assertAndGetBroadcastedShape;
 
 },{}]},{},[2]);
