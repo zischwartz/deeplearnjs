@@ -208,10 +208,10 @@ limitations under the License.
 
 <div class="mdl-grid">
   <div class="mdl-layout-spacer mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
-    <div class="mdl-cell mdl-cell--10-col">
-      {% capture my_include %}{% include README.md %}{% endcapture %}
-      {{ my_include | markdownify }}
-    </div>
+  <div class="mdl-cell mdl-cell--10-col">
+    {% capture my_include %}{% include README.md %}{% endcapture %}
+    {{ my_include | markdownify }}
+  </div>
   <div class="mdl-layout-spacer mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
 </div>
 
