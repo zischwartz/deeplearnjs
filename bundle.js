@@ -25,7 +25,10 @@ function isSafari() {
 }
 function isMobile() {
     var a = navigator.userAgent || navigator.vendor || window.opera;
-    return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4));
+    return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i
+        .test(a) ||
+        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i
+            .test(a.substr(0, 4));
 }
 var inferenceCanvas = document.querySelector('#inference');
 var enableCPPN = false;
@@ -60,13 +63,15 @@ function startCPPN() {
     cppn.generateWeights(NUM_NEURONS, WEIGHTS_STDEV);
     cppn.start();
     var currentColorElement = document.querySelector('#colormode');
-    document.querySelector('#color-selector').addEventListener('click', function (event) {
+    document.querySelector('#color-selector')
+        .addEventListener('click', function (event) {
         var colorMode = event.target.getAttribute('data-val');
         currentColorElement.value = colorMode;
         cppn.setColorMode(colorMode);
     });
     var currentActivationFnElement = document.querySelector('#activation-fn');
-    document.querySelector('#activation-selector').addEventListener('click', function (event) {
+    document.querySelector('#activation-selector')
+        .addEventListener('click', function (event) {
         var activationFn = event.target.getAttribute('data-val');
         currentActivationFnElement.value = activationFn;
         cppn.setActivationFunction(activationFn);
@@ -578,7 +583,7 @@ var InMemoryDataset = (function () {
 }());
 exports.InMemoryDataset = InMemoryDataset;
 
-},{"./math/ndarray":22,"./util":79}],7:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":75}],7:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -1170,7 +1175,7 @@ var SplitNode = (function (_super) {
 }(Node));
 exports.SplitNode = SplitNode;
 
-},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":79}],8:[function(require,module,exports){
+},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":75}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var initializers_1 = require("./initializers");
@@ -1311,7 +1316,7 @@ var GraphRunner = (function () {
                 _this.eventObserver.batchesTrainedCallback(_this.totalBatchesTrained);
             }
         });
-        setTimeout(function () { return _this.trainNetwork(); });
+        requestAnimationFrame(function () { return _this.trainNetwork(); });
     };
     GraphRunner.prototype.infer = function (inferenceTensor, inferenceFeedEntries, inferenceExampleIntervalMs, inferenceExampleCount, numPasses) {
         var _this = this;
@@ -1336,7 +1341,7 @@ var GraphRunner = (function () {
         this.currentInferenceLoopNumPasses = numPasses;
         if (!this.isInferring) {
             this.inferencePassesThisRun = 0;
-            setTimeout(function () { return _this.inferNetwork(); });
+            requestAnimationFrame(function () { return _this.inferNetwork(); });
         }
         this.isInferring = true;
     };
@@ -1420,7 +1425,7 @@ var GraphRunner = (function () {
 }());
 exports.GraphRunner = GraphRunner;
 
-},{"./math/ndarray":22,"./session":75}],10:[function(require,module,exports){
+},{"./math/ndarray":22,"./session":71}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -1497,7 +1502,7 @@ function isPassthroughNode(node, map) {
 }
 exports.isPassthroughNode = isPassthroughNode;
 
-},{"./graph":7,"./priority_queue":74}],11:[function(require,module,exports){
+},{"./graph":7,"./priority_queue":70}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("./math/conv_util");
@@ -1556,7 +1561,7 @@ exports.Session = session_1.Session;
 var sgd_optimizer_1 = require("./sgd_optimizer");
 exports.SGDOptimizer = sgd_optimizer_1.SGDOptimizer;
 
-},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":33,"./math/webgl/gpgpu_util":35,"./math/webgl/render_ndarray_gpu_util":44,"./math/webgl/webgl_util":51,"./optimizer":73,"./session":75,"./sgd_optimizer":77,"./util":79}],12:[function(require,module,exports){
+},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./optimizer":69,"./session":71,"./sgd_optimizer":73,"./util":75}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1783,7 +1788,7 @@ var InGPUMemoryShuffledInputProviderBuilder = (function (_super) {
 }(InMemoryShuffledInputProviderBuilder));
 exports.InGPUMemoryShuffledInputProviderBuilder = InGPUMemoryShuffledInputProviderBuilder;
 
-},{"./math/ndarray":22,"./util":79}],14:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":75}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./ndarray");
@@ -1879,7 +1884,7 @@ function computeConcat3DOutputShape(x1Shape, x2Shape, axis) {
 }
 exports.computeConcat3DOutputShape = computeConcat3DOutputShape;
 
-},{"../util":79}],16:[function(require,module,exports){
+},{"../util":75}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -1910,14 +1915,6 @@ function computeWeightsShape4D(inputDepth, outputDepth, fSize) {
     return [fSize, fSize, inputDepth, outputDepth];
 }
 exports.computeWeightsShape4D = computeWeightsShape4D;
-function computeWeightsTexShape(inputDepth, outputDepth, fieldSize) {
-    return [fieldSize * fieldSize * inputDepth, outputDepth];
-}
-exports.computeWeightsTexShape = computeWeightsTexShape;
-function computeBiasesTexShape(outputDepth) {
-    return [1, outputDepth];
-}
-exports.computeBiasesTexShape = computeBiasesTexShape;
 function computeDilatedRC(rc, origStride) {
     var rowsDilated = (rc[0] - 1) * origStride + 1;
     var colsDilated = (rc[1] - 1) * origStride + 1;
@@ -1925,7 +1922,7 @@ function computeDilatedRC(rc, origStride) {
 }
 exports.computeDilatedRC = computeDilatedRC;
 
-},{"../util":79}],17:[function(require,module,exports){
+},{"../util":75}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function validateShapes(sourceSize, destSize) {
@@ -2132,9 +2129,9 @@ var NDArrayMath = (function () {
         return this.track(this.cloneInternal(ndarray));
     };
     NDArrayMath.prototype.reshape = function (ndarray, newShape) {
-        util.assert(ndarray.size === util.sizeFromShape(newShape), "Error in reshape: old size " + ndarray.size + " must match new size " +
-            (util.sizeFromShape(newShape) + "."));
-        return this.track(this.reshapeInternal(ndarray, newShape));
+        console.warn('math.reshape() is deprecated. Please call reshape() ' +
+            'directly on the ndarray object');
+        return ndarray.reshape(newShape);
     };
     NDArrayMath.prototype.slice2D = function (input, begin, size) {
         util.assert(begin[0] + size[0] <= input.shape[0] &&
@@ -2390,6 +2387,49 @@ var NDArrayMath = (function () {
         }
         return this.track(this.batchNormalization3DInternal(x, mean, variance, varianceEpsilon, scale, offset));
     };
+    NDArrayMath.prototype.multiRNNCell = function (lstmCells, data, c, h) {
+        util.assert(data.shape[0] === 1, "Error in multiRNNCell: first dimension of data is " + data.shape[0] + ", " +
+            "but batch sizes > 1 are not yet supported.");
+        var res = this.scope(function () {
+            var input = data;
+            var newStates = [];
+            for (var i = 0; i < lstmCells.length; i++) {
+                var output = lstmCells[i](input, c[i], h[i]);
+                newStates.push(output[0]);
+                newStates.push(output[1]);
+                input = output[1];
+            }
+            return newStates;
+        });
+        var newC = [];
+        var newH = [];
+        for (var i = 0; i < res.length; i += 2) {
+            newC.push(res[i]);
+            newH.push(res[i + 1]);
+        }
+        return [newC, newH];
+    };
+    NDArrayMath.prototype.basicLSTMCell = function (forgetBias, lstmKernel, lstmBias, data, c, h) {
+        var _this = this;
+        var res = this.scope(function () {
+            util.assert(data.shape[0] === 1, "Error in multiRNNCell: first dimension of data is " +
+                (data.shape[0] + ", but batch sizes > 1 are not yet supported."));
+            var data3D = data.as3D(1, 1, data.shape[1]);
+            var h3D = h.as3D(1, 1, h.shape[1]);
+            var combined3D = _this.concat3D(data3D, h3D, 2);
+            var combined2D = combined3D.as2D(1, data.shape[1] + h.shape[1]);
+            var weighted = _this.matMul(combined2D, lstmKernel);
+            var res = _this.add(weighted, lstmBias);
+            var i = _this.slice2D(res, [0, 0], [res.shape[0], res.shape[1] / 4]);
+            var j = _this.slice2D(res, [0, res.shape[1] / 4 * 1], [res.shape[0], res.shape[1] / 4]);
+            var f = _this.slice2D(res, [0, res.shape[1] / 4 * 2], [res.shape[0], res.shape[1] / 4]);
+            var o = _this.slice2D(res, [0, res.shape[1] / 4 * 3], [res.shape[0], res.shape[1] / 4]);
+            var newC = _this.add(_this.multiplyStrict(c, _this.sigmoid(_this.scalarPlusArray(forgetBias, f))), _this.multiplyStrict(_this.sigmoid(i), _this.tanh(j)));
+            var newH = _this.multiplyStrict(_this.tanh(newC), _this.sigmoid(o));
+            return [newC, newH];
+        });
+        return [res[0], res[1]];
+    };
     return NDArrayMath;
 }());
 exports.NDArrayMath = NDArrayMath;
@@ -2399,7 +2439,7 @@ var MatrixOrientation;
     MatrixOrientation[MatrixOrientation["TRANSPOSED"] = 1] = "TRANSPOSED";
 })(MatrixOrientation = exports.MatrixOrientation || (exports.MatrixOrientation = {}));
 
-},{"../util":79,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
+},{"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -2426,9 +2466,6 @@ var NDArrayMathCPU = (function (_super) {
     }
     NDArrayMathCPU.prototype.cloneInternal = function (ndarray) {
         return ndarray_1.NDArray.make(ndarray.shape, { values: new Float32Array(ndarray.getValues()) });
-    };
-    NDArrayMathCPU.prototype.reshapeInternal = function (ndarray, newShape) {
-        return this.cloneInternal(ndarray).reshape(newShape);
     };
     NDArrayMathCPU.prototype.slice2DInternal = function (input, beginRowCol, sizeRowCol) {
         var result = ndarray_1.Array2D.zeros(sizeRowCol);
@@ -3069,7 +3106,7 @@ var NDArrayMathCPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathCPU = NDArrayMathCPU;
 
-},{"../math/conv_util":16,"../util":79,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3082,65 +3119,36 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = require("../util");
-var concat3d_util = require("./concat3d_util");
-var conv_util = require("./conv_util");
 var math_1 = require("./math");
 var ndarray = require("./ndarray");
 var ndarray_1 = require("./ndarray");
-var addscaledmat_gpu = require("./webgl/addscaledmat_gpu");
+var addscaledmat_gpu_1 = require("./webgl/addscaledmat_gpu");
 var argmaxequals_gpu_1 = require("./webgl/argmaxequals_gpu");
 var argminmax_gpu_1 = require("./webgl/argminmax_gpu");
-var avg_pool_gpu = require("./webgl/avg_pool_gpu");
-var batchnorm_gpu = require("./webgl/batchnorm_gpu");
-var concat3d_gpu = require("./webgl/concat3d_gpu");
-var conv_backprop_gpu = require("./webgl/conv_backprop_gpu");
-var conv_gpu = require("./webgl/conv_gpu");
-var copy_gpu = require("./webgl/copy_gpu");
-var gpgpu_context_1 = require("./webgl/gpgpu_context");
+var batchnorm_gpu_1 = require("./webgl/batchnorm_gpu");
 var binaryop_gpu_1 = require("./webgl/binaryop_gpu");
+var concat3d_gpu_1 = require("./webgl/concat3d_gpu");
+var conv_backprop_gpu_1 = require("./webgl/conv_backprop_gpu");
+var conv_gpu_1 = require("./webgl/conv_gpu");
+var copy_gpu_1 = require("./webgl/copy_gpu");
+var gpgpu_context_1 = require("./webgl/gpgpu_context");
 var gpgpu_math = require("./webgl/gpgpu_math");
 var gpgpu_util = require("./webgl/gpgpu_util");
 var logsumexp_gpu_1 = require("./webgl/logsumexp_gpu");
-var max_pool_backprop_gpu = require("./webgl/max_pool_backprop_gpu");
-var max_pool_gpu = require("./webgl/max_pool_gpu");
-var min_pool_gpu = require("./webgl/min_pool_gpu");
+var max_pool_backprop_gpu_1 = require("./webgl/max_pool_backprop_gpu");
 var minmax_gpu_1 = require("./webgl/minmax_gpu");
 var mulmat_gpu_1 = require("./webgl/mulmat_gpu");
-var pool_gpu = require("./webgl/pool_gpu");
+var pool_gpu_1 = require("./webgl/pool_gpu");
 var reducesum_gpu_1 = require("./webgl/reducesum_gpu");
-var reshape_gpu = require("./webgl/reshape_gpu");
-var resize_bilinear_gpu = require("./webgl/resize_bilinear_gpu");
+var resize_bilinear_gpu_1 = require("./webgl/resize_bilinear_gpu");
 var texture_manager_1 = require("./webgl/texture_manager");
-var webgl_util = require("./webgl/webgl_util");
 var unaryop_gpu_1 = require("./webgl/unaryop_gpu");
-var BATCHNORM_PROG = 'batchnorm';
-var COPY_PROG = 'copy';
-var CONCAT_PROG = 'concat';
-var ADD_SCALED_MAT_PROG = 'addscaledmat';
-var RESHAPE_PROG = 'reshape';
-var CONV2D_PROG = 'conv';
-var CONV2D_TRANSPOSE_PROG = 'conv_transpose';
-var CONV2D_DERW_PROG = 'conv_derw';
-var CONV2D_DERB_PROG = 'conv_derb';
-var MAX_POOL_PROG = 'maxpool';
-var MAX_POOL_POSITIONS_PROG = 'maxpool_posn';
-var MAX_POOL_BACKPROP_PROG = 'maxpool_backprop';
-var MIN_POOL_PROG = 'minpool';
-var AVG_POOL_PROG = 'avgpool';
-var RESIZE_BILINEAR_PROG = 'resizebilin';
-function makeCopyProgramName(sourceShapeRowCol, sourceSizeRowCol, destSizeRowCol) {
-    var shapeName = sourceShapeRowCol[0] + "_" + sourceShapeRowCol[1];
-    var srcSizeName = sourceSizeRowCol[0] + "_" + sourceSizeRowCol[1];
-    var dstSizeName = destSizeRowCol[0] + "_" + destSizeRowCol[1];
-    return COPY_PROG + "_" + shapeName + "_" + srcSizeName + "_" + dstSizeName;
-}
+var webgl_util = require("./webgl/webgl_util");
 var NDArrayMathGPU = (function (_super) {
     __extends(NDArrayMathGPU, _super);
     function NDArrayMathGPU(gpgpu, safeMode) {
         if (safeMode === void 0) { safeMode = true; }
         var _this = _super.call(this, safeMode) || this;
-        _this.programCache = {};
         _this.binaryCache = {};
         if (gpgpu == null) {
             var gl = gpgpu_util.createWebGLContext();
@@ -3159,40 +3167,11 @@ var NDArrayMathGPU = (function (_super) {
         return this.gpgpu;
     };
     NDArrayMathGPU.prototype.cloneInternal = function (ndarray) {
-        var textureShapeRC = ndarray.getTextureShapeRC();
-        var program = this.getAndSaveProgram(makeCopyProgramName(textureShapeRC, textureShapeRC, textureShapeRC), function () { return copy_gpu.getFragmentShaderSource(textureShapeRC, textureShapeRC, textureShapeRC); });
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        copy_gpu.copy(this.gpgpu, program, ndarray.getTexture(), textureShapeRC, [0, 0], textureShapeRC, resultTexture, textureShapeRC, [0, 0], textureShapeRC);
-        return ndarray_1.NDArray.make(ndarray.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
-    };
-    NDArrayMathGPU.prototype.reshapeInternal = function (ndarray, newShape) {
-        var newTexShape;
-        switch (newShape.length) {
-            case 0:
-                newTexShape = [1, 1];
-                break;
-            case 1:
-                newTexShape = [newShape[0], 1];
-                break;
-            case 2:
-                newTexShape = [newShape[0], newShape[1]];
-                break;
-            case 3:
-                newTexShape = [newShape[0], newShape[1] * newShape[2]];
-                break;
-            default:
-                throw Error("Reshapes into " + newShape.length + "-dim ndarray is not yet " +
-                    "supported on GPU");
-        }
-        var actualTexShape = ndarray.getTextureShapeRC(newTexShape);
-        var clonedArray;
-        if (!util.arraysEqual(actualTexShape, newTexShape)) {
-            clonedArray = this.reshapeTexture(ndarray, newTexShape);
-        }
-        else {
-            clonedArray = this.cloneInternal(ndarray);
-        }
-        return clonedArray.reshape(newShape);
+        var texShape = ndarray.getTextureShapeRC();
+        var source = ndarray.as2D(texShape[0], texShape[1]);
+        var output = this.makeOutputArray(texShape);
+        this.copy2D(source, [0, 0], texShape, output, [0, 0], texShape);
+        return output.reshape(ndarray.shape);
     };
     NDArrayMathGPU.prototype.slice2DInternal = function (input, beginRowCol, sizeRowCol) {
         var result = ndarray_1.NDArray.make(sizeRowCol, {
@@ -3203,53 +3182,17 @@ var NDArrayMathGPU = (function (_super) {
         return result;
     };
     NDArrayMathGPU.prototype.copy2DInternal = function (source, sourceBeginRowCol, sourceSizeRowCol, dest, destBeginRowCol, destSizeRowCol) {
-        var sourceShapeRC = source.getTextureShapeRC();
-        var destShapeRC = dest.getTextureShapeRC();
-        var program = this.getAndSaveProgram(makeCopyProgramName(sourceShapeRC, sourceSizeRowCol, destSizeRowCol), function () { return copy_gpu.getFragmentShaderSource(sourceShapeRC, sourceSizeRowCol, destSizeRowCol); });
-        copy_gpu.copy(this.gpgpu, program, source.getTexture(), sourceShapeRC, sourceBeginRowCol, sourceSizeRowCol, dest.getTexture(), destShapeRC, destBeginRowCol, destSizeRowCol);
+        var program = new copy_gpu_1.Copy2DProgram(sourceSizeRowCol[1], destSizeRowCol[1]);
+        var customSetup = program.getCustomSetupFunc(sourceBeginRowCol, destBeginRowCol, destSizeRowCol);
+        this.compileAndRun(program, [source], dest, customSetup);
     };
     NDArrayMathGPU.prototype.concat3DInternal = function (x1, x2, axis) {
-        var x1TexShapeRC = conv_util.computeTexShapeFrom3D(x1.shape);
-        var x2TexShapeRC = conv_util.computeTexShapeFrom3D(x2.shape);
-        var actualX1TexShape = x1.getTextureShapeRC(x1TexShapeRC);
-        var cleanupX1 = false;
-        if (!util.arraysEqual(actualX1TexShape, x1TexShapeRC)) {
-            x1 = this.reshapeTexture(x1, x1TexShapeRC);
-            cleanupX1 = true;
-        }
-        var actualX2TexShape = x2.getTextureShapeRC(x2TexShapeRC);
-        var cleanupX2 = false;
-        if (!util.arraysEqual(actualX2TexShape, x2TexShapeRC)) {
-            x2 = this.reshapeTexture(x2, x2TexShapeRC);
-            cleanupX2 = true;
-        }
-        var resultShapeRCD = concat3d_util.computeConcat3DOutputShape(x1.shape, x2.shape, axis);
-        var program = this.getAndSaveProgram(CONCAT_PROG + "_" + x1.shape + "_" + x2.shape + "_" + axis, function () { return concat3d_gpu.getFragmentShaderSource(x1.shape, x2.shape, resultShapeRCD, axis); });
-        var resultTexShape = conv_util.computeTexShapeFrom3D(resultShapeRCD);
-        var resultTex = this.textureManager.acquireTexture(resultTexShape);
-        concat3d_gpu.concat3D(this.gpgpu, program, x1.getTexture(), x2.getTexture(), resultTex, resultTexShape);
-        if (cleanupX1) {
-            x1.dispose();
-        }
-        if (cleanupX2) {
-            x2.dispose();
-        }
-        return ndarray_1.NDArray.make(resultShapeRCD, { texture: resultTex, textureShapeRC: resultTexShape });
+        var program = new concat3d_gpu_1.Concat3DProgram(x1.shape, x2.shape, axis);
+        return this.compileAndRun(program, [x1, x2]);
     };
     NDArrayMathGPU.prototype.scaledArrayAddInternal = function (c1, a, c2, b) {
-        var cleanupB = false;
-        if (!this.doGPUShapesMatch(a, b)) {
-            b = this.reshapeTexture(b, a.getTextureShapeRC());
-            cleanupB = true;
-        }
-        var program = this.getAndSaveProgram(ADD_SCALED_MAT_PROG, function () { return addscaledmat_gpu.getFragmentShaderSource(); });
-        var textureShapeRC = a.getTextureShapeRC();
-        var resultTexture = this.textureManager.acquireTexture(textureShapeRC);
-        addscaledmat_gpu.addScaledMatrices(this.gpgpu, program, a.getTexture(), b.getTexture(), textureShapeRC[0], textureShapeRC[1], c1.getTexture(), c2.getTexture(), resultTexture);
-        if (cleanupB) {
-            b.dispose();
-        }
-        return ndarray_1.NDArray.make(a.shape, { texture: resultTexture, textureShapeRC: textureShapeRC });
+        var program = new addscaledmat_gpu_1.AddScaledMatProgram(a.shape, b.shape);
+        return this.compileAndRun(program, [a, b, c1, c2]);
     };
     NDArrayMathGPU.prototype.negInternal = function (a) {
         var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.NEG);
@@ -3260,22 +3203,17 @@ var NDArrayMathGPU = (function (_super) {
         var texture = this.textureManager.acquireTexture(textureShapeRC);
         return ndarray_1.NDArray.make(shape, { texture: texture, textureShapeRC: textureShapeRC });
     };
-    NDArrayMathGPU.prototype.compileAndRun = function (program, inputs) {
+    NDArrayMathGPU.prototype.compileAndRun = function (program, inputs, output, customSetup) {
         var _this = this;
-        var output = this.makeOutputArray(program.outputShape);
+        if (output == null) {
+            output = this.makeOutputArray(program.outputShape);
+        }
         var key = gpgpu_math.makeShaderKey(program, inputs, output);
         var binary = this.getAndSaveBinary(key, function () {
             return gpgpu_math.compileProgram(_this.gpgpu, program, inputs, output);
         });
-        gpgpu_math.runProgram(binary, inputs, output);
+        gpgpu_math.runProgram(binary, inputs, output, customSetup);
         return output;
-    };
-    NDArrayMathGPU.prototype.reshapeTexture = function (a, newTextureShape) {
-        var aTexShape = a.getTextureShapeRC();
-        var program = this.getAndSaveProgram(RESHAPE_PROG, function () { return reshape_gpu.getFragmentShaderSource(); });
-        var resultTexture = this.textureManager.acquireTexture(newTextureShape);
-        reshape_gpu.reshape(this.gpgpu, program, a.getTexture(), aTexShape[0], aTexShape[1], resultTexture, newTextureShape[0], newTextureShape[1]);
-        return ndarray_1.NDArray.make(a.shape, { texture: resultTexture, textureShapeRC: newTextureShape });
     };
     NDArrayMathGPU.prototype.matMulInternal = function (a, b, aOrientation, bOrientation) {
         var program = new mulmat_gpu_1.MatMulProgram(a.shape, b.shape, aOrientation, bOrientation);
@@ -3286,63 +3224,20 @@ var NDArrayMathGPU = (function (_super) {
         return this.compileAndRun(program, [a, b]);
     };
     NDArrayMathGPU.prototype.batchNormalization3DInternal = function (x, mean, variance, varianceEpsilon, scale, offset) {
-        var xTexShape = x.getTextureShapeRC();
-        var cleanupMean = false;
-        var preferredMeanTexShape = mean.rank === 1 ? [1, mean.size] : xTexShape;
-        var meanTexShape = mean.getTextureShapeRC(preferredMeanTexShape);
-        if (!util.arraysEqual(meanTexShape, preferredMeanTexShape)) {
-            mean = this.reshapeTexture(mean, preferredMeanTexShape);
-            meanTexShape = preferredMeanTexShape;
-            cleanupMean = true;
-        }
-        var cleanupVariance = false;
-        var preferredVarianceTexShape = variance.rank === 1 ? [1, variance.size] : xTexShape;
-        var varianceTexShape = variance.getTextureShapeRC(preferredMeanTexShape);
-        if (!util.arraysEqual(varianceTexShape, preferredVarianceTexShape)) {
-            variance = this.reshapeTexture(variance, preferredVarianceTexShape);
-            varianceTexShape = preferredVarianceTexShape;
-            cleanupVariance = true;
-        }
-        var scaleTexShape = null;
-        var cleanupScale = false;
-        if (scale != null) {
-            var preferredScaleTexShape = scale.rank === 1 ? [1, scale.size] : xTexShape;
-            scaleTexShape = scale.getTextureShapeRC(preferredScaleTexShape);
-            if (!util.arraysEqual(scaleTexShape, preferredScaleTexShape)) {
-                scale = this.reshapeTexture(scale, preferredScaleTexShape);
-                scaleTexShape = preferredScaleTexShape;
-                cleanupScale = true;
-            }
-        }
-        var offsetTexShape = null;
-        var cleanupOffset = false;
+        if (varianceEpsilon === void 0) { varianceEpsilon = 0.000001; }
+        var inputs = [x, mean, variance];
+        var offsetShape = null;
         if (offset != null) {
-            var preferredOffsetTexShape = offset.rank === 1 ? [1, offset.size] : xTexShape;
-            offsetTexShape = offset.getTextureShapeRC(preferredOffsetTexShape);
-            if (!util.arraysEqual(offsetTexShape, preferredOffsetTexShape)) {
-                offset = this.reshapeTexture(offset, preferredOffsetTexShape);
-                offsetTexShape = preferredOffsetTexShape;
-                cleanupOffset = true;
-            }
+            offsetShape = offset.shape;
+            inputs.push(offset);
         }
-        var resultTexShape = x.getTextureShapeRC();
-        var program = this.getAndSaveProgram(BATCHNORM_PROG + "_" + xTexShape + "_" + meanTexShape + "_" + varianceTexShape + "_" +
-            (scaleTexShape + "_" + offsetTexShape + "_" + varianceEpsilon), function () { return batchnorm_gpu.getFragmentShaderSource(xTexShape, meanTexShape, varianceTexShape, offsetTexShape, scaleTexShape, varianceEpsilon); });
-        var resultTexture = this.textureManager.acquireTexture(resultTexShape);
-        batchnorm_gpu.batchNormalization(this.gpgpu, program, x.getTexture(), xTexShape, mean.getTexture(), meanTexShape, variance.getTexture(), varianceTexShape, offset != null ? offset.getTexture() : null, offset != null ? offsetTexShape : null, scale != null ? scale.getTexture() : null, scale != null ? scaleTexShape : null, resultTexture, resultTexShape);
-        if (cleanupMean) {
-            mean.dispose();
+        var scaleShape = null;
+        if (scale != null) {
+            scaleShape = scale.shape;
+            inputs.push(scale);
         }
-        if (cleanupVariance) {
-            variance.dispose();
-        }
-        if (cleanupScale) {
-            scale.dispose();
-        }
-        if (cleanupOffset) {
-            offset.dispose();
-        }
-        return ndarray_1.NDArray.make(x.shape, { texture: resultTexture, textureShapeRC: resultTexShape });
+        var program = new batchnorm_gpu_1.BatchNormProgram(x.shape, mean.shape, variance.shape, offsetShape, scaleShape, varianceEpsilon);
+        return this.compileAndRun(program, inputs);
     };
     NDArrayMathGPU.prototype.switchDimInternal = function (a, newDim) {
         throw new Error('Not yet implemented!');
@@ -3418,293 +3313,60 @@ var NDArrayMathGPU = (function (_super) {
         var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.STEP);
         return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.conv2dInternal = function (x, weights, biases, stride, zeroPad) {
+    NDArrayMathGPU.prototype.conv2dInternal = function (x, weights, bias, stride, zeroPad) {
         var fieldSize = weights.shape[0];
-        var inputDepth = weights.shape[2];
         var outputDepth = weights.shape[3];
-        var progKey = [
-            CONV2D_PROG, x.shape, outputDepth, fieldSize, stride, biases != null
-        ].join('_');
-        var program = this.getAndSaveProgram(progKey, function () {
-            return conv_gpu.getFragmentShaderSource(x.shape, outputDepth, fieldSize, stride, zeroPad, biases != null);
-        });
-        var xTexShape = conv_util.computeTexShapeFrom3D(x.shape);
-        var wTexShape = conv_util.computeWeightsTexShape(inputDepth, outputDepth, fieldSize);
-        var biasTexShape = conv_util.computeBiasesTexShape(outputDepth);
-        var actualXTexShape = x.getTextureShapeRC(xTexShape);
-        var cleanupX = false;
-        if (!util.arraysEqual(actualXTexShape, xTexShape)) {
-            x = this.reshapeTexture(x, xTexShape);
-            cleanupX = true;
-        }
-        var cleanupW = false;
-        var actualWTexShape = weights.getTextureShapeRC(wTexShape);
-        if (!util.arraysEqual(actualWTexShape, wTexShape)) {
-            weights = this.reshapeTexture(weights, wTexShape);
-            cleanupW = true;
-        }
-        var cleanupB = false;
-        if (biases != null) {
-            var actualBTexShape = biases.getTextureShapeRC(biasTexShape);
-            if (!util.arraysEqual(actualBTexShape, biasTexShape)) {
-                biases = this.reshapeTexture(biases, biasTexShape);
-                cleanupB = true;
-            }
-        }
-        var resultShape = conv_util.computeOutputShape3D(x.shape, fieldSize, outputDepth, stride, zeroPad);
-        var resultTexShape = conv_util.computeTexShapeFrom3D(resultShape);
-        var resultTex = this.textureManager.acquireTexture(resultTexShape);
-        conv_gpu.convolve(this.gpgpu, program, x.getTexture(), weights.getTexture(), biases != null ? biases.getTexture() : null, resultTex, resultTexShape);
-        if (cleanupX) {
-            x.dispose();
-        }
-        if (cleanupW) {
-            weights.dispose();
-        }
-        if (cleanupB && biases != null) {
-            biases.dispose();
-        }
-        return ndarray_1.NDArray.make(resultShape, { texture: resultTex, textureShapeRC: resultTexShape });
+        var program = new conv_gpu_1.Conv2DProgram(x.shape, fieldSize, outputDepth, stride, zeroPad, bias != null);
+        var inputs = bias != null ? [x, weights, bias] : [x, weights];
+        return this.compileAndRun(program, inputs);
     };
     NDArrayMathGPU.prototype.conv2dBackPropInternal = function (x, dy, weights, stride, pad) {
         var fSize = weights.shape[0];
-        var inputDepth = weights.shape[2];
-        var outputDepth = weights.shape[3];
-        var xTexShape = conv_util.computeTexShapeFrom3D(x.shape);
-        var wTexShape = conv_util.computeWeightsTexShape(inputDepth, outputDepth, fSize);
-        var yTexShape = conv_util.computeTexShapeFrom3D(dy.shape);
-        var cleanupX = false;
-        var actualXTexShape = x.getTextureShapeRC(xTexShape);
-        if (!util.arraysEqual(actualXTexShape, xTexShape)) {
-            x = this.reshapeTexture(x, xTexShape);
-            cleanupX = true;
-        }
-        var cleanupW = false;
-        var actualWTexShape = weights.getTextureShapeRC(wTexShape);
-        if (!util.arraysEqual(actualWTexShape, wTexShape)) {
-            weights = this.reshapeTexture(weights, wTexShape);
-            cleanupW = true;
-        }
-        var cleanupY = false;
-        var actualYTexShape = dy.getTextureShapeRC(yTexShape);
-        if (!util.arraysEqual(actualYTexShape, yTexShape)) {
-            dy = this.reshapeTexture(dy, yTexShape);
-            cleanupY = true;
-        }
         var dw = this.conv2dDerWeights(x, dy, fSize, stride, pad);
         var db = this.conv2dDerBias(dy);
         var dx = this.conv2dTransposeInternal(dy, weights, null, stride, pad);
-        if (cleanupX) {
-            x.dispose();
-        }
-        if (cleanupW) {
-            weights.dispose();
-        }
-        if (cleanupY) {
-            dy.dispose();
-        }
         return { dx: dx, db: db, dw: dw };
     };
-    NDArrayMathGPU.prototype.conv2dTransposeInternal = function (x, weights, biases, origStride, origPad) {
+    NDArrayMathGPU.prototype.conv2dTransposeInternal = function (x, weights, bias, origStride, origPad) {
         var origInputDepth = weights.shape[2];
-        var origOutputDepth = weights.shape[3];
         var fieldSize = weights.shape[0];
-        var progKey = [
-            CONV2D_TRANSPOSE_PROG, x.shape, fieldSize, origInputDepth, origStride,
-            origPad, biases != null
-        ].join('_');
-        var program = this.getAndSaveProgram(progKey, function () {
-            return conv_backprop_gpu.getFragmentShaderConvTransposeSource(x.shape, fieldSize, origInputDepth, origStride, origPad, biases != null);
-        });
-        var xTexShape = conv_util.computeTexShapeFrom3D(x.shape);
-        var wTexShape = conv_util.computeWeightsTexShape(origInputDepth, origOutputDepth, fieldSize);
-        var biasTexShape = conv_util.computeBiasesTexShape(origInputDepth);
-        var actualXTexShape = x.getTextureShapeRC(xTexShape);
-        var cleanupX = false;
-        if (!util.arraysEqual(actualXTexShape, xTexShape)) {
-            x = this.reshapeTexture(x, xTexShape);
-            cleanupX = true;
-        }
-        var cleanupW = false;
-        var actualWTexShape = weights.getTextureShapeRC(wTexShape);
-        if (!util.arraysEqual(actualWTexShape, wTexShape)) {
-            weights = this.reshapeTexture(weights, wTexShape);
-            cleanupW = true;
-        }
-        var cleanupB = false;
-        if (biases != null) {
-            var actualBiasTexShape = biases.getTextureShapeRC(biasTexShape);
-            if (!util.arraysEqual(actualBiasTexShape, biasTexShape)) {
-                biases = this.reshapeTexture(biases, biasTexShape);
-                cleanupB = true;
-            }
-        }
-        var dilatedRC = conv_util.computeDilatedRC([x.shape[0], x.shape[1]], origStride);
-        var pad = fieldSize - 1 - origPad;
-        var resultShape = conv_util.computeOutputShape3D([dilatedRC[0], dilatedRC[1], origOutputDepth], fieldSize, origInputDepth, 1, pad);
-        var resultTexShape = conv_util.computeTexShapeFrom3D(resultShape);
-        var resultTex = this.textureManager.acquireTexture(resultTexShape);
-        conv_backprop_gpu.convTranspose(this.gpgpu, program, x.getTexture(), weights.getTexture(), biases != null ? biases.getTexture() : null, resultTex, resultTexShape);
-        if (cleanupX) {
-            x.dispose();
-        }
-        if (cleanupW) {
-            weights.dispose();
-        }
-        if (cleanupB) {
-            biases.dispose();
-        }
-        return ndarray_1.NDArray.make(resultShape, { texture: resultTex, textureShapeRC: resultTexShape });
+        var program = new conv_backprop_gpu_1.Conv2DTransposeProgram(x.shape, fieldSize, origInputDepth, origStride, origPad, bias != null);
+        var inputs = bias != null ? [x, weights, bias] : [x, weights];
+        return this.compileAndRun(program, inputs);
     };
     NDArrayMathGPU.prototype.conv2dDerWeights = function (x, dY, fSize, stride, zeroPad) {
-        var inputDepth = x.shape[2];
         var outputDepth = dY.shape[2];
-        var progKey = [
-            CONV2D_DERW_PROG, x.shape, fSize, outputDepth, stride, zeroPad
-        ].join('_');
-        var program = this.getAndSaveProgram(progKey, function () {
-            return conv_backprop_gpu.getFragmentShaderDerWeightsSource(x.shape, fSize, outputDepth, stride, zeroPad);
-        });
-        var xTexShape = conv_util.computeTexShapeFrom3D(x.shape);
-        var yShape = conv_util.computeOutputShape3D(x.shape, fSize, outputDepth, stride, zeroPad);
-        var yTexShape = conv_util.computeTexShapeFrom3D(yShape);
-        var actualXTexShape = x.getTextureShapeRC(xTexShape);
-        var cleanupX = false;
-        if (!util.arraysEqual(actualXTexShape, xTexShape)) {
-            x = this.reshapeTexture(x, xTexShape);
-            cleanupX = true;
-        }
-        var cleanupY = false;
-        var actualYTexShape = dY.getTextureShapeRC(yTexShape);
-        if (!util.arraysEqual(actualYTexShape, yTexShape)) {
-            dY = this.reshapeTexture(dY, yTexShape);
-            cleanupY = true;
-        }
-        var resultTexShape = conv_util.computeWeightsTexShape(inputDepth, outputDepth, fSize);
-        var resultTex = this.textureManager.acquireTexture(resultTexShape);
-        conv_backprop_gpu.derWeights(this.gpgpu, program, x.getTexture(), dY.getTexture(), resultTex, resultTexShape);
-        if (cleanupX) {
-            x.dispose();
-        }
-        if (cleanupY) {
-            dY.dispose();
-        }
-        var weightsShape = conv_util.computeWeightsShape4D(inputDepth, outputDepth, fSize);
-        return ndarray_1.NDArray.make(weightsShape, { texture: resultTex, textureShapeRC: resultTexShape });
+        var program = new conv_backprop_gpu_1.Conv2DDerWeightsProgram(x.shape, fSize, outputDepth, stride, zeroPad);
+        return this.compileAndRun(program, [x, dY]);
     };
     NDArrayMathGPU.prototype.conv2dDerBias = function (dY) {
-        var outputDepth = dY.shape[2];
-        var progKey = [CONV2D_DERB_PROG, dY.shape].join('_');
-        var program = this.getAndSaveProgram(progKey, function () {
-            return conv_backprop_gpu.getFragmentShaderDerBiasSource(dY.shape);
-        });
-        var yTexShape = conv_util.computeTexShapeFrom3D(dY.shape);
-        var cleanupY = false;
-        var actualYTexShape = dY.getTextureShapeRC(yTexShape);
-        if (!util.arraysEqual(actualYTexShape, yTexShape)) {
-            dY = this.reshapeTexture(dY, yTexShape);
-            cleanupY = true;
-        }
-        var resultTexShape = conv_util.computeBiasesTexShape(outputDepth);
-        var resultTex = this.textureManager.acquireTexture(resultTexShape);
-        conv_backprop_gpu.derBias(this.gpgpu, program, dY.getTexture(), resultTex, resultTexShape);
-        if (cleanupY) {
-            dY.dispose();
-        }
-        return ndarray_1.NDArray.make([outputDepth], { texture: resultTex, textureShapeRC: resultTexShape });
-    };
-    NDArrayMathGPU.prototype.pool = function (program, x, fSize, stride, pad) {
-        var xTexShape = conv_util.computeTexShapeFrom3D(x.shape);
-        var actualXTexShape = x.getTextureShapeRC(xTexShape);
-        var cleanupX = false;
-        if (!util.arraysEqual(actualXTexShape, xTexShape)) {
-            x = this.reshapeTexture(x, xTexShape);
-            cleanupX = true;
-        }
-        var resultShape = conv_util.computeOutputShape3D(x.shape, fSize, x.shape[2], stride, pad);
-        var resultTexShape = conv_util.computeTexShapeFrom3D(resultShape);
-        var poolResultTex = this.textureManager.acquireTexture(resultTexShape);
-        pool_gpu.poolCommon(this.gpgpu, program, x.getTexture(), poolResultTex, resultTexShape);
-        if (cleanupX) {
-            x.dispose();
-        }
-        return ndarray_1.NDArray.make(resultShape, { texture: poolResultTex, textureShapeRC: resultTexShape });
+        var program = new conv_backprop_gpu_1.Conv2DDerBiasProgram(dY.shape);
+        return this.compileAndRun(program, [dY]);
     };
     NDArrayMathGPU.prototype.maxPoolInternal = function (x, fSize, stride, pad) {
-        var maxPoolProgKey = [MAX_POOL_PROG, x.shape, fSize, stride, pad].join('_');
-        var maxPoolProgram = this.getAndSaveProgram(maxPoolProgKey, function () {
-            return max_pool_gpu.getFragmentShaderMaxPoolSource(x.shape, fSize, stride, pad);
-        });
-        return this.pool(maxPoolProgram, x, fSize, stride, pad);
+        var program = new pool_gpu_1.Pool2DProgram(x.shape, fSize, stride, pad, 'max', false);
+        return this.compileAndRun(program, [x]);
     };
     NDArrayMathGPU.prototype.minPoolInternal = function (x, fSize, stride, pad) {
-        var minPoolProgKey = [MIN_POOL_PROG, x.shape, fSize, stride, pad].join('_');
-        var minPoolProgram = this.getAndSaveProgram(minPoolProgKey, function () {
-            return min_pool_gpu.getFragmentShaderMinPoolSource(x.shape, fSize, stride, pad);
-        });
-        return this.pool(minPoolProgram, x, fSize, stride, pad);
+        var program = new pool_gpu_1.Pool2DProgram(x.shape, fSize, stride, pad, 'min', false);
+        return this.compileAndRun(program, [x]);
     };
     NDArrayMathGPU.prototype.avgPoolInternal = function (x, fSize, stride, pad) {
-        var avgPoolProgKey = [AVG_POOL_PROG, x.shape, fSize, stride, pad].join('_');
-        var avgPoolProgram = this.getAndSaveProgram(avgPoolProgKey, function () {
-            return avg_pool_gpu.getFragmentShaderAvgPoolSource(x.shape, fSize, stride, pad);
-        });
-        return this.pool(avgPoolProgram, x, fSize, stride, pad);
+        var program = new pool_gpu_1.Pool2DProgram(x.shape, fSize, stride, pad, 'avg', false);
+        return this.compileAndRun(program, [x]);
     };
     NDArrayMathGPU.prototype.maxPoolBackpropInternal = function (dy, x, fSize, origStride, origPad) {
-        var maxPoolPositionsProgKey = [
-            MAX_POOL_POSITIONS_PROG, x.shape, fSize, origStride, origPad
-        ].join('_');
-        var maxPoolPositionsProgram = this.getAndSaveProgram(maxPoolPositionsProgKey, function () {
-            return max_pool_gpu.getFragmentShaderMaxPoolPositionsSource(x.shape, fSize, origStride, origPad);
-        });
-        var maxPoolResultShape = conv_util.computeOutputShape3D(x.shape, fSize, x.shape[2], origStride, origPad);
-        var maxPoolResultTexShape = conv_util.computeTexShapeFrom3D(maxPoolResultShape);
-        var maxPoolPositionsResultTex = this.textureManager.acquireTexture(maxPoolResultTexShape);
-        var xTexShape = conv_util.computeTexShapeFrom3D(x.shape);
-        var actualXTexShape = x.getTextureShapeRC(xTexShape);
-        var cleanupX = false;
-        if (!util.arraysEqual(actualXTexShape, xTexShape)) {
-            x = this.reshapeTexture(x, xTexShape);
-            cleanupX = true;
-        }
-        max_pool_gpu.maxPoolCommon(this.gpgpu, maxPoolPositionsProgram, x.getTexture(), maxPoolPositionsResultTex, maxPoolResultTexShape);
-        var maxPoolBackpropProgKey = [
-            MAX_POOL_BACKPROP_PROG, dy.shape, fSize, origStride, origPad
-        ].join('_');
-        var program = this.getAndSaveProgram(maxPoolBackpropProgKey, function () {
-            return max_pool_backprop_gpu.getFragmentShaderMaxPoolBackprop(dy.shape, fSize, origStride, origPad);
-        });
-        var dyTexShape = conv_util.computeTexShapeFrom3D(dy.shape);
-        var actualDyTexShape = dy.getTextureShapeRC(dyTexShape);
-        var cleanupDy = false;
-        if (!util.arraysEqual(actualDyTexShape, dyTexShape)) {
-            dy = this.reshapeTexture(dy, dyTexShape);
-            cleanupDy = true;
-        }
-        var dilatedDyRC = conv_util.computeDilatedRC([dy.shape[0], dy.shape[1]], origStride);
-        var pad = fSize - 1 - origPad;
-        var resultShapeRCD = conv_util.computeOutputShape3D([dilatedDyRC[0], dilatedDyRC[1], dy.shape[2]], fSize, dy.shape[2], 1, pad);
-        var resultTexShape = conv_util.computeTexShapeFrom3D(resultShapeRCD);
-        var resultTex = this.textureManager.acquireTexture(resultTexShape);
-        max_pool_backprop_gpu.maxPoolBackprop(this.gpgpu, program, dy.getTexture(), maxPoolPositionsResultTex, resultTex, resultTexShape);
-        if (cleanupDy) {
-            dy.dispose();
-        }
-        if (cleanupX) {
-            x.dispose();
-        }
-        this.textureManager.releaseTexture(maxPoolPositionsResultTex, maxPoolResultTexShape);
-        return ndarray_1.NDArray.make(resultShapeRCD, { texture: resultTex, textureShapeRC: resultTexShape });
+        var getPositions = true;
+        var maxPoolPositionsProgram = new pool_gpu_1.Pool2DProgram(x.shape, fSize, origStride, origPad, 'max', getPositions);
+        var maxPoolPositions = this.compileAndRun(maxPoolPositionsProgram, [x]);
+        var maxPoolBackPropProgram = new max_pool_backprop_gpu_1.MaxPool2DBackpropProgram(dy.shape, fSize, origStride, origPad);
+        var result = this.compileAndRun(maxPoolBackPropProgram, [dy, maxPoolPositions]);
+        maxPoolPositions.dispose();
+        return result;
     };
     NDArrayMathGPU.prototype.resizeBilinear3DInternal = function (x, newShape2D, alignCorners) {
-        var programKey = [RESIZE_BILINEAR_PROG, x.shape, newShape2D, alignCorners].join('_');
-        var newShapeRCD = [newShape2D[0], newShape2D[1], x.shape[2]];
-        var resultTexShape = conv_util.computeTexShapeFrom3D(newShapeRCD);
-        var program = this.getAndSaveProgram(programKey, function () { return resize_bilinear_gpu.getFragmentShaderSource(x.shape, newShape2D, alignCorners); });
-        var resultTexture = this.textureManager.acquireTexture(resultTexShape);
-        resize_bilinear_gpu.resizeBilinear(this.gpgpu, program, x.getTexture(), resultTexture, resultTexShape);
-        return ndarray_1.NDArray.make(newShapeRCD, { texture: resultTexture, textureShapeRC: resultTexShape });
+        var program = new resize_bilinear_gpu_1.ResizeBilinear3DProgram(x.shape, newShape2D, alignCorners);
+        return this.compileAndRun(program, [x]);
     };
     NDArrayMathGPU.prototype.getAndSaveBinary = function (key, getBinary) {
         if (!(key in this.binaryCache)) {
@@ -3712,32 +3374,10 @@ var NDArrayMathGPU = (function (_super) {
         }
         return this.binaryCache[key];
     };
-    NDArrayMathGPU.prototype.getAndSaveProgram = function (programKey, getShaderSource) {
-        if (!(programKey in this.programCache)) {
-            this.programCache[programKey] =
-                this.gpgpu.createProgram(getShaderSource());
-        }
-        return this.programCache[programKey];
-    };
-    NDArrayMathGPU.prototype.doGPUShapesMatch = function (a, b) {
-        util.assertShapesMatch(a.shape, b.shape);
-        if (a.inGPU()) {
-            b.getTextureShapeRC(a.getTextureShapeRC());
-        }
-        else if (b.inGPU()) {
-            a.getTextureShapeRC(b.getTextureShapeRC());
-        }
-        return util.arraysEqual(a.getTextureShapeRC(), b.getTextureShapeRC());
-    };
     NDArrayMathGPU.prototype.getTextureManager = function () {
         return this.textureManager;
     };
     NDArrayMathGPU.prototype.dispose = function () {
-        for (var programKey in this.programCache) {
-            if (this.programCache.hasOwnProperty(programKey)) {
-                this.gpgpu.deleteProgram(this.programCache[programKey]);
-            }
-        }
         for (var key in this.binaryCache) {
             this.gpgpu.deleteProgram(this.binaryCache[key].webGLProgram);
         }
@@ -3750,7 +3390,7 @@ var NDArrayMathGPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathGPU = NDArrayMathGPU;
 
-},{"../util":79,"./concat3d_util":15,"./conv_util":16,"./math":19,"./ndarray":22,"./webgl/addscaledmat_gpu":23,"./webgl/argmaxequals_gpu":24,"./webgl/argminmax_gpu":25,"./webgl/avg_pool_gpu":26,"./webgl/batchnorm_gpu":27,"./webgl/binaryop_gpu":28,"./webgl/concat3d_gpu":29,"./webgl/conv_backprop_gpu":30,"./webgl/conv_gpu":31,"./webgl/copy_gpu":32,"./webgl/gpgpu_context":33,"./webgl/gpgpu_math":34,"./webgl/gpgpu_util":35,"./webgl/logsumexp_gpu":36,"./webgl/max_pool_backprop_gpu":37,"./webgl/max_pool_gpu":38,"./webgl/min_pool_gpu":39,"./webgl/minmax_gpu":40,"./webgl/mulmat_gpu":41,"./webgl/pool_gpu":42,"./webgl/reducesum_gpu":43,"./webgl/reshape_gpu":45,"./webgl/resize_bilinear_gpu":46,"./webgl/texture_manager":49,"./webgl/unaryop_gpu":50,"./webgl/webgl_util":51}],22:[function(require,module,exports){
+},{"./math":19,"./ndarray":22,"./webgl/addscaledmat_gpu":23,"./webgl/argmaxequals_gpu":24,"./webgl/argminmax_gpu":25,"./webgl/batchnorm_gpu":26,"./webgl/binaryop_gpu":27,"./webgl/concat3d_gpu":28,"./webgl/conv_backprop_gpu":29,"./webgl/conv_gpu":30,"./webgl/copy_gpu":31,"./webgl/gpgpu_context":32,"./webgl/gpgpu_math":33,"./webgl/gpgpu_util":34,"./webgl/logsumexp_gpu":35,"./webgl/max_pool_backprop_gpu":36,"./webgl/minmax_gpu":37,"./webgl/mulmat_gpu":38,"./webgl/pool_gpu":39,"./webgl/reducesum_gpu":40,"./webgl/resize_bilinear_gpu":42,"./webgl/texture_manager":45,"./webgl/unaryop_gpu":46,"./webgl/webgl_util":47}],22:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -4185,50 +3825,23 @@ function toTypedArray(a) {
     return (a instanceof Float32Array) ? a : new Float32Array(util.flatten(a));
 }
 
-},{"../util":79,"./webgl/webgl_util":51}],23:[function(require,module,exports){
+},{"../util":75,"./webgl/webgl_util":47}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var gpgpu_context_1 = require("./gpgpu_context");
-function getFragmentShaderSource() {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    uniform sampler2D matrixB;\n    uniform sampler2D matrixAScalar;\n    uniform sampler2D matrixBScalar;\n    varying vec2 resultUV;\n\n    const vec2 halfTexel = vec2(0.5, 0.5);\n\n    void main() {\n      float a = texture2D(matrixA, resultUV).r;\n      float b = texture2D(matrixB, resultUV).r;\n      float aScalar = texture2D(matrixAScalar, halfTexel).r;\n      float bScalar = texture2D(matrixBScalar, halfTexel).r;\n      vec2 abScaled = vec2(a, b) * vec2(aScalar, bScalar);\n      gl_FragColor = vec4(abScaled.x + abScaled.y, 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function addScaledMatrices(gpgpu, addScaledMatricesProgram, a, b, rows, columns, aScalar, bScalar, result) {
-    gpgpu.setOutputMatrixTexture(result, rows, columns);
-    gpgpu.setProgram(addScaledMatricesProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.setInputMatrixTexture(b, 'matrixB', 1);
-    gpgpu.setInputMatrixTexture(aScalar, 'matrixAScalar', 2);
-    gpgpu.setInputMatrixTexture(bScalar, 'matrixBScalar', 3);
-    gpgpu.executeProgram();
-}
-exports.addScaledMatrices = addScaledMatrices;
-function uploadAddScaledMatricesDownload(a, b, rows, columns, aScalar, bScalar) {
-    var gpgpu = new gpgpu_context_1.GPGPUContext();
-    var program = gpgpu.createProgram(getFragmentShaderSource());
-    var aTex = gpgpu.createMatrixTexture(rows, columns);
-    var bTex = gpgpu.createMatrixTexture(rows, columns);
-    var aScalarTex = gpgpu.createMatrixTexture(1, 1);
-    var bScalarTex = gpgpu.createMatrixTexture(1, 1);
-    var resultTex = gpgpu.createMatrixTexture(rows, columns);
-    gpgpu.uploadMatrixToTexture(aTex, rows, columns, a);
-    gpgpu.uploadMatrixToTexture(bTex, rows, columns, b);
-    gpgpu.uploadMatrixToTexture(aScalarTex, 1, 1, new Float32Array([aScalar]));
-    gpgpu.uploadMatrixToTexture(bScalarTex, 1, 1, new Float32Array([bScalar]));
-    addScaledMatrices(gpgpu, program, aTex, bTex, rows, columns, aScalarTex, bScalarTex, resultTex);
-    var result = gpgpu.downloadMatrixFromTexture(resultTex, rows, columns);
-    gpgpu.deleteMatrixTexture(aTex);
-    gpgpu.deleteMatrixTexture(bTex);
-    gpgpu.deleteMatrixTexture(resultTex);
-    gpgpu.deleteMatrixTexture(aScalarTex);
-    gpgpu.deleteMatrixTexture(bScalarTex);
-    gpgpu.deleteProgram(program);
-    gpgpu.dispose();
-    return result;
-}
-exports.uploadAddScaledMatricesDownload = uploadAddScaledMatricesDownload;
+var util = require("../../util");
+var AddScaledMatProgram = (function () {
+    function AddScaledMatProgram(aShape, bShape) {
+        this.variableNames = ['A', 'B', 'c1', 'c2'];
+        this.params = [];
+        this.supportsBroadcasting = true;
+        this.outputShape = util.assertAndGetBroadcastedShape(aShape, bShape);
+        this.userCode = "\n      void main() {\n        float a = getAAtOutCoords();\n        float b = getBAtOutCoords();\n        float c1 = getC1();\n        float c2 = getC2();\n        setOutput(dot(vec2(c1, c2), vec2(a, b)));\n      }\n    ";
+    }
+    return AddScaledMatProgram;
+}());
+exports.AddScaledMatProgram = AddScaledMatProgram;
 
-},{"./gpgpu_context":33}],24:[function(require,module,exports){
+},{"../../util":75}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var argminmax_gpu = require("./argminmax_gpu");
@@ -4250,7 +3863,7 @@ exports.ArgMaxEqualsProgram = ArgMaxEqualsProgram;
 Object.defineProperty(exports, "__esModule", { value: true });
 function getArgMinMaxSnippet(op, texName, size) {
     var compOp = (op === 'min') ? '<' : '>';
-    return "\n    float getArgMinMax" + texName + "() {\n      float bestIndex = 0.0;\n      float bestValue = get" + texName + "Flat(0.0);\n\n      for (int i = 0; i < " + size + "; i++) {\n        float i_float = float(i);\n        float candidate = get" + texName + "Flat(i_float);\n        if (isNaN(candidate)) {\n          return candidate;\n        }\n        if (candidate " + compOp + " bestValue) {\n          bestValue = candidate;\n          bestIndex = i_float;\n        }\n      }\n      return bestIndex;\n    }\n  ";
+    return "\n    float getArgMinMax" + texName + "() {\n      float bestIndex = 0.0;\n      float bestValue = get" + texName + "Flat(0.0);\n\n      for (int ii = 0; ii < " + size + "; ii++) {\n        float i = float(ii);\n        float candidate = get" + texName + "Flat(i);\n        if (isNaN(candidate)) {\n          return candidate;\n        }\n        if (candidate " + compOp + " bestValue) {\n          bestValue = candidate;\n          bestIndex = i;\n        }\n      }\n      return bestIndex;\n    }\n  ";
 }
 exports.getArgMinMaxSnippet = getArgMinMaxSnippet;
 var ArgMinMaxProgram = (function () {
@@ -4268,72 +3881,36 @@ exports.ArgMinMaxProgram = ArgMinMaxProgram;
 },{}],26:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var pool_gpu = require("./pool_gpu");
-function getFragmentShaderAvgPoolSource(xShapeRCD, fSize, stride, pad) {
-    return pool_gpu.getFragmentShaderPoolCommonSource(xShapeRCD, fSize, stride, pad, 'avg', false);
-}
-exports.getFragmentShaderAvgPoolSource = getFragmentShaderAvgPoolSource;
-function avgPool(gpgpu, program, x, result, resultShapeRowCol) {
-    pool_gpu.poolCommon(gpgpu, program, x, result, resultShapeRowCol);
-}
-exports.avgPool = avgPool;
+var util = require("../../util");
+var BatchNormProgram = (function () {
+    function BatchNormProgram(xShape, meanShape, varianceShape, offsetShape, scaleShape, varianceEpsilon) {
+        this.params = [];
+        this.outputShape = [];
+        this.supportsBroadcasting = true;
+        this.variableNames = ['x', 'mean', 'variance'];
+        util.assertAndGetBroadcastedShape(xShape, meanShape);
+        util.assertAndGetBroadcastedShape(xShape, varianceShape);
+        var offsetSnippet = '0.0';
+        if (offsetShape != null) {
+            util.assertAndGetBroadcastedShape(xShape, offsetShape);
+            this.variableNames.push('offset');
+            offsetSnippet = 'getOffsetAtOutCoords()';
+        }
+        var scaleSnippet = '1.0';
+        if (scaleShape != null) {
+            util.assertAndGetBroadcastedShape(xShape, scaleShape);
+            this.variableNames.push('scale');
+            scaleSnippet = 'getScaleAtOutCoords()';
+        }
+        this.params = [varianceEpsilon];
+        this.outputShape = xShape;
+        this.userCode = "\n      void main() {\n        float x = getXAtOutCoords();\n        float mean = getMeanAtOutCoords();\n        float variance = getVarianceAtOutCoords();\n        float offset = " + offsetSnippet + ";\n        float scale = " + scaleSnippet + ";\n        float inv = scale / sqrt(variance + float(" + varianceEpsilon + "));\n        setOutput((x - mean) * inv + offset);\n      }\n    ";
+    }
+    return BatchNormProgram;
+}());
+exports.BatchNormProgram = BatchNormProgram;
 
-},{"./pool_gpu":42}],27:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-function getFragmentShaderSource(xTexShapeRC, meanTexShapeRC, varianceTexShapeRC, offsetTexShapeRC, scaleTexShapeRC, varianceEpsilon) {
-    if (varianceEpsilon === void 0) { varianceEpsilon = 0.001; }
-    var offsetSamplerSnippet = '';
-    var offsetShapeInitializationSnippet = '';
-    var offsetCoordsSnippet = '';
-    var offsetUVSnippet = '';
-    var offsetValueSnippet = '';
-    var offsetOperationSnippet = '0.0';
-    var scaleSamplerSnippet = '';
-    var scaleShapeInitializationSnippet = '';
-    var scaleCoordsSnippet = '';
-    var scaleUVSnippet = '';
-    var scaleValueSnippet = '';
-    var scaleOperationSnippet = '';
-    if (offsetTexShapeRC != null) {
-        offsetSamplerSnippet = 'uniform sampler2D offset;';
-        offsetShapeInitializationSnippet = "const vec2 offsetShapeCR = vec2(\n            " + offsetTexShapeRC[1] + ", " + offsetTexShapeRC[0] + ");";
-        offsetCoordsSnippet = 'vec2 offsetCoordsCR = mod(yTexCR, offsetShapeCR);';
-        offsetUVSnippet =
-            'vec2 offsetUV = (offsetCoordsCR + halfCR) / offsetShapeCR;';
-        offsetValueSnippet = 'float offsetValue = texture2D(offset, offsetUV).r;';
-        offsetOperationSnippet = 'offsetValue';
-    }
-    if (scaleTexShapeRC != null) {
-        scaleSamplerSnippet = 'uniform sampler2D scale;';
-        scaleShapeInitializationSnippet = "const vec2 scaleShapeCR = vec2(\n            " + scaleTexShapeRC[1] + ", " + scaleTexShapeRC[0] + ");";
-        scaleCoordsSnippet = 'vec2 scaleCoordsCR = mod(yTexCR, scaleShapeCR);';
-        scaleUVSnippet = 'vec2 scaleUV = (scaleCoordsCR + halfCR) / scaleShapeCR;';
-        scaleValueSnippet = 'float scaleValue = texture2D(scale, scaleUV).r;';
-        scaleOperationSnippet = 'inv *= scaleValue;';
-    }
-    return "\n    precision highp float;\n    uniform sampler2D x;\n    uniform sampler2D mean;\n    uniform sampler2D variance;\n    " + offsetSamplerSnippet + "\n    " + scaleSamplerSnippet + "\n\n    varying vec2 resultUV;\n\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 meanShapeCR = vec2(" + meanTexShapeRC[1] + ", " + meanTexShapeRC[0] + ");\n    const vec2 varianceShapeCR = vec2(\n        " + varianceTexShapeRC[1] + ", " + varianceTexShapeRC[0] + ");\n\n    " + offsetShapeInitializationSnippet + "\n    " + scaleShapeInitializationSnippet + "\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const float varianceEpsilon = " + varianceEpsilon + ";\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      vec2 meanCoordsCR = mod(yTexCR, meanShapeCR);\n      vec2 varianceCoordsCR = mod(yTexCR, varianceShapeCR);\n      " + offsetCoordsSnippet + "\n      " + scaleCoordsSnippet + "\n\n      vec2 meanUV = (meanCoordsCR + halfCR) / meanShapeCR;\n      vec2 varianceUV = (varianceCoordsCR + halfCR) / varianceShapeCR;\n      " + offsetUVSnippet + "\n      " + scaleUVSnippet + "\n\n      float xValue = texture2D(x, resultUV).r;\n      float meanValue = texture2D(mean, meanUV).r;\n      float varianceValue = texture2D(variance, varianceUV).r;\n      " + offsetValueSnippet + "\n      " + scaleValueSnippet + "\n\n      float inv = 1.0 / sqrt(varianceValue + varianceEpsilon);\n      " + scaleOperationSnippet + "\n      float xTimesInv = xValue * inv;\n      float meanTimesInvWithOffset = " + offsetOperationSnippet + "\n          - meanValue * inv;\n\n      gl_FragColor = vec4(xTimesInv + meanTimesInvWithOffset, 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function batchNormalization(gpgpu, program, x, xShapeRowCol, mean, meanShapeRowCol, variance, varianceShapeRowCol, offset, offsetShapeRowCol, scale, scaleShapeRowCol, result, resultShapeRowCol) {
-    gpgpu.setOutputMatrixTexture(result, resultShapeRowCol[0], resultShapeRowCol[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(x, 'x', 0);
-    gpgpu.setInputMatrixTexture(mean, 'mean', 1);
-    gpgpu.setInputMatrixTexture(variance, 'variance', 2);
-    var nextIndex = 3;
-    if (offset != null) {
-        gpgpu.setInputMatrixTexture(offset, 'offset', nextIndex);
-        nextIndex++;
-    }
-    if (scale != null) {
-        gpgpu.setInputMatrixTexture(scale, 'scale', nextIndex);
-    }
-    gpgpu.executeProgram();
-}
-exports.batchNormalization = batchNormalization;
-
-},{}],28:[function(require,module,exports){
+},{"../../util":75}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -4349,163 +3926,116 @@ var BinaryOpProgram = (function () {
 }());
 exports.BinaryOpProgram = BinaryOpProgram;
 
-},{"../../util":79}],29:[function(require,module,exports){
+},{"../../util":75}],28:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var concat3d_util = require("../concat3d_util");
+var Concat3DProgram = (function () {
+    function Concat3DProgram(x1Shape, x2Shape, axis) {
+        this.variableNames = ['A', 'B'];
+        this.params = [];
+        this.outputShape = [];
+        var yAxes = ['yR', 'yC', 'yD'];
+        var concatAxis = yAxes[axis];
+        this.params = [axis];
+        this.outputShape =
+            concat3d_util.computeConcat3DOutputShape(x1Shape, x2Shape, axis);
+        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float yD = coords.z;\n\n        float value = 0.0;\n        if (" + concatAxis + " < " + x1Shape[axis] + ".0) {\n          value = getA(yR, yC, yD);\n        } else {\n          " + concatAxis + " -= " + x1Shape[axis] + ".0;\n          value = getB(yR, yC, yD);\n        }\n\n        setOutput(value);\n      }\n    ";
+    }
+    return Concat3DProgram;
+}());
+exports.Concat3DProgram = Concat3DProgram;
+
+},{"../concat3d_util":15}],29:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
-function getFragmentShaderSource(x1ShapeRCD, x2ShapeRCD, resultShapeRCD, axis) {
-    var x1TexShapeRC = conv_util.computeTexShapeFrom3D(x1ShapeRCD);
-    var x2TexShapeRC = conv_util.computeTexShapeFrom3D(x2ShapeRCD);
-    var yAxes = ['yR', 'yC', 'yD'];
-    var concatAxis = yAxes[axis];
-    return "\n    precision highp float;\n    uniform sampler2D x1;\n    uniform sampler2D x2;\n\n    const vec2 x1ShapeCR = vec2(" + x1TexShapeRC[1] + ", " + x1TexShapeRC[0] + ");\n    const vec2 x2ShapeCR = vec2(" + x2TexShapeRC[1] + ".0, " + x2TexShapeRC[0] + ".0);\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, yD).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + resultShapeRCD[2] + ".0);\n      float yD = mod(yTexCR.x, " + resultShapeRCD[2] + ".0);\n\n      float value = 0.0;\n\n      if (" + concatAxis + " < " + x1ShapeRCD[axis] + ".0) {\n        // Map yR, yC, yD back to x1 coordinates.\n        vec2 x1CR = vec2(yC * " + x1ShapeRCD[2] + ".0 + yD, yR);\n        vec2 x1UV = (x1CR + halfCR) / x1ShapeCR;\n        value = texture2D(x1, x1UV).r;\n      } else {\n        " + concatAxis + " = " + concatAxis + " - " + x1ShapeRCD[axis] + ".0;\n\n        // Map yR, yC, yD back to x2 coordinates.\n        vec2 x2CR = vec2(yC * " + x2ShapeRCD[2] + ".0 + yD, yR);\n        vec2 x2UV = (x2CR + halfCR) / x2ShapeCR;\n        value = texture2D(x2, x2UV).r;\n      }\n\n      gl_FragColor = vec4(value, 0.0, 0.0, 0.0);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function concat3D(gpgpu, program, x1, x2, result, resultShapeRC) {
-    gpgpu.setOutputMatrixTexture(result, resultShapeRC[0], resultShapeRC[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(x1, 'x1', 0);
-    gpgpu.setInputMatrixTexture(x2, 'x2', 1);
-    gpgpu.executeProgram();
-}
-exports.concat3D = concat3D;
+var Conv2DDerWeightsProgram = (function () {
+    function Conv2DDerWeightsProgram(xShape, fSize, outputDepth, stride, zeroPad) {
+        this.variableNames = ['x', 'dy'];
+        var yShape = conv_util.computeOutputShape3D(xShape, fSize, outputDepth, stride, zeroPad);
+        var yNumRows = yShape[0];
+        var yNumCols = yShape[1];
+        var xNumRows = xShape[0];
+        var xNumCols = xShape[1];
+        this.outputShape =
+            conv_util.computeWeightsShape4D(xShape[2], outputDepth, fSize);
+        this.params = [stride, zeroPad];
+        this.userCode = "\n      void main() {\n        vec4 coords = getOutputCoords();\n        float wR = coords.x;\n        float wC = coords.y;\n        float d1 = coords.z;\n        float d2 = coords.w;\n\n        // Convolve x(?, ?, d1) with dy(:, :, d2) to get dw(wR, wC, d1, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iyR = 0; iyR < " + yNumRows + "; iyR++) {\n          float yR = float(iyR);\n          float xR = wR + yR * " + stride + ".0 - " + zeroPad + ".0;\n\n          if (xR < 0.0 || xR >= " + xNumRows + ".0) {\n            continue;\n          }\n\n          for (int iyC = 0; iyC < " + yNumCols + "; iyC++) {\n            float yC = float(iyC);\n            float xC = wC + yC * " + stride + ".0 - " + zeroPad + ".0;\n\n            if (xC < 0.0 || xC >= " + xNumCols + ".0) {\n              continue;\n            }\n\n            float dyValue = getDy(yR, yC, d2);\n            float xValue = getX(xR, xC, d1);\n            dotProd += (xValue * dyValue);\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
+    }
+    return Conv2DDerWeightsProgram;
+}());
+exports.Conv2DDerWeightsProgram = Conv2DDerWeightsProgram;
+var Conv2DTransposeProgram = (function () {
+    function Conv2DTransposeProgram(xShape, fSize, origInputDepth, origStride, origPad, hasBias) {
+        this.variableNames = ['x', 'W', 'bias'];
+        var xRows = xShape[0], xCols = xShape[1], origOutputDepth = xShape[2];
+        var biasSnippet = hasBias ? 'dotProd += getBias(d2);' : '';
+        var xRowsDilated = (xRows - 1) * origStride + 1;
+        var xColsDilated = (xCols - 1) * origStride + 1;
+        var pad = fSize - 1 - origPad;
+        this.outputShape = conv_util.computeOutputShape3D([xRowsDilated, xColsDilated, origOutputDepth], fSize, origInputDepth, 1, pad);
+        this.params = [pad, fSize, origStride, hasBias];
+        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float d2 = coords.z;\n\n        vec2 xRCCorner = vec2(yR, yC) - vec2(" + pad + ".0, " + pad + ".0);\n        float xRCorner = xRCCorner.x;\n        float xCCorner = xRCCorner.y;\n\n        // Convolve x(?, ?, d1) with w(:, :, d2, d1) to get y(yR, yC, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iwR = 0; iwR < " + fSize + "; iwR++) {\n          float wR = float(iwR);\n          float xR = (xRCorner + wR) / " + origStride + ".0;\n\n          if (xR < 0.0 || xR >= " + xRows + ".0 || fract(xR) > 0.0) {\n            continue;\n          }\n\n          float wRPerm = " + fSize + ".0 - 1.0 - wR;\n\n          for (int iwC = 0; iwC < " + fSize + "; iwC++) {\n            float wC = float(iwC);\n            float xC = (xCCorner + wC) / " + origStride + ".0;\n\n            if (xC < 0.0 || xC >= " + xCols + ".0 || fract(xC) > 0.0) {\n              continue;\n            }\n\n            float wCPerm = " + fSize + ".0 - 1.0 - wC;\n\n            for (int id1 = 0; id1 < " + origOutputDepth + "; id1++) {\n              float d1 = float(id1);\n              float xValue = getX(xR, xC, d1);\n              float wValue = getW(wRPerm, wCPerm, d2, d1);\n              dotProd += xValue * wValue;\n            }\n          }\n        }\n        " + biasSnippet + "\n        setOutput(dotProd);\n      }\n    ";
+    }
+    return Conv2DTransposeProgram;
+}());
+exports.Conv2DTransposeProgram = Conv2DTransposeProgram;
+var Conv2DDerBiasProgram = (function () {
+    function Conv2DDerBiasProgram(yShape) {
+        this.variableNames = ['dy'];
+        this.params = [];
+        var yNumRows = yShape[0], yNumCols = yShape[1], outputDepth = yShape[2];
+        this.outputShape = [outputDepth];
+        this.userCode = "\n      void main() {\n        float d2 = getOutputCoords();\n\n        float derBias = 0.0;\n        for (int iyR = 0; iyR < " + yNumRows + "; iyR++) {\n          float yR = float(iyR);\n          for (int iyC = 0; iyC < " + yNumCols + "; iyC++) {\n            float yC = float(iyC);\n            derBias += getDy(yR, yC, d2);\n          }\n        }\n        setOutput(derBias);\n      }\n    ";
+    }
+    return Conv2DDerBiasProgram;
+}());
+exports.Conv2DDerBiasProgram = Conv2DDerBiasProgram;
 
 },{"../conv_util":16}],30:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
-var conv_gpu = require("./conv_gpu");
-function getFragmentShaderDerWeightsSource(xShapeRowColDepth, fSize, outputDepth, stride, zeroPad) {
-    var getMatrixValueOrZeroPad = conv_gpu.getFragmentShaderGetMatrixValueOrZeroPadSource();
-    var inputDepth = xShapeRowColDepth[2];
-    var xTexShapeRC = conv_util.computeTexShapeFrom3D(xShapeRowColDepth);
-    var yShape = conv_util.computeOutputShape3D(xShapeRowColDepth, fSize, outputDepth, stride, zeroPad);
-    var yNumRows = yShape[0];
-    var yNumCols = yShape[1];
-    var yTexShapeRC = conv_util.computeTexShapeFrom3D(yShape);
-    var fSizeTimesInputDepth = fSize * inputDepth;
-    var prologue = "\n    precision highp float;\n    uniform sampler2D x;\n    uniform sampler2D dy;\n  ";
-    return prologue + '\n' + getMatrixValueOrZeroPad + '\n' +
-        ("\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 dyShapeCR = vec2(" + yTexShapeRC[1] + ", " + yTexShapeRC[0] + ");\n\n    void main() {\n      vec2 wTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (wTexR, wTexC) to 4D (wR, wC, d1, d2).\n      float wR = floor(wTexCR.y / " + fSizeTimesInputDepth + ".0);\n      float wTexRLeftover = wTexCR.y - wR * " + fSizeTimesInputDepth + ".0;\n      float wC = floor(wTexRLeftover / " + inputDepth + ".0);\n      float d1 = mod(wTexRLeftover, " + inputDepth + ".0);\n      float d2 = wTexCR.x;\n\n      // Convolve x(?, ?, d1) with dy(:, :, d2) to get dw(wR, wC, d1, d2).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int yR = 0; yR < " + yNumRows + "; yR++) {\n        float yTexR = float(yR);\n        float xR = wR + yTexR * " + stride + ".0 - " + zeroPad + ".0;\n        float xTexR = xR;\n\n        for (int yC = 0; yC < " + yNumCols + "; yC++) {\n          float yC_float = float(yC);\n          float xC = wC + yC_float * " + stride + ".0 - " + zeroPad + ".0;\n\n          // Map from 3D (xR, xC, d1) to 2D (xTexR, xTexC).\n          // Map from 3D (yR, yC, d2) to 2D (yTexR, yTexC).\n          vec2 xyTexC =\n              vec2(xC, yC_float) * vec2(" + inputDepth + ".0, " + outputDepth + ".0) +\n              vec2(d1, d2);\n          float xTexC = xyTexC.x;\n          float yTexC = xyTexC.y;\n\n          // Read dy(yR, yC, d2).\n          vec2 dyUV = (vec2(yTexC, yTexR) + halfCR) / dyShapeCR;\n          float dyValue = texture2D(dy, dyUV).r;\n\n          // Read x(xR, xC, d1) (potentially zero-padded).\n          float xValue =\n            getMatrixValueOrZeroPad(x, xShapeCR, vec2(xTexC, xTexR));\n\n          dotProd += (xValue * dyValue);\n        }\n      }\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }");
-}
-exports.getFragmentShaderDerWeightsSource = getFragmentShaderDerWeightsSource;
-function getFragmentShaderConvTransposeSource(xShapeRCD, fSize, origInputDepth, origStride, origPad, hasBias) {
-    var pad = fSize - 1 - origPad;
-    var xRows = xShapeRCD[0], xCols = xShapeRCD[1], origOutputDepth = xShapeRCD[2];
-    var xTexShapeRC = conv_util.computeTexShapeFrom3D(xShapeRCD);
-    var wTexShapeRC = conv_util.computeWeightsTexShape(origInputDepth, origOutputDepth, fSize);
-    var getBiasValue = hasBias ?
-        conv_gpu.getFragmentShaderGetBiasValueSource(origInputDepth) :
-        '';
-    var biasPrologue = hasBias ? 'uniform sampler2D biases;' : '';
-    var biasOperation = hasBias ? 'dotProd += getBiasValue(biases, d2);' : '';
-    var prologue = "\n    precision highp float;\n    uniform sampler2D x;\n    uniform sampler2D weights;\n    " + biasPrologue + "\n    ";
-    return prologue + '\n' + getBiasValue + '\n' +
-        ("\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 wShapeCR = vec2(" + wTexShapeRC[1] + ", " + wTexShapeRC[0] + ");\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d2).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + origInputDepth + ".0);\n      float d2 = mod(yTexCR.x, " + origInputDepth + ".0);\n\n      vec2 xRCCorner = vec2(yR, yC) - vec2(" + pad + ".0, " + pad + ".0);\n      float xRCorner = xRCCorner.x;\n      float xCCorner = xRCCorner.y;\n\n      // Convolve x(?, ?, d1) with w(:, :, d2, d1) to get y(yR, yC, d2).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float xR = (xRCorner + wR_float) / " + origStride + ".0;\n        // TODO(smilkov): Splice this with another version where you call\n        // getMatrixValueOrZeroPad(). Here and below.\n        if (xR < 0.0 || xR >= " + xRows + ".0 || fract(xR) > 0.0) {\n          continue;\n        }\n\n        float wRPerm = " + fSize + ".0 - 1.0 - wR_float;\n        float xTexR = xR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float xC = (xCCorner + wC_float) / " + origStride + ".0;\n          if (xC < 0.0 || xC >= " + xCols + ".0 || fract(xC) > 0.0) {\n            continue;\n          }\n\n          float wCPerm = " + fSize + ".0 - 1.0 - wC_float;\n          float wTexR = wRPerm * " + fSize + ".0 * " + origInputDepth + ".0 +\n                        wCPerm * " + origInputDepth + ".0 + d2;\n\n          for (int d1 = 0; d1 < " + origOutputDepth + "; d1++) {\n            float d1_float = float(d1);\n            float xTexC = xC * " + origOutputDepth + ".0 + d1_float;\n            float wTexC = d1_float;\n\n            // Read x(xR, xC, d1).\n            vec2 xUV = (vec2(xTexC, xTexR) + halfCR) / xShapeCR;\n            float xValue = texture2D(x, xUV).r;\n\n            // Read w(wRPerm, wCPerm, d2, d1).\n            vec2 wUV = (vec2(wTexC, wTexR) + halfCR) / wShapeCR;\n            float wValue = texture2D(weights, wUV).r;\n\n            dotProd += xValue * wValue;\n          }\n        }\n      }\n      " + biasOperation + "\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }");
-}
-exports.getFragmentShaderConvTransposeSource = getFragmentShaderConvTransposeSource;
-function getFragmentShaderDerBiasSource(dyShapeRCD) {
-    var dyTexShapeRC = conv_util.computeTexShapeFrom3D(dyShapeRCD);
-    var yNumRows = dyShapeRCD[0], yNumCols = dyShapeRCD[1], outputDepth = dyShapeRCD[2];
-    return "\n    precision highp float;\n    uniform sampler2D dy;\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 dyShapeCR = vec2(" + dyTexShapeRC[1] + ", " + dyTexShapeRC[0] + ");\n\n    void main() {\n      vec2 biasTexCR = floor(gl_FragCoord.xy);\n\n      // The bias texture RC shape is [1, d2].\n      float d2 = biasTexCR.x;\n\n      float derBias = 0.0;\n      for (int yR = 0; yR < " + yNumRows + "; yR++) {\n        float yTexR = float(yR);\n\n        for (int yC = 0; yC < " + yNumCols + "; yC++) {\n          float yC_float = float(yC);\n          // Map from 3D (yR, yC, d2) to 2D (yTexR, yTexC).\n          float yTexC = yC_float * " + outputDepth + ".0 + d2;\n\n          // Read dy(yR, yC, d2).\n          vec2 dyUV = (vec2(yTexC, yTexR) + halfCR) / dyShapeCR;\n          float dyValue = texture2D(dy, dyUV).r;\n\n          derBias += dyValue;\n        }\n      }\n      gl_FragColor = vec4(derBias, 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderDerBiasSource = getFragmentShaderDerBiasSource;
-function derBias(gpgpu, program, dyTex, result, resultTexShapeRC) {
-    gpgpu.setOutputMatrixTexture(result, resultTexShapeRC[0], resultTexShapeRC[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(dyTex, 'dy', 0);
-    gpgpu.executeProgram();
-}
-exports.derBias = derBias;
-function derWeights(gpgpu, program, xTex, dyTex, result, resultTexShapeRC) {
-    gpgpu.setOutputMatrixTexture(result, resultTexShapeRC[0], resultTexShapeRC[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(xTex, 'x', 0);
-    gpgpu.setInputMatrixTexture(dyTex, 'dy', 1);
-    gpgpu.executeProgram();
-}
-exports.derWeights = derWeights;
-function convTranspose(gpgpu, program, xTex, weightsTex, biasesTex, resultTex, resultTexShapeRC) {
-    gpgpu.setOutputMatrixTexture(resultTex, resultTexShapeRC[0], resultTexShapeRC[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(xTex, 'x', 0);
-    gpgpu.setInputMatrixTexture(weightsTex, 'weights', 1);
-    if (biasesTex != null) {
-        gpgpu.setInputMatrixTexture(biasesTex, 'biases', 2);
+var Conv2DProgram = (function () {
+    function Conv2DProgram(xShape, fieldSize, outputDepth, stride, pad, hasBias) {
+        this.variableNames = ['x', 'W', 'bias'];
+        this.outputShape = conv_util.computeOutputShape3D(xShape, fieldSize, outputDepth, stride, pad);
+        var inputDepth = xShape[2];
+        this.params = [fieldSize, stride, pad, hasBias];
+        var biasSnippet = hasBias ? 'dotProd += getBias(d2);' : '';
+        var xNumRows = xShape[0];
+        var xNumCols = xShape[1];
+        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float d2 = coords.z;\n\n        vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ".0, " + stride + ".0) -\n            vec2(" + pad + ".0, " + pad + ".0);\n        float xRCorner = xRCCorner.x;\n        float xCCorner = xRCCorner.y;\n\n        // Convolve x(?, ?, d1) with w(:, :, d1, d2) to get y(yR, yC, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iwR = 0; iwR < " + fieldSize + "; iwR++) {\n          float wR = float(iwR);\n          float xR = xRCorner + wR;\n\n          if (xR < 0.0 || xR >= " + xNumRows + ".0) {\n            continue;\n          }\n\n          for (int iwC = 0; iwC < " + fieldSize + "; iwC++) {\n            float wC = float(iwC);\n            float xC = xCCorner + wC;\n\n            if (xC < 0.0 || xC >= " + xNumCols + ".0) {\n              continue;\n            }\n\n            for (int id1 = 0; id1 < " + inputDepth + "; id1++) {\n              float d1 = float(id1);\n              float xValue = getX(xR, xC, d1);\n              float wValue = getW(wR, wC, d1, d2);\n              dotProd += xValue * wValue;\n            }\n          }\n        }\n        " + biasSnippet + "\n        setOutput(dotProd);\n      }\n    ";
     }
-    gpgpu.executeProgram();
-}
-exports.convTranspose = convTranspose;
+    return Conv2DProgram;
+}());
+exports.Conv2DProgram = Conv2DProgram;
 
-},{"../conv_util":16,"./conv_gpu":31}],31:[function(require,module,exports){
+},{"../conv_util":16}],31:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var conv_util = require("../conv_util");
-function getFragmentShaderPrologueSource() {
-    return "\n    precision highp float;\n    uniform sampler2D x;\n    uniform sampler2D weights;\n    uniform sampler2D biases;\n    varying vec2 resultUV;";
-}
-exports.getFragmentShaderPrologueSource = getFragmentShaderPrologueSource;
-function getFragmentShaderGetMatrixValueOrZeroPadSource() {
-    return "\n    float getMatrixValueOrZeroPad(in sampler2D matrix, vec2 matrixShapeCR,\n        vec2 requestedCR) {\n      vec2 uv = (requestedCR + vec2(0.5, 0.5)) / matrixShapeCR;\n      float value = texture2D(matrix, uv).r;\n      bool lessThanZero = any(lessThan(uv, vec2(0, 0)));\n      bool greaterThanOne = any(greaterThan(uv, vec2(1, 1)));\n      bool outside = lessThanZero || greaterThanOne;\n      return mix(value, 0.0, float(outside));\n    }";
-}
-exports.getFragmentShaderGetMatrixValueOrZeroPadSource = getFragmentShaderGetMatrixValueOrZeroPadSource;
-function getFragmentShaderConvolveSource(xShapeRCD, fSize, outputDepth, stride, pad, hasBias) {
-    var inputDepth = xShapeRCD[2];
-    var xTexShapeRC = conv_util.computeTexShapeFrom3D(xShapeRCD);
-    var wTexShapeRC = conv_util.computeWeightsTexShape(inputDepth, outputDepth, fSize);
-    return "\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n    const vec2 wShapeCR = vec2(" + wTexShapeRC[1] + ", " + wTexShapeRC[0] + ");\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d2).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + outputDepth + ".0);\n      float d2 = mod(yTexCR.x, " + outputDepth + ".0);\n      float wTexC = d2;\n\n      vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ", " + stride + ") -\n          vec2(" + pad + ".0, " + pad + ".0);\n      float xRCorner = xRCCorner.x;\n      float xCCorner = xRCCorner.y;\n\n      // Convolve x(?, ?, d1) with w(:, :, d1, d2) to get y(yR, yC, d2).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float xR = xRCorner + wR_float;\n        float xTexR = xR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float xC = xCCorner + wC_float;\n\n          for (int d1 = 0; d1 < " + inputDepth + "; d1++) {\n            float d1_float = float(d1);\n            float xTexC = xC * " + inputDepth + ".0 + d1_float;\n            float wTexR = wR_float * " + fSize * inputDepth + ".0 +\n                wC_float * " + inputDepth + ".0 + d1_float;\n\n            float xValue =\n                getMatrixValueOrZeroPad(x, xShapeCR, vec2(xTexC, xTexR));\n\n            // Read w(wR, wC, d1, d2).\n            vec2 wUV = (vec2(wTexC, wTexR) + halfCR) / wShapeCR;\n            float wValue = texture2D(weights, wUV).r;\n\n            dotProd += xValue * wValue;\n          }\n        }\n      }\n      if (" + hasBias + ") {\n        dotProd += getBiasValue(biases, d2);\n      }\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderConvolveSource = getFragmentShaderConvolveSource;
-function getFragmentShaderGetBiasValueSource(outputDepth) {
-    return "\n    float getBiasValue(in sampler2D bias, float biasC) {\n      const vec2 biasShapeCR = vec2(" + outputDepth + ", 1);\n      vec2 biasCR = vec2(mod(biasC, " + outputDepth + ".0), 0);\n      vec2 biasUV = (biasCR + vec2(0.5, 0.5)) / biasShapeCR;\n      return texture2D(bias, biasUV).r;\n    }";
-}
-exports.getFragmentShaderGetBiasValueSource = getFragmentShaderGetBiasValueSource;
-function getFragmentShaderSource(aShapeRowColDepth, resultDepth, fieldSize, stride, zeroPad, hasBias) {
-    var prologue = getFragmentShaderPrologueSource();
-    var getMatrixValueOrZeroPad = getFragmentShaderGetMatrixValueOrZeroPadSource();
-    var convolve = getFragmentShaderConvolveSource(aShapeRowColDepth, fieldSize, resultDepth, stride, zeroPad, hasBias);
-    var getBiasValue = getFragmentShaderGetBiasValueSource(resultDepth);
-    return [
-        prologue,
-        getMatrixValueOrZeroPad,
-        getBiasValue,
-        convolve,
-    ].join('\n');
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function convolve(gpgpu, program, a, weights, biases, result, resultShapeRowCol) {
-    gpgpu.setOutputMatrixTexture(result, resultShapeRowCol[0], resultShapeRowCol[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(a, 'x', 0);
-    gpgpu.setInputMatrixTexture(weights, 'weights', 1);
-    if (biases != null) {
-        gpgpu.setInputMatrixTexture(biases, 'biases', 2);
+var Copy2DProgram = (function () {
+    function Copy2DProgram(srcNumCols, destNumCols) {
+        this.variableNames = ['source'];
+        this.outputShape = null;
+        this.params = [srcNumCols, destNumCols];
+        this.userCode = "\n      uniform vec2 sourceStart;\n      uniform vec2 destStart;\n\n      void main() {\n        vec2 destCoords = getOutputCoords() - destStart;\n        float index = dot(destCoords, vec2(" + destNumCols + ".0, 1.0));\n        vec2 sourceCoords = sourceStart + vec2(\n          floor(index / " + srcNumCols + ".0),\n          mod(index, " + srcNumCols + ".0)\n        );\n        setOutput(getSource(sourceCoords.x, sourceCoords.y));\n      }\n    ";
     }
-    gpgpu.executeProgram();
-}
-exports.convolve = convolve;
+    Copy2DProgram.prototype.getCustomSetupFunc = function (sourceStart, destStart, destSize) {
+        return function (gpgpu) {
+            gpgpu.setOutputMatrixWriteRegion(destStart[0], destSize[0], destStart[1], destSize[1]);
+            var sourceStartCRLoc = gpgpu.getUniformLocation('sourceStart');
+            gpgpu.gl.uniform2f(sourceStartCRLoc, sourceStart[0], sourceStart[1]);
+            var destStartCRLoc = gpgpu.getUniformLocation('destStart');
+            gpgpu.gl.uniform2f(destStartCRLoc, destStart[0], destStart[1]);
+        };
+    };
+    return Copy2DProgram;
+}());
+exports.Copy2DProgram = Copy2DProgram;
 
-},{"../conv_util":16}],32:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-function getFragmentShaderSource(sourceShapeRowCol, sourceSizeRowCol, destSizeRowCol) {
-    return "\n    precision highp float;\n    uniform sampler2D source;\n    uniform vec2 sourceStartCR;\n    uniform vec2 destStartCR;\n\n    const vec2 sourceShapeCR =\n      vec2(" + sourceShapeRowCol[1] + ", " + sourceShapeRowCol[0] + ");\n    const vec2 sourceSizeCR =\n      vec2(" + sourceSizeRowCol[1] + ", " + sourceSizeRowCol[0] + ");\n    const vec2 destSizeCR =\n      vec2(" + destSizeRowCol[1] + ", " + destSizeRowCol[0] + ");\n\n    void main() {\n      vec2 destOffsetCR = floor(gl_FragCoord.xy) - destStartCR;\n      float destOffsetFlat = (destOffsetCR.y * destSizeCR.x) + destOffsetCR.x;\n      vec2 sourceOffsetCR = vec2(mod(destOffsetFlat, sourceSizeCR.x),\n        floor(destOffsetFlat / sourceSizeCR.x));\n      vec2 sourceCR = sourceStartCR + sourceOffsetCR;\n      vec2 sourceUV = (sourceCR + vec2(0.5, 0.5)) / sourceShapeCR;\n      gl_FragColor = texture2D(source, sourceUV);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function copy(gpgpu, program, source, sourceShapeRowCol, sourceStartRowCol, sourceSizeRowCol, dest, destShapeRowCol, destStartRowCol, destSizeRowCol) {
-    gpgpu.setOutputMatrixTexture(dest, destShapeRowCol[0], destShapeRowCol[1]);
-    gpgpu.setOutputMatrixWriteRegion(destStartRowCol[0], destSizeRowCol[0], destStartRowCol[1], destSizeRowCol[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(source, 'source', 0);
-    var sourceStartCRLoc = gpgpu.getUniformLocation('sourceStartCR');
-    gpgpu.gl.uniform2f(sourceStartCRLoc, sourceStartRowCol[1], sourceStartRowCol[0]);
-    var destStartCRLoc = gpgpu.getUniformLocation('destStartCR');
-    gpgpu.gl.uniform2f(destStartCRLoc, destStartRowCol[1], destStartRowCol[0]);
-    gpgpu.executeProgram();
-}
-exports.copy = copy;
-
-},{}],33:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var gpgpu_util = require("./gpgpu_util");
@@ -4729,19 +4259,19 @@ var GPGPUContext = (function () {
 }());
 exports.GPGPUContext = GPGPUContext;
 
-},{"./gpgpu_util":35,"./tex_util":48,"./webgl_util":51}],34:[function(require,module,exports){
+},{"./gpgpu_util":34,"./tex_util":44,"./webgl_util":47}],33:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var shader_compiler = require("./shader_compiler");
 var util = require("../../util");
+var shader_compiler = require("./shader_compiler");
 function compileProgram(gpgpu, program, inputs, output) {
     var userCode = program.userCode;
-    var inputInfos = program.variableNames.map(function (x, i) {
+    var inputInfos = inputs.map(function (input, i) {
         var shapeInfo = {
-            logicalShape: inputs[i].shape,
-            texShape: inputs[i].getTextureShapeRC()
+            logicalShape: input.shape,
+            texShape: input.getTextureShapeRC()
         };
-        return { name: x, shapeInfo: shapeInfo };
+        return { name: program.variableNames[i], shapeInfo: shapeInfo };
     });
     var inShapeInfos = inputInfos.map(function (x) { return x.shapeInfo; });
     var outShapeInfo = {
@@ -4752,19 +4282,20 @@ function compileProgram(gpgpu, program, inputs, output) {
     return {
         program: program,
         source: source,
-        webGLProgram: gpgpu.createProgram(source),
-        gpgpu: gpgpu,
-        inShapeInfos: inShapeInfos,
-        outShapeInfo: outShapeInfo
+        webGLProgram: gpgpu.createProgram(source), gpgpu: gpgpu, inShapeInfos: inShapeInfos, outShapeInfo: outShapeInfo
     };
 }
 exports.compileProgram = compileProgram;
-function validateBinaryAndProgram(shapeInfos, bArrays) {
+function validateBinaryAndProgram(shapeInfos, inputs) {
+    if (shapeInfos.length !== inputs.length) {
+        throw Error("Binary was compiled with " + shapeInfos.length + " inputs, but " +
+            ("was executed with " + inputs.length + " inputs"));
+    }
     shapeInfos.forEach(function (s, i) {
         var shapeA = s.logicalShape;
         var texShapeA = s.texShape;
-        var shapeB = bArrays[i].shape;
-        var texShapeB = bArrays[i].getTextureShapeRC();
+        var shapeB = inputs[i].shape;
+        var texShapeB = inputs[i].getTextureShapeRC();
         if (!util.arraysEqual(shapeA, shapeB)) {
             throw Error("Binary was compiled with different shapes than " +
                 ("the current args. Shapes " + shapeA + " and " + shapeB + " must match"));
@@ -4775,7 +4306,7 @@ function validateBinaryAndProgram(shapeInfos, bArrays) {
         }
     });
 }
-function runProgram(binary, inputs, output) {
+function runProgram(binary, inputs, output, customSetup) {
     validateBinaryAndProgram(binary.inShapeInfos, inputs);
     validateBinaryAndProgram([binary.outShapeInfo], [output]);
     var outTex = output.getTexture();
@@ -4787,6 +4318,9 @@ function runProgram(binary, inputs, output) {
         var tex = input.getTexture();
         gpgpu.setInputMatrixTexture(tex, binary.program.variableNames[i], i);
     });
+    if (customSetup != null) {
+        customSetup(gpgpu);
+    }
     gpgpu.executeProgram();
 }
 exports.runProgram = runProgram;
@@ -4801,7 +4335,7 @@ function makeShaderKey(program, inputs, output) {
 }
 exports.makeShaderKey = makeShaderKey;
 
-},{"../../util":79,"./shader_compiler":47}],35:[function(require,module,exports){
+},{"../../util":75,"./shader_compiler":43}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tex_util = require("./tex_util");
@@ -4968,7 +4502,7 @@ function downloadMatrixFromPackedOutputTexture(gl, rows, columns) {
 }
 exports.downloadMatrixFromPackedOutputTexture = downloadMatrixFromPackedOutputTexture;
 
-},{"./tex_util":48,"./webgl_util":51}],36:[function(require,module,exports){
+},{"./tex_util":44,"./webgl_util":47}],35:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var LogSumExpProgram = (function () {
@@ -4982,61 +4516,26 @@ var LogSumExpProgram = (function () {
 }());
 exports.LogSumExpProgram = LogSumExpProgram;
 
-},{}],37:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
-function getFragmentShaderMaxPoolBackprop(dyShapeRCD, fSize, origStride, origPad) {
-    var origInputDepth = dyShapeRCD[2];
-    var pad = fSize - 1 - origPad;
-    var dyRows = dyShapeRCD[0], dyCols = dyShapeRCD[1], depth = dyShapeRCD[2];
-    var dyTexShapeRC = conv_util.computeTexShapeFrom3D(dyShapeRCD);
-    return "\n    precision highp float;\n    uniform sampler2D dy;\n    uniform sampler2D maxPos;\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 dyShapeCR = vec2(" + dyTexShapeRC[1] + ", " + dyTexShapeRC[0] + ");\n\n    void main() {\n      vec2 dxTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (dxTexR, dxTexC) to 3D (dxR, dxC, d).\n      float dxR = dxTexCR.y;\n      float dxC = floor(dxTexCR.x / " + origInputDepth + ".0);\n      float d = mod(dxTexCR.x, " + origInputDepth + ".0);\n\n      vec2 dyRCCorner = vec2(dxR, dxC) - vec2(" + pad + ".0, " + pad + ".0);\n      float dyRCorner = dyRCCorner.x;\n      float dyCCorner = dyRCCorner.y;\n\n      // Convolve dy(?, ?, d) with pos mask(:, :, d) to get dx(yR, dxC, d).\n      // ? = to be determined. : = across all values in that axis.\n      float dotProd = 0.0;\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float dyR = (dyRCorner + wR_float) / " + origStride + ".0;\n        // TODO(nsthorat): Splice this with another version where you call\n        // getMatrixValueOrZeroPad(). Here and below.\n        if (dyR < 0.0 || dyR >= " + dyRows + ".0 || fract(dyR) > 0.0) {\n          continue;\n        }\n\n        float dyTexR = dyR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float dyC = (dyCCorner + wC_float) / " + origStride + ".0;\n          if (dyC < 0.0 || dyC >= " + dyCols + ".0 || fract(dyC) > 0.0) {\n            continue;\n          }\n\n          float dyTexC = dyC * " + depth + ".0 + d;\n\n          // Read dy(dyR, dyC, d).\n          vec2 dyUV = (vec2(dyTexC, dyTexR) + halfCR) / dyShapeCR;\n          float dyValue = texture2D(dy, dyUV).r;\n\n          // Read maxPos(dyR, dyC, d).\n          float maxPosValue =\n              " + (fSize * fSize - 1) + ".0 - texture2D(maxPos, dyUV).r;\n\n          // Get the current value, check it against the value from the\n          // position matrix.\n          float curPosValue = wR_float * " + fSize + ".0 + wC_float;\n          float mask = float(maxPosValue == curPosValue ? 1.0 : 0.0);\n\n          dotProd += dyValue * mask;\n        }\n      }\n      gl_FragColor = vec4(dotProd, 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderMaxPoolBackprop = getFragmentShaderMaxPoolBackprop;
-function maxPoolBackprop(gpgpu, program, dyTex, maxPositionsTex, resultTex, resultTexShapeRC) {
-    gpgpu.setOutputMatrixTexture(resultTex, resultTexShapeRC[0], resultTexShapeRC[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(dyTex, 'dy', 0);
-    gpgpu.setInputMatrixTexture(maxPositionsTex, 'maxPos', 1);
-    gpgpu.executeProgram();
-}
-exports.maxPoolBackprop = maxPoolBackprop;
+var MaxPool2DBackpropProgram = (function () {
+    function MaxPool2DBackpropProgram(dyShape, fSize, origStride, origPad) {
+        this.variableNames = ['dy', 'maxPos'];
+        var pad = fSize - 1 - origPad;
+        var dyRows = dyShape[0];
+        var dyCols = dyShape[1];
+        this.params = [fSize, origStride, origPad];
+        var dilatedDyRC = conv_util.computeDilatedRC([dyShape[0], dyShape[1]], origStride);
+        this.outputShape = conv_util.computeOutputShape3D([dilatedDyRC[0], dilatedDyRC[1], dyShape[2]], fSize, dyShape[2], 1, pad);
+        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float dxR = coords.x;\n        float dxC = coords.y;\n        float d = coords.z;\n\n        vec2 dyRCCorner = vec2(dxR, dxC) - vec2(" + pad + ".0, " + pad + ".0);\n        float dyRCorner = dyRCCorner.x;\n        float dyCCorner = dyRCCorner.y;\n\n        // Convolve dy(?, ?, d) with pos mask(:, :, d) to get dx(yR, dxC, d).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iwR = 0; iwR < " + fSize + "; iwR++) {\n          float wR = float(iwR);\n          float dyR = (dyRCorner + wR) / " + origStride + ".0;\n\n          if (dyR < 0.0 || dyR >= " + dyRows + ".0 || fract(dyR) > 0.0) {\n            continue;\n          }\n\n          for (int iwC = 0; iwC < " + fSize + "; iwC++) {\n            float wC = float(iwC);\n            float dyC = (dyCCorner + wC) / " + origStride + ".0;\n\n            if (dyC < 0.0 || dyC >= " + dyCols + ".0 || fract(dyC) > 0.0) {\n              continue;\n            }\n\n            float dyValue = getDy(dyR, dyC, d);\n            float maxPosValue =\n                " + (fSize * fSize - 1) + ".0 - getMaxPos(dyR, dyC, d);\n\n            // Get the current value, check it against the value from the\n            // position matrix.\n            float curPosValue = wR * " + fSize + ".0 + wC;\n            float mask = float(maxPosValue == curPosValue ? 1.0 : 0.0);\n\n            dotProd += dyValue * mask;\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
+    }
+    return MaxPool2DBackpropProgram;
+}());
+exports.MaxPool2DBackpropProgram = MaxPool2DBackpropProgram;
 
-},{"../conv_util":16}],38:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var pool_gpu = require("./pool_gpu");
-function getFragmentShaderMaxPoolPositionsSource(xShapeRCD, fSize, stride, pad) {
-    return getFragmentShaderMaxPoolCommonSource(xShapeRCD, fSize, stride, pad, true);
-}
-exports.getFragmentShaderMaxPoolPositionsSource = getFragmentShaderMaxPoolPositionsSource;
-function getFragmentShaderMaxPoolSource(xShapeRCD, fSize, stride, pad) {
-    return getFragmentShaderMaxPoolCommonSource(xShapeRCD, fSize, stride, pad, false);
-}
-exports.getFragmentShaderMaxPoolSource = getFragmentShaderMaxPoolSource;
-function getFragmentShaderMaxPoolCommonSource(xShapeRCD, fSize, stride, pad, computeMaxPositions) {
-    return pool_gpu.getFragmentShaderPoolCommonSource(xShapeRCD, fSize, stride, pad, 'max', computeMaxPositions);
-}
-function maxPoolCommon(gpgpu, program, x, result, resultShapeRowCol) {
-    pool_gpu.poolCommon(gpgpu, program, x, result, resultShapeRowCol);
-}
-exports.maxPoolCommon = maxPoolCommon;
-
-},{"./pool_gpu":42}],39:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var pool_gpu = require("./pool_gpu");
-function getFragmentShaderMinPoolSource(xShapeRCD, fSize, stride, pad) {
-    return pool_gpu.getFragmentShaderPoolCommonSource(xShapeRCD, fSize, stride, pad, 'min', false);
-}
-exports.getFragmentShaderMinPoolSource = getFragmentShaderMinPoolSource;
-function minPool(gpgpu, program, x, result, resultShapeRowCol) {
-    pool_gpu.poolCommon(gpgpu, program, x, result, resultShapeRowCol);
-}
-exports.minPool = minPool;
-
-},{"./pool_gpu":42}],40:[function(require,module,exports){
+},{"../conv_util":16}],37:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var MinMaxProgram = (function () {
@@ -5050,7 +4549,7 @@ var MinMaxProgram = (function () {
 }());
 exports.MinMaxProgram = MinMaxProgram;
 
-},{}],41:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = require("../math");
@@ -5064,45 +4563,43 @@ var MatMulProgram = (function () {
         var outerShapeB = (bOrient === math_1.MatrixOrientation.REGULAR) ? bShape[1] : bShape[0];
         this.outputShape = [outerShapeA, outerShapeB];
         var sharedDim = (aOrient === math_1.MatrixOrientation.REGULAR ? aShape[1] : aShape[0]);
-        var aSnippet = (aOrient === math_1.MatrixOrientation.REGULAR) ?
-            'aRow, i_float' : 'i_float, aRow';
-        var bSnippet = (bOrient === math_1.MatrixOrientation.REGULAR) ?
-            'i_float, bCol' : 'bCol, i_float';
-        this.userCode = "\n      const int sharedDim = " + sharedDim + ";\n\n      float dotARowBCol(float aRow, float bCol) {\n        float result = 0.0;\n        for (int i = 0; i < sharedDim; i++) {\n          float i_float = float(i);\n          float a = getMatrixA(" + aSnippet + ");\n          float b = getMatrixB(" + bSnippet + ");\n          result += (a * b);\n        }\n        return result;\n      }\n\n      void main() {\n        vec2 resRC = getOutputCoords();\n        setOutput(dotARowBCol(resRC.x, resRC.y));\n      }\n    ";
+        var aSnippet = (aOrient === math_1.MatrixOrientation.REGULAR) ? 'aRow, i' : 'i, aRow';
+        var bSnippet = (bOrient === math_1.MatrixOrientation.REGULAR) ? 'i, bCol' : 'bCol, i';
+        this.userCode = "\n      const int sharedDim = " + sharedDim + ";\n\n      float dotARowBCol(float aRow, float bCol) {\n        float result = 0.0;\n        for (int ii = 0; ii < sharedDim; ii++) {\n          float i = float(ii);\n          float a = getMatrixA(" + aSnippet + ");\n          float b = getMatrixB(" + bSnippet + ");\n          result += (a * b);\n        }\n        return result;\n      }\n\n      void main() {\n        vec2 resRC = getOutputCoords();\n        setOutput(dotARowBCol(resRC.x, resRC.y));\n      }\n    ";
     }
     return MatMulProgram;
 }());
 exports.MatMulProgram = MatMulProgram;
 
-},{"../math":19}],42:[function(require,module,exports){
+},{"../math":19}],39:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
-function getFragmentShaderPoolCommonSource(xShapeRCD, fSize, stride, pad, poolType, computePositions) {
-    if (poolType === 'avg' && computePositions) {
-        throw new Error('Cannot compute positions for average pool.');
+var Pool2DProgram = (function () {
+    function Pool2DProgram(xShape, fSize, stride, pad, poolType, computePositions) {
+        this.variableNames = ['x'];
+        if (poolType === 'avg' && computePositions) {
+            throw new Error('Cannot compute positions for average pool.');
+        }
+        var returnValue = 'minMaxValue';
+        if (computePositions) {
+            returnValue = 'minMaxPosition';
+        }
+        else if (poolType === 'avg') {
+            returnValue = "avgValue / " + fSize * fSize + ".0";
+        }
+        var xRowsLimit = xShape[0] - 0.5;
+        var xColsLimit = xShape[1] - 0.5;
+        this.params = [stride, pad, fSize, computePositions];
+        this.outputShape =
+            conv_util.computeOutputShape3D(xShape, fSize, xShape[2], stride, pad);
+        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float d = coords.z;\n\n        vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ".0, " + stride + ".0) -\n            vec2(" + pad + ".0, " + pad + ".0);\n        float xRCorner = xRCCorner.x;\n        float xCCorner = xRCCorner.y;\n\n        // max/min x(?, ?, d) to get y(yR, yC, d).\n        // ? = to be determined\n        float minMaxValue = 0.0;\n        float minMaxValueFound = 0.0;\n        float minMaxPosition = 0.0;\n        float avgValue = 0.0;\n\n        for (int iwR = 0; iwR < " + fSize + "; iwR++) {\n          float wR = float(iwR);\n          float xR = xRCorner + wR;\n\n          if (xR < 0.0 || xR > " + xRowsLimit + ") {\n            continue;\n          }\n\n          for (int iwC = 0; iwC < " + fSize + "; iwC++) {\n            float wC = float(iwC);\n            float xC = xCCorner + wC;\n\n            if (xC < 0.0 || xC > " + xColsLimit + ") {\n              continue;\n            }\n\n            float value = getX(xR, xC, d);\n\n            if (isNaN(value)) {\n              setOutput(value);\n              return;\n            }\n\n            if (" + (poolType === 'avg') + ") {\n              avgValue += value;\n            } else {\n              // If a min / max value has already been found, use it. If not,\n              // use the current value.\n              float currMinMaxValue = mix(\n                  value, minMaxValue, minMaxValueFound);\n              if (value " + (poolType === 'min' ? '<=' : '>=') + " currMinMaxValue) {\n                minMaxValue = value;\n                minMaxValueFound = 1.0;\n                if (" + computePositions + ") {\n                  minMaxPosition = wR * " + fSize + ".0 + wC;\n                }\n              }\n            }\n          }\n        }\n        setOutput(" + returnValue + ");\n      }\n    ";
     }
-    var depth = xShapeRCD[2];
-    var xTexShapeRC = conv_util.computeTexShapeFrom3D(xShapeRCD);
-    var returnValue = 'minMaxValue';
-    if (computePositions) {
-        returnValue = 'minMaxPosition';
-    }
-    else if (poolType === 'avg') {
-        returnValue = 'avgValue';
-    }
-    return "\n    precision highp float;\n    uniform sampler2D x;\n    varying vec2 resultUV;\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n    const vec2 xShapeCR = vec2(" + xTexShapeRC[1] + ", " + xTexShapeRC[0] + ");\n\n    bool isNaN(float val) {\n      return val == val ? false : true;\n    }\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d2).\n      float yR = yTexCR.y;\n      float yC = floor(yTexCR.x / " + depth + ".0);\n      float d = mod(yTexCR.x, " + depth + ".0);\n\n      vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ", " + stride + ") -\n          vec2(" + pad + ".0, " + pad + ".0);\n      float xRCorner = xRCCorner.x;\n      float xCCorner = xRCCorner.y;\n\n      // max/min x(?, ?, d) to get y(yR, yC, d).\n      // ? = to be determined\n      float minMaxValue = 0.0;\n      float minMaxValueFound = 0.0;\n      float minMaxPosition = 0.0;\n      float avgValue = 0.0;\n\n      for (int wR = 0; wR < " + fSize + "; wR++) {\n        float wR_float = float(wR);\n        float xR = xRCorner + wR_float;\n        float xTexR = xR;\n\n        for (int wC = 0; wC < " + fSize + "; wC++) {\n          float wC_float = float(wC);\n          float xC = xCCorner + wC_float;\n          float xTexC = xC * " + depth + ".0 + d;\n\n          vec2 texCR = vec2(xTexC, xTexR);\n\n          // Check if the requested UV is invalid.\n          vec2 uv = (texCR + halfCR) / xShapeCR;\n          bool lessThanZero = any(lessThan(uv, vec2(0, 0)));\n          bool greaterThanOne = any(greaterThan(uv, vec2(1, 1)));\n          bool outside = lessThanZero || greaterThanOne;\n          if (outside) {\n            continue;\n          }\n\n          float value = texture2D(x, uv).r;\n          if (isNaN(value)) {\n            gl_FragColor = vec4(value, 0, 0, 0);\n            return;\n          }\n          if (" + (poolType === 'avg') + ") {\n            avgValue += value / " + fSize * fSize + ".0;\n          } else {\n            // If a min / max value has already been found, use it. If not, use\n            // the current value.\n            float currentMinMaxValue = mix(\n                value, minMaxValue, minMaxValueFound);\n            if (value " + (poolType === 'min' ? '<=' : '>=') + " currentMinMaxValue) {\n              minMaxValue = value;\n              minMaxValueFound = 1.0;\n              if (" + computePositions + ") {\n                minMaxPosition = wR_float * " + fSize + ".0 + wC_float;\n              }\n            }\n          }\n        }\n      }\n      gl_FragColor = vec4(" + returnValue + ", 0, 0, 0);\n    }";
-}
-exports.getFragmentShaderPoolCommonSource = getFragmentShaderPoolCommonSource;
-function poolCommon(gpgpu, program, x, result, resultShapeRowCol) {
-    gpgpu.setOutputMatrixTexture(result, resultShapeRowCol[0], resultShapeRowCol[1]);
-    gpgpu.setProgram(program);
-    gpgpu.setInputMatrixTexture(x, 'x', 0);
-    gpgpu.executeProgram();
-}
-exports.poolCommon = poolCommon;
+    return Pool2DProgram;
+}());
+exports.Pool2DProgram = Pool2DProgram;
 
-},{"../conv_util":16}],43:[function(require,module,exports){
+},{"../conv_util":16}],40:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ReduceSumProgram = (function () {
@@ -5117,7 +4614,7 @@ var ReduceSumProgram = (function () {
 }());
 exports.ReduceSumProgram = ReduceSumProgram;
 
-},{}],44:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var webgl_util = require("./webgl_util");
@@ -5138,55 +4635,31 @@ function renderToFramebuffer(gpgpu, renderShader, sourceTex) {
 }
 exports.renderToFramebuffer = renderToFramebuffer;
 
-},{"./webgl_util":51}],45:[function(require,module,exports){
+},{"./webgl_util":47}],42:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var util = require("../../util");
-function getFragmentShaderSource() {
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    uniform vec2 inputDimCR;\n    uniform vec2 resultDimCR;\n    varying vec2 resultUV;\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    void main() {\n      vec2 resultCR = floor(resultUV * resultDimCR);\n      // indexInFlat = row * stride + column, where stride == numOutputColumns\n      float indexInFlat = resultCR.y * resultDimCR.x + resultCR.x;\n\n      vec2 inputCR = vec2(\n        mod(indexInFlat, inputDimCR.x), // col = indexInFlat % numInputColumns\n        floor(indexInFlat / inputDimCR.x) // row = indexInFlat / numInputColumns\n      ) + halfCR;\n\n      vec2 inputUV = inputCR / inputDimCR;\n      gl_FragColor = texture2D(matrixA, inputUV);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function reshape(gpgpu, reshapeProgram, a, aNumRows, aNumCols, result, resultNumRows, resultNumCols) {
-    var inputSize = aNumRows * aNumCols;
-    var outputSize = resultNumCols * resultNumRows;
-    util.assert(inputSize === outputSize, "The input size (" + inputSize + ") and output size (" + outputSize + ") " +
-        "must match");
-    gpgpu.setOutputMatrixTexture(result, resultNumRows, resultNumCols);
-    gpgpu.setProgram(reshapeProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    var inputDimCRLocation = gpgpu.getUniformLocation('inputDimCR');
-    gpgpu.gl.uniform2f(inputDimCRLocation, aNumCols, aNumRows);
-    var resultDimCRLocation = gpgpu.getUniformLocation('resultDimCR');
-    gpgpu.gl.uniform2f(resultDimCRLocation, resultNumCols, resultNumRows);
-    gpgpu.executeProgram();
-}
-exports.reshape = reshape;
+var ResizeBilinear3DProgram = (function () {
+    function ResizeBilinear3DProgram(inputShape, outputDimensionsRowCol, alignCorners) {
+        this.variableNames = ['A'];
+        this.params = [];
+        this.outputShape = [];
+        var depth = inputShape[2];
+        this.outputShape =
+            [outputDimensionsRowCol[0], outputDimensionsRowCol[1], depth];
+        this.params = [alignCorners];
+        var effectiveInputShape = alignCorners ?
+            [inputShape[0] - 1, inputShape[1] - 1, depth] :
+            inputShape;
+        var effectiveOutputShape = alignCorners ?
+            [this.outputShape[0] - 1, this.outputShape[1] - 1, depth] :
+            this.outputShape;
+        this.userCode = "\n      const vec2 effectiveInputOverOutputRatioRC = vec2(\n          " + effectiveInputShape[0] / effectiveOutputShape[0] + ",\n          " + effectiveInputShape[1] / effectiveOutputShape[1] + ");\n      const vec2 inputShapeRC = vec2(" + inputShape[0] + ".0, " + inputShape[1] + ".0);\n\n      void main() {\n        vec3 coords = getOutputCoords();\n        vec2 yRC = coords.xy;\n        float d = coords.z;\n\n        // Fractional source index.\n        vec2 sourceFracIndexRC = yRC * effectiveInputOverOutputRatioRC;\n\n        // Compute the four integer indices.\n        vec2 sourceFloorRC = floor(sourceFracIndexRC);\n        vec2 sourceCeilRC = min(inputShapeRC - 1.0, ceil(sourceFracIndexRC));\n\n        float topLeft = getA(sourceFloorRC[0], sourceFloorRC[1], d);\n        float bottomLeft = getA(sourceCeilRC[0], sourceFloorRC[1], d);\n        float topRight = getA(sourceFloorRC[0], sourceCeilRC[1], d);\n        float bottomRight = getA(sourceCeilRC[0], sourceCeilRC[1], d);\n\n        vec2 fracRC = sourceFracIndexRC - sourceFloorRC;\n\n        float top = topLeft + (topRight - topLeft) * fracRC[1];\n        float bottom = bottomLeft + (bottomRight - bottomLeft) * fracRC[1];\n        float newValue = top + (bottom - top) * fracRC[0];\n\n        setOutput(newValue);\n      }\n    ";
+    }
+    return ResizeBilinear3DProgram;
+}());
+exports.ResizeBilinear3DProgram = ResizeBilinear3DProgram;
 
-},{"../../util":79}],46:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var conv_util = require("../conv_util");
-function getFragmentShaderSource(inputShapeRCD, outputDimensionsRowCol, alignCorners) {
-    var depth = inputShapeRCD[2];
-    var inputTexShapeRC = conv_util.computeTexShapeFrom3D(inputShapeRCD);
-    var effectiveInputShapeRCD = alignCorners ?
-        [inputShapeRCD[0] - 1, inputShapeRCD[1] - 1, depth] :
-        inputShapeRCD;
-    var effectiveOutputShapeRCD = alignCorners ?
-        [outputDimensionsRowCol[0] - 1, outputDimensionsRowCol[1] - 1, depth] :
-        [outputDimensionsRowCol[0], outputDimensionsRowCol[1], depth];
-    return "\n    precision highp float;\n    uniform sampler2D matrixA;\n    varying vec2 resultUV;\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    const vec2 inputShapeCR = vec2(" + inputShapeRCD[1] + ", " + inputShapeRCD[0] + ");\n    const vec2 inputShapeTexCR = vec2(\n        " + inputTexShapeRC[1] + ", " + inputTexShapeRC[0] + ");\n\n    const vec2 effectiveInputOverOutputRatioCR = vec2(\n        " + effectiveInputShapeRCD[1] / effectiveOutputShapeRCD[1] + ",\n        " + effectiveInputShapeRCD[0] / effectiveOutputShapeRCD[0] + ");\n\n    float sampleInput(float col, float row, float d) {\n      vec2 uv = (vec2(col * " + depth + ".0 + d, row) + halfCR) / inputShapeTexCR;\n      return texture2D(matrixA, uv).r;\n    }\n\n    void main() {\n      vec2 yTexCR = floor(gl_FragCoord.xy);\n\n      // Map from 2D (yTexR, yTexC) to 3D (yR, yC, d).\n      vec2 yCR = vec2(floor(yTexCR.x / " + depth + ".0), yTexCR.y);\n      float d = mod(yTexCR.x, " + depth + ".0);\n\n      // Fractional source index.\n      vec2 sourceFracIndexCR = yCR * effectiveInputOverOutputRatioCR;\n\n      // Compute the four integer indices.\n      vec2 sourceFloorCR = floor(sourceFracIndexCR);\n      vec2 sourceCeilCR = min(inputShapeCR - 1.0, ceil(sourceFracIndexCR));\n\n      float topLeft = sampleInput(sourceFloorCR[0], sourceFloorCR[1], d);\n      float bottomLeft = sampleInput(sourceFloorCR[0], sourceCeilCR[1], d);\n      float topRight = sampleInput(sourceCeilCR[0], sourceFloorCR[1], d);\n      float bottomRight = sampleInput(sourceCeilCR[0], sourceCeilCR[1], d);\n\n      vec2 fracCR = sourceFracIndexCR - sourceFloorCR;\n\n      float top = topLeft + (topRight - topLeft) * fracCR[0];\n      float bottom = bottomLeft + (bottomRight - bottomLeft) * fracCR[0];\n      float newValue = top + (bottom - top) * fracCR[1];\n\n      gl_FragColor = vec4(newValue, 0.0, 0.0, 0.0);\n    }";
-}
-exports.getFragmentShaderSource = getFragmentShaderSource;
-function resizeBilinear(gpgpu, resizeBilinearProgram, a, result, resultShapeRowCol) {
-    gpgpu.setOutputMatrixTexture(result, resultShapeRowCol[0], resultShapeRowCol[1]);
-    gpgpu.setProgram(resizeBilinearProgram);
-    gpgpu.setInputMatrixTexture(a, 'matrixA', 0);
-    gpgpu.executeProgram();
-}
-exports.resizeBilinear = resizeBilinear;
-
-},{"../conv_util":16}],47:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -5197,8 +4670,7 @@ function makeShader(inputsInfo, outputShape, userCode, broadcast) {
     var outTexShape = outputShape.texShape;
     var outputSamplingSnippet = getOutputSamplingSnippet(outputShape.logicalShape, outTexShape);
     var source = [
-        SHADER_PREFIX, inputPrefixSnippet, SAMPLE_1D_SNIPPET, SAMPLE_2D_SNIPPET,
-        SAMPLE_3D_SNIPPET, SAMPLE_4D_SNIPPET, inputSamplingSnippet,
+        SHADER_PREFIX, inputPrefixSnippet, inputSamplingSnippet,
         outputSamplingSnippet, userCode
     ].join('\n');
     return source;
@@ -5229,7 +4701,8 @@ function getInputSamplingSnippet(inInfo, outShapeInfo, broadcast) {
             throw new Error(shape.length + "-D input sampling" +
                 " is not yet supported");
     }
-    if (broadcast || util.arraysEqual(inInfo.shapeInfo.logicalShape, outShapeInfo.logicalShape)) {
+    if (broadcast ||
+        util.arraysEqual(inInfo.shapeInfo.logicalShape, outShapeInfo.logicalShape)) {
         res +=
             getSamplerAtOutputCoords(inInfo.name, texShape, outTexShape, broadcast);
     }
@@ -5252,11 +4725,11 @@ function getOutputSamplingSnippet(outShape, outTexShape) {
             throw new Error(outShape.length + "-D output sampling is not yet supported");
     }
 }
-var SHADER_PREFIX = "\n  precision highp float;\n  varying vec2 resultUV;\n  const vec2 halfCR = vec2(0.5, 0.5);\n\n  void setOutput(float val) {\n    gl_FragColor = vec4(val, 0, 0, 0);\n  }\n\n  bool isNaN(float val) {\n    return val == val ? false : true;\n  }\n";
-var SAMPLE_1D_SNIPPET = "\n  float sample1D(sampler2D texture, float texNumR, float texNumC, float index) {\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
-var SAMPLE_2D_SNIPPET = "\n  float sample2D(sampler2D texture, float texNumR, float texNumC, float numC,\n      float row, float col) {\n    float index = dot(vec2(row, col), vec2(numC, 1.0));\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
-var SAMPLE_3D_SNIPPET = "\n  float sample3D(sampler2D texture, float texNumR, float texNumC, float stride0,\n      float stride1, float row, float col, float depth) {\n    float index = dot(vec3(row, col, depth), vec3(stride0, stride1, 1.0));\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
-var SAMPLE_4D_SNIPPET = "\n  float sample4D(sampler2D texture, float texNumR, float texNumC, float stride0,\n      float stride1, float stride2, float row, float col, float depth,\n      float depth2) {\n    float index = dot(vec4(row, col, depth, depth2),\n                      vec4(stride0, stride1, stride2, 1.0));\n    float texR = floor(index / texNumC);\n    float texC = mod(index, texNumC);\n    vec2 uv = (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n    return texture2D(texture, uv).r;\n  }\n";
+var SAMPLE_1D_SNIPPET = "\nvec2 UVfrom1D(float texNumR, float texNumC, float index) {\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_2D_SNIPPET = "\nvec2 UVfrom2D(float texNumR, float texNumC, float numC, float row,\n    float col) {\n  float index = dot(vec2(row, col), vec2(numC, 1.0));\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_3D_SNIPPET = "\nvec2 UVfrom3D(float texNumR, float texNumC, float stride0,\n    float stride1, float row, float col, float depth) {\n  float index = dot(vec3(row, col, depth), vec3(stride0, stride1, 1.0));\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_4D_SNIPPET = "\nvec2 UVfrom4D(float texNumR, float texNumC, float stride0,\n    float stride1, float stride2, float row, float col, float depth,\n    float depth2) {\n  float index = dot(vec4(row, col, depth, depth2),\n                    vec4(stride0, stride1, stride2, 1.0));\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SHADER_PREFIX = "\n  precision highp float;\n  varying vec2 resultUV;\n  const vec2 halfCR = vec2(0.5, 0.5);\n\n  float sample(sampler2D texture, vec2 uv) {\n    return texture2D(texture, uv).r;\n  }\n\n  void setOutput(float val) {\n    gl_FragColor = vec4(val, 0, 0, 0);\n  }\n\n  bool isNaN(float val) {\n    return val == val ? false : true;\n  }\n  " + SAMPLE_1D_SNIPPET + "\n  " + SAMPLE_2D_SNIPPET + "\n  " + SAMPLE_3D_SNIPPET + "\n  " + SAMPLE_4D_SNIPPET + "\n";
 function getOutput1DCoords(shape, texShape) {
     if (texShape[0] === 1) {
         return "\n      float getOutputCoords() {\n        return floor(gl_FragCoord.x);\n      }\n    ";
@@ -5285,22 +4758,22 @@ function getOutput2DCoords(shape, texShape) {
 }
 function getSamplerScalar(texName) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
-    return "\n    float " + funcName + "() {\n      return texture2D(" + texName + ", halfCR).r;\n    }\n  ";
+    return "\n    float " + funcName + "() {\n      return sample(" + texName + ", halfCR);\n    }\n  ";
 }
 function getSampler1D(texName, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
     var tR = texShape[0];
     var tC = texShape[1];
     if (texShape[0] === 1 && texShape[1] === 1) {
-        return "\n      float " + funcName + "(float index) {\n        return texture2D(" + texName + ", halfCR).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float index) {\n        return sample(" + texName + ", halfCR);\n      }\n    ";
     }
     if (texShape[1] === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tR + ".0);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
     if (texShape[0] === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tC + ".0, 0.5);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float index) {\n      return sample1D(" + texName + ", " + tR + ".0, " + tC + ".0, index);\n    }\n  ";
+    return "\n    float " + funcName + "(float index) {\n      vec2 uv = UVfrom1D(" + tR + ".0, " + tC + ".0, index);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSampler3D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
@@ -5308,7 +4781,10 @@ function getSampler3D(texName, shape, texShape) {
     var tC = texShape[1];
     var stride0 = shape[1] * shape[2];
     var stride1 = shape[2];
-    return "\n    float " + funcName + "(float row, float col, float depth) {\n      return sample3D(" + texName + ", " + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0,\n          row, col, depth);\n    }\n  ";
+    if (tC === stride0) {
+        return "\n      float " + funcName + "(float row, float col, float depth) {\n        float texR = row;\n        float texC = dot(vec2(col, depth), vec2(" + stride1 + ", 1.0));\n        vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+    }
+    return "\n    float " + funcName + "(float row, float col, float depth) {\n      vec2 uv = UVfrom3D(" + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0, row,\n        col, depth);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSampler4D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
@@ -5317,45 +4793,53 @@ function getSampler4D(texName, shape, texShape) {
     var stride2 = shape[3];
     var stride1 = shape[2] * stride2;
     var stride0 = shape[1] * stride1;
-    return "\n  float " + funcName + "(float row, float col, float depth, float depth2) {\n    return sample4D(" + texName + ", " + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0,\n        " + stride2 + ".0, row, col, depth, depth2);\n  }\n";
+    if (tC === stride0) {
+        return "\n      float " + funcName + "(float row, float col, float depth, float depth2) {\n        float texR = row;\n        float texC = dot(vec3(col, depth, depth2),\n                         vec3(" + stride1 + ".0, " + stride2 + ".0, 1.0));\n        vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+    }
+    return "\n    float " + funcName + "(float row, float col, float depth, float depth2) {\n      vec2 uv = UVfrom4D(" + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0,\n          " + stride2 + ".0, row, col, depth, depth2);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSampler2D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
     var tR = texShape[0];
     var tC = texShape[1];
     if (util.arraysEqual(shape, texShape)) {
-        return "\n      float " + funcName + "(float row, float col) {\n        vec2 uv = (vec2(col, row) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float row, float col) {\n        vec2 uv = (vec2(col, row) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float row, float col) {\n      return sample2D(" + texName + ", " + tR + ".0, " + tC + ".0, " + shape[1] + ".0, row, col);\n    }\n  ";
+    if (tC === 1) {
+        return "\n      float " + funcName + "(float row, float col) {\n        float index = dot(vec2(row, col), vec2(" + shape[1] + ".0, 1.0));\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+    }
+    if (tR === 1) {
+        return "\n      float " + funcName + "(float row, float col) {\n        float index = dot(vec2(row, col), vec2(" + shape[1] + ".0, 1.0));\n        vec2 uv = vec2((index + 0.5) / " + tC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
+    }
+    return "\n    float " + funcName + "(float row, float col) {\n      vec2 uv = UVfrom2D(" + tR + ".0, " + tC + ".0, " + shape[1] + ".0, row, col);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSamplerFlat(texName, texShape) {
-    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) +
-        'Flat';
+    var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) + 'Flat';
     var tNumR = texShape[0];
     var tNumC = texShape[1];
     if (tNumC === 1 && tNumR === 1) {
-        return "\n      float " + funcName + "(float index) {\n        return texture2D(" + texName + ", halfCR).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float index) {\n        return sample(" + texName + ", halfCR);\n      }\n    ";
     }
     if (tNumC === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tNumR + ".0);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tNumR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
     if (tNumR === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tNumC + ".0, 0.5);\n        return texture2D(" + texName + ", uv).r;\n      }\n    ";
+        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tNumC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float index) {\n      float texR = floor(index / " + tNumC + ".0);\n      float texC = mod(index, " + tNumC + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tNumC + ".0, " + tNumR + ".0);\n      return texture2D(" + texName + ", uv).r;\n    }\n  ";
+    return "\n    float " + funcName + "(float index) {\n      float texR = floor(index / " + tNumC + ".0);\n      float texC = mod(index, " + tNumC + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tNumC + ".0, " + tNumR + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) +
         'AtOutCoords';
     if (util.arraysEqual(inTexShape, outTexShape)) {
-        return "\n      float " + funcName + "() {\n        return texture2D(" + texName + ", resultUV).r;\n      }\n    ";
+        return "\n      float " + funcName + "() {\n        return sample(" + texName + ", resultUV);\n      }\n    ";
     }
     var inSize = util.sizeFromShape(inTexShape);
     var broadcastSnippet = broadcast ? "index = mod(index, " + inSize + ".0);" : '';
-    return "\n    float " + funcName + "() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + outTexShape[1] + ".0, 1.0));\n      " + broadcastSnippet + "\n      float texR = floor(index / " + inTexShape[1] + ".0);\n      float texC = mod(index, " + inTexShape[1] + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return texture2D(" + texName + ", uv).r;\n    }\n  ";
+    return "\n    float " + funcName + "() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + outTexShape[1] + ".0, 1.0));\n      " + broadcastSnippet + "\n      float texR = floor(index / " + inTexShape[1] + ".0);\n      float texC = mod(index, " + inTexShape[1] + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 
-},{"../../util":79}],48:[function(require,module,exports){
+},{"../../util":75}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getUnpackedMatrixTextureShapeWidthHeight(rows, columns) {
@@ -5523,7 +5007,7 @@ function decodeMatrixFromPackedRGBA(packedRGBA, rows, columns, matrix) {
 }
 exports.decodeMatrixFromPackedRGBA = decodeMatrixFromPackedRGBA;
 
-},{}],49:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TextureManager = (function () {
@@ -5594,7 +5078,7 @@ function getKeyFromTextureShape(shapeRowsCol) {
     return shapeRowsCol[0] + '_' + shapeRowsCol[1];
 }
 
-},{}],50:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var UnaryOp;
@@ -5641,7 +5125,7 @@ function getOpSnippet(op) {
     }
 }
 
-},{}],51:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var USE_WEBGL2_WHEN_AVAILABLE = true;
@@ -5925,9 +5409,9 @@ function validateTextureUnit(gl, textureUnit) {
         throw new Error('textureUnit must be in ' + textureUnitRange + '.');
     }
 }
-function getTextureShapeFromLogicalShape(gl, logicalShape, preferredTexShape) {
+function getTextureShapeFromLogicalShape(gl, logShape, preferredTexShape) {
     var maxTexSize = queryMaxTextureSize(gl);
-    var size = util.sizeFromShape(logicalShape);
+    var size = util.sizeFromShape(logShape);
     if (preferredTexShape != null) {
         var sizePreferred = util.sizeFromShape(preferredTexShape);
         util.assert(size === sizePreferred, "Size of shape (" + size + ") must match size of " +
@@ -5937,16 +5421,20 @@ function getTextureShapeFromLogicalShape(gl, logicalShape, preferredTexShape) {
             return preferredTexShape;
         }
     }
-    if (logicalShape.length <= 1 && size <= maxTexSize) {
+    if (logShape.length <= 1 && size <= maxTexSize) {
         return [size, 1];
     }
-    else if (logicalShape.length === 2 && logicalShape[0] <= maxTexSize &&
-        logicalShape[1] <= maxTexSize) {
-        return logicalShape;
+    else if (logShape.length === 2 && logShape[0] <= maxTexSize &&
+        logShape[1] <= maxTexSize) {
+        return logShape;
     }
-    else if (logicalShape.length === 3 && logicalShape[0] <= maxTexSize &&
-        logicalShape[1] * logicalShape[2] <= maxTexSize) {
-        return [logicalShape[0], logicalShape[1] * logicalShape[2]];
+    else if (logShape.length === 3 && logShape[0] <= maxTexSize &&
+        logShape[1] * logShape[2] <= maxTexSize) {
+        return [logShape[0], logShape[1] * logShape[2]];
+    }
+    else if (logShape.length === 4 && logShape[0] <= maxTexSize &&
+        logShape[1] * logShape[2] * logShape[3] <= maxTexSize) {
+        return [logShape[0], logShape[1] * logShape[2] * logShape[3]];
     }
     else {
         return util.sizeToSquarishShape(size);
@@ -5954,7 +5442,7 @@ function getTextureShapeFromLogicalShape(gl, logicalShape, preferredTexShape) {
 }
 exports.getTextureShapeFromLogicalShape = getTextureShapeFromLogicalShape;
 
-},{"../../util":79}],52:[function(require,module,exports){
+},{"../../util":75}],48:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -6072,7 +5560,7 @@ function emitOpFromNode(node) {
     }
 }
 
-},{"./graph":7,"./graph_util":10,"./ops/add":53,"./ops/argmax":54,"./ops/argmaxequals":55,"./ops/concat3d":56,"./ops/convolution":57,"./ops/divide":58,"./ops/element_wise_activation":59,"./ops/element_wise_cost":60,"./ops/exp":61,"./ops/linear_combination":62,"./ops/log":63,"./ops/matmul":64,"./ops/max_pool":65,"./ops/multiply":66,"./ops/reduce_sum":68,"./ops/reshape":69,"./ops/softmax":70,"./ops/split":71,"./ops/subtract":72}],53:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./ops/add":49,"./ops/argmax":50,"./ops/argmaxequals":51,"./ops/concat3d":52,"./ops/convolution":53,"./ops/divide":54,"./ops/element_wise_activation":55,"./ops/element_wise_cost":56,"./ops/exp":57,"./ops/linear_combination":58,"./ops/log":59,"./ops/matmul":60,"./ops/max_pool":61,"./ops/multiply":62,"./ops/reduce_sum":64,"./ops/reshape":65,"./ops/softmax":66,"./ops/split":67,"./ops/subtract":68}],49:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6159,7 +5647,7 @@ var Add = (function (_super) {
 }(op_1.Operation));
 exports.Add = Add;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":79,"./op":67}],54:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":63}],50:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6195,7 +5683,7 @@ var ArgMax = (function (_super) {
 }(op_1.Operation));
 exports.ArgMax = ArgMax;
 
-},{"./op":67}],55:[function(require,module,exports){
+},{"./op":63}],51:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6233,7 +5721,7 @@ var ArgMaxEquals = (function (_super) {
 }(op_1.Operation));
 exports.ArgMaxEquals = ArgMaxEquals;
 
-},{"./op":67}],56:[function(require,module,exports){
+},{"./op":63}],52:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6275,7 +5763,7 @@ var Concat3D = (function (_super) {
 }(op_1.Operation));
 exports.Concat3D = Concat3D;
 
-},{"../math/concat3d_util":15,"./op":67}],57:[function(require,module,exports){
+},{"../math/concat3d_util":15,"./op":63}],53:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6344,7 +5832,7 @@ var Convolution2D = (function (_super) {
 }(op_1.Operation));
 exports.Convolution2D = Convolution2D;
 
-},{"../math/conv_util":16,"../util":79,"./op":67}],58:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":75,"./op":63}],54:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6439,7 +5927,7 @@ var Divide = (function (_super) {
 }(op_1.Operation));
 exports.Divide = Divide;
 
-},{"../graph_util":10,"../util":79,"./op":67}],59:[function(require,module,exports){
+},{"../graph_util":10,"../util":75,"./op":63}],55:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6517,7 +6005,7 @@ var Square = (function (_super) {
 }(ElementWiseActivation));
 exports.Square = Square;
 
-},{"../math/activation_functions":14,"./op":67}],60:[function(require,module,exports){
+},{"../math/activation_functions":14,"./op":63}],56:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6586,7 +6074,7 @@ var MeanSquaredCost = (function (_super) {
 }(ElementWiseCost));
 exports.MeanSquaredCost = MeanSquaredCost;
 
-},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":79,"./op":67}],61:[function(require,module,exports){
+},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":75,"./op":63}],57:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6630,7 +6118,7 @@ var Exp = (function (_super) {
 }(op_1.Operation));
 exports.Exp = Exp;
 
-},{"../graph_util":10,"./op":67}],62:[function(require,module,exports){
+},{"../graph_util":10,"./op":63}],58:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6694,7 +6182,7 @@ var LinearCombination = (function (_super) {
 }(op_1.Operation));
 exports.LinearCombination = LinearCombination;
 
-},{"../graph_util":10,"./op":67}],63:[function(require,module,exports){
+},{"../graph_util":10,"./op":63}],59:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6738,7 +6226,7 @@ var Log = (function (_super) {
 }(op_1.Operation));
 exports.Log = Log;
 
-},{"../graph_util":10,"./op":67}],64:[function(require,module,exports){
+},{"../graph_util":10,"./op":63}],60:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6807,7 +6295,7 @@ var MatMul = (function (_super) {
 }(op_1.Operation));
 exports.MatMul = MatMul;
 
-},{"../graph_util":10,"../math/math":19,"./op":67}],65:[function(require,module,exports){
+},{"../graph_util":10,"../math/math":19,"./op":63}],61:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6861,7 +6349,7 @@ var MaxPool = (function (_super) {
 }(op_1.Operation));
 exports.MaxPool = MaxPool;
 
-},{"../math/conv_util":16,"../util":79,"./op":67}],66:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":75,"./op":63}],62:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6944,7 +6432,7 @@ var Multiply = (function (_super) {
 }(op_1.Operation));
 exports.Multiply = Multiply;
 
-},{"../graph_util":10,"../util":79,"./op":67}],67:[function(require,module,exports){
+},{"../graph_util":10,"../util":75,"./op":63}],63:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Operation = (function () {
@@ -6956,7 +6444,7 @@ var Operation = (function () {
 }());
 exports.Operation = Operation;
 
-},{}],68:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7008,7 +6496,7 @@ var ReduceSum = (function (_super) {
 }(op_1.Operation));
 exports.ReduceSum = ReduceSum;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":79,"./op":67}],69:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":63}],65:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7038,21 +6526,21 @@ var Reshape = (function (_super) {
         var _this = this;
         var x = inferenceArrays.get(this.xTensor);
         math.scope(function (keep) {
-            inferenceArrays.set(_this.yTensor, keep(math.reshape(x, _this.yTensor.shape)));
+            inferenceArrays.set(_this.yTensor, keep(x.reshape(_this.yTensor.shape)));
         });
     };
     Reshape.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
         var _this = this;
         var dy = gradientArrays.get(this.yTensor);
         math.scope(function (keep) {
-            gradientArrays.set(_this.xTensor, keep(math.reshape(dy, _this.xTensor.shape)));
+            gradientArrays.set(_this.xTensor, keep(dy.reshape(_this.xTensor.shape)));
         });
     };
     return Reshape;
 }(op_1.Operation));
 exports.Reshape = Reshape;
 
-},{"../util":79,"./op":67}],70:[function(require,module,exports){
+},{"../util":75,"./op":63}],66:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7140,7 +6628,7 @@ function crossEntropyCost(math, y, target, epsilon) {
 }
 exports.crossEntropyCost = crossEntropyCost;
 
-},{"../graph":7,"../math/ndarray":22,"../util":79,"./op":67}],71:[function(require,module,exports){
+},{"../graph":7,"../math/ndarray":22,"../util":75,"./op":63}],67:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7190,7 +6678,7 @@ var Split = (function (_super) {
 }(op_1.Operation));
 exports.Split = Split;
 
-},{"../graph_util":10,"../util":79,"./op":67}],72:[function(require,module,exports){
+},{"../graph_util":10,"../util":75,"./op":63}],68:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7278,7 +6766,7 @@ var Subtract = (function (_super) {
 }(op_1.Operation));
 exports.Subtract = Subtract;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":79,"./op":67}],73:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":63}],69:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Optimizer = (function () {
@@ -7291,7 +6779,7 @@ var Optimizer = (function () {
 }());
 exports.Optimizer = Optimizer;
 
-},{}],74:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function defaultCompare(a, b) {
@@ -7422,7 +6910,7 @@ var PriorityQueue = (function () {
 }());
 exports.PriorityQueue = PriorityQueue;
 
-},{}],75:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -7560,7 +7048,7 @@ var Session = (function () {
 }());
 exports.Session = Session;
 
-},{"./math/ndarray":22,"./operation_emitter":52,"./session_util":76,"./tensor_array_map":78,"./util":79}],76:[function(require,module,exports){
+},{"./math/ndarray":22,"./operation_emitter":48,"./session_util":72,"./tensor_array_map":74,"./util":75}],72:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -7725,7 +7213,7 @@ function addSplitNodes(nodes) {
 }
 exports.addSplitNodes = addSplitNodes;
 
-},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":79}],77:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":75}],73:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7801,7 +7289,7 @@ var SGDOptimizer = (function (_super) {
 }(optimizer_1.Optimizer));
 exports.SGDOptimizer = SGDOptimizer;
 
-},{"./math/ndarray":22,"./optimizer":73,"./session_util":76,"./tensor_array_map":78}],78:[function(require,module,exports){
+},{"./math/ndarray":22,"./optimizer":69,"./session_util":72,"./tensor_array_map":74}],74:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TensorArrayMap = (function () {
@@ -7859,7 +7347,7 @@ var TensorArrayMap = (function () {
 }());
 exports.TensorArrayMap = TensorArrayMap;
 
-},{}],79:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function shuffle(array) {
