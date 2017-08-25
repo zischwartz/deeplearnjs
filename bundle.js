@@ -583,7 +583,7 @@ var InMemoryDataset = (function () {
 }());
 exports.InMemoryDataset = InMemoryDataset;
 
-},{"./math/ndarray":22,"./util":75}],7:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":76}],7:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -1175,7 +1175,7 @@ var SplitNode = (function (_super) {
 }(Node));
 exports.SplitNode = SplitNode;
 
-},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":75}],8:[function(require,module,exports){
+},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":76}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var initializers_1 = require("./initializers");
@@ -1425,7 +1425,7 @@ var GraphRunner = (function () {
 }());
 exports.GraphRunner = GraphRunner;
 
-},{"./math/ndarray":22,"./session":71}],10:[function(require,module,exports){
+},{"./math/ndarray":22,"./session":72}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -1502,7 +1502,7 @@ function isPassthroughNode(node, map) {
 }
 exports.isPassthroughNode = isPassthroughNode;
 
-},{"./graph":7,"./priority_queue":70}],11:[function(require,module,exports){
+},{"./graph":7,"./priority_queue":71}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("./math/conv_util");
@@ -1560,8 +1560,10 @@ exports.CostReduction = session_1.CostReduction;
 exports.Session = session_1.Session;
 var sgd_optimizer_1 = require("./sgd_optimizer");
 exports.SGDOptimizer = sgd_optimizer_1.SGDOptimizer;
+var momentumOptimizer_1 = require("./momentumOptimizer");
+exports.MomentumOptimizer = momentumOptimizer_1.MomentumOptimizer;
 
-},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./optimizer":69,"./session":71,"./sgd_optimizer":73,"./util":75}],12:[function(require,module,exports){
+},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./momentumOptimizer":48,"./optimizer":70,"./session":72,"./sgd_optimizer":74,"./util":76}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1788,7 +1790,7 @@ var InGPUMemoryShuffledInputProviderBuilder = (function (_super) {
 }(InMemoryShuffledInputProviderBuilder));
 exports.InGPUMemoryShuffledInputProviderBuilder = InGPUMemoryShuffledInputProviderBuilder;
 
-},{"./math/ndarray":22,"./util":75}],14:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":76}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./ndarray");
@@ -1884,7 +1886,7 @@ function computeConcat3DOutputShape(x1Shape, x2Shape, axis) {
 }
 exports.computeConcat3DOutputShape = computeConcat3DOutputShape;
 
-},{"../util":75}],16:[function(require,module,exports){
+},{"../util":76}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -1922,7 +1924,7 @@ function computeDilatedRC(rc, origStride) {
 }
 exports.computeDilatedRC = computeDilatedRC;
 
-},{"../util":75}],17:[function(require,module,exports){
+},{"../util":76}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function validateShapes(sourceSize, destSize) {
@@ -2439,7 +2441,7 @@ var MatrixOrientation;
     MatrixOrientation[MatrixOrientation["TRANSPOSED"] = 1] = "TRANSPOSED";
 })(MatrixOrientation = exports.MatrixOrientation || (exports.MatrixOrientation = {}));
 
-},{"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
+},{"../util":76,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3106,7 +3108,7 @@ var NDArrayMathCPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathCPU = NDArrayMathCPU;
 
-},{"../math/conv_util":16,"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":76,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3825,7 +3827,7 @@ function toTypedArray(a) {
     return (a instanceof Float32Array) ? a : new Float32Array(util.flatten(a));
 }
 
-},{"../util":75,"./webgl/webgl_util":47}],23:[function(require,module,exports){
+},{"../util":76,"./webgl/webgl_util":47}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -3841,7 +3843,7 @@ var AddScaledMatProgram = (function () {
 }());
 exports.AddScaledMatProgram = AddScaledMatProgram;
 
-},{"../../util":75}],24:[function(require,module,exports){
+},{"../../util":76}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var argminmax_gpu = require("./argminmax_gpu");
@@ -3910,7 +3912,7 @@ var BatchNormProgram = (function () {
 }());
 exports.BatchNormProgram = BatchNormProgram;
 
-},{"../../util":75}],27:[function(require,module,exports){
+},{"../../util":76}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -3926,7 +3928,7 @@ var BinaryOpProgram = (function () {
 }());
 exports.BinaryOpProgram = BinaryOpProgram;
 
-},{"../../util":75}],28:[function(require,module,exports){
+},{"../../util":76}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var concat3d_util = require("../concat3d_util");
@@ -4335,7 +4337,7 @@ function makeShaderKey(program, inputs, output) {
 }
 exports.makeShaderKey = makeShaderKey;
 
-},{"../../util":75,"./shader_compiler":43}],34:[function(require,module,exports){
+},{"../../util":76,"./shader_compiler":43}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tex_util = require("./tex_util");
@@ -4839,7 +4841,7 @@ function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
     return "\n    float " + funcName + "() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + outTexShape[1] + ".0, 1.0));\n      " + broadcastSnippet + "\n      float texR = floor(index / " + inTexShape[1] + ".0);\n      float texC = mod(index, " + inTexShape[1] + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 
-},{"../../util":75}],44:[function(require,module,exports){
+},{"../../util":76}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getUnpackedMatrixTextureShapeWidthHeight(rows, columns) {
@@ -5442,7 +5444,78 @@ function getTextureShapeFromLogicalShape(gl, logShape, preferredTexShape) {
 }
 exports.getTextureShapeFromLogicalShape = getTextureShapeFromLogicalShape;
 
-},{"../../util":75}],48:[function(require,module,exports){
+},{"../../util":76}],48:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ndarray_1 = require("./math/ndarray");
+var sgd_optimizer_1 = require("./sgd_optimizer");
+var tensor_array_map_1 = require("./tensor_array_map");
+var MomentumOptimizer = (function (_super) {
+    __extends(MomentumOptimizer, _super);
+    function MomentumOptimizer(learningRate, momentum, specifiedVariableList) {
+        var _this = _super.call(this, learningRate, specifiedVariableList) || this;
+        _this.learningRate = learningRate;
+        _this.momentum = momentum;
+        _this.variableVelocities = new tensor_array_map_1.TensorArrayMap();
+        return _this;
+    }
+    MomentumOptimizer.prototype.beforeBatch = function (math, batchSize, runtime, activationArrayMap, gradientArrayMap) {
+        var _this = this;
+        _super.prototype.beforeBatch.call(this, math, batchSize, runtime, activationArrayMap, gradientArrayMap);
+        this.m = ndarray_1.Scalar.new(this.momentum);
+        if (this.variableVelocities.size() === 0) {
+            this.variableNodes.forEach(function (node) {
+                _this.variableVelocities.set(node.output, ndarray_1.NDArray.zeros(node.output.shape));
+            });
+        }
+    };
+    MomentumOptimizer.prototype.afterBatch = function (math, batchSize, runtime, activationArrayMap, gradientArrayMap) {
+        var _this = this;
+        math.scope(function (keep) {
+            _this.variableNodes.forEach(function (node) {
+                var oldVariable = activationArrayMap.get(node.output);
+                var gradient = _this.variableGradients.get(node.output);
+                var oldVelocity = _this.variableVelocities.get(node.output);
+                var velocity = math.scaledArrayAdd(_this.m, oldVelocity, _this.one, gradient);
+                var variable = math.scaledArrayAdd(_this.c, velocity, _this.one, oldVariable);
+                _this.variableVelocities.set(node.output, keep(velocity));
+                activationArrayMap.set(node.output, keep(variable));
+                node.data = variable;
+                oldVariable.dispose();
+                oldVelocity.dispose();
+            });
+        });
+        this.variableGradients.dispose();
+        this.variableGradients = new tensor_array_map_1.TensorArrayMap();
+    };
+    MomentumOptimizer.prototype.dispose = function () {
+        if (this.c != null) {
+            this.c.dispose();
+        }
+        if (this.m != null) {
+            this.m.dispose();
+        }
+        this.one.dispose();
+        this.variableVelocities.dispose();
+    };
+    MomentumOptimizer.prototype.setMomentum = function (momentum) {
+        this.momentum = momentum;
+    };
+    return MomentumOptimizer;
+}(sgd_optimizer_1.SGDOptimizer));
+exports.MomentumOptimizer = MomentumOptimizer;
+
+},{"./math/ndarray":22,"./sgd_optimizer":74,"./tensor_array_map":75}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -5560,7 +5633,7 @@ function emitOpFromNode(node) {
     }
 }
 
-},{"./graph":7,"./graph_util":10,"./ops/add":49,"./ops/argmax":50,"./ops/argmaxequals":51,"./ops/concat3d":52,"./ops/convolution":53,"./ops/divide":54,"./ops/element_wise_activation":55,"./ops/element_wise_cost":56,"./ops/exp":57,"./ops/linear_combination":58,"./ops/log":59,"./ops/matmul":60,"./ops/max_pool":61,"./ops/multiply":62,"./ops/reduce_sum":64,"./ops/reshape":65,"./ops/softmax":66,"./ops/split":67,"./ops/subtract":68}],49:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./ops/add":50,"./ops/argmax":51,"./ops/argmaxequals":52,"./ops/concat3d":53,"./ops/convolution":54,"./ops/divide":55,"./ops/element_wise_activation":56,"./ops/element_wise_cost":57,"./ops/exp":58,"./ops/linear_combination":59,"./ops/log":60,"./ops/matmul":61,"./ops/max_pool":62,"./ops/multiply":63,"./ops/reduce_sum":65,"./ops/reshape":66,"./ops/softmax":67,"./ops/split":68,"./ops/subtract":69}],50:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5647,7 +5720,7 @@ var Add = (function (_super) {
 }(op_1.Operation));
 exports.Add = Add;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":63}],50:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":76,"./op":64}],51:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5683,7 +5756,7 @@ var ArgMax = (function (_super) {
 }(op_1.Operation));
 exports.ArgMax = ArgMax;
 
-},{"./op":63}],51:[function(require,module,exports){
+},{"./op":64}],52:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5721,7 +5794,7 @@ var ArgMaxEquals = (function (_super) {
 }(op_1.Operation));
 exports.ArgMaxEquals = ArgMaxEquals;
 
-},{"./op":63}],52:[function(require,module,exports){
+},{"./op":64}],53:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5763,7 +5836,7 @@ var Concat3D = (function (_super) {
 }(op_1.Operation));
 exports.Concat3D = Concat3D;
 
-},{"../math/concat3d_util":15,"./op":63}],53:[function(require,module,exports){
+},{"../math/concat3d_util":15,"./op":64}],54:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5832,7 +5905,7 @@ var Convolution2D = (function (_super) {
 }(op_1.Operation));
 exports.Convolution2D = Convolution2D;
 
-},{"../math/conv_util":16,"../util":75,"./op":63}],54:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":76,"./op":64}],55:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5927,7 +6000,7 @@ var Divide = (function (_super) {
 }(op_1.Operation));
 exports.Divide = Divide;
 
-},{"../graph_util":10,"../util":75,"./op":63}],55:[function(require,module,exports){
+},{"../graph_util":10,"../util":76,"./op":64}],56:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6005,7 +6078,7 @@ var Square = (function (_super) {
 }(ElementWiseActivation));
 exports.Square = Square;
 
-},{"../math/activation_functions":14,"./op":63}],56:[function(require,module,exports){
+},{"../math/activation_functions":14,"./op":64}],57:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6074,7 +6147,7 @@ var MeanSquaredCost = (function (_super) {
 }(ElementWiseCost));
 exports.MeanSquaredCost = MeanSquaredCost;
 
-},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":75,"./op":63}],57:[function(require,module,exports){
+},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":76,"./op":64}],58:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6118,7 +6191,7 @@ var Exp = (function (_super) {
 }(op_1.Operation));
 exports.Exp = Exp;
 
-},{"../graph_util":10,"./op":63}],58:[function(require,module,exports){
+},{"../graph_util":10,"./op":64}],59:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6182,7 +6255,7 @@ var LinearCombination = (function (_super) {
 }(op_1.Operation));
 exports.LinearCombination = LinearCombination;
 
-},{"../graph_util":10,"./op":63}],59:[function(require,module,exports){
+},{"../graph_util":10,"./op":64}],60:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6226,7 +6299,7 @@ var Log = (function (_super) {
 }(op_1.Operation));
 exports.Log = Log;
 
-},{"../graph_util":10,"./op":63}],60:[function(require,module,exports){
+},{"../graph_util":10,"./op":64}],61:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6295,7 +6368,7 @@ var MatMul = (function (_super) {
 }(op_1.Operation));
 exports.MatMul = MatMul;
 
-},{"../graph_util":10,"../math/math":19,"./op":63}],61:[function(require,module,exports){
+},{"../graph_util":10,"../math/math":19,"./op":64}],62:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6349,7 +6422,7 @@ var MaxPool = (function (_super) {
 }(op_1.Operation));
 exports.MaxPool = MaxPool;
 
-},{"../math/conv_util":16,"../util":75,"./op":63}],62:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":76,"./op":64}],63:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6432,7 +6505,7 @@ var Multiply = (function (_super) {
 }(op_1.Operation));
 exports.Multiply = Multiply;
 
-},{"../graph_util":10,"../util":75,"./op":63}],63:[function(require,module,exports){
+},{"../graph_util":10,"../util":76,"./op":64}],64:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Operation = (function () {
@@ -6444,7 +6517,7 @@ var Operation = (function () {
 }());
 exports.Operation = Operation;
 
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6496,7 +6569,7 @@ var ReduceSum = (function (_super) {
 }(op_1.Operation));
 exports.ReduceSum = ReduceSum;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":63}],65:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":76,"./op":64}],66:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6540,7 +6613,7 @@ var Reshape = (function (_super) {
 }(op_1.Operation));
 exports.Reshape = Reshape;
 
-},{"../util":75,"./op":63}],66:[function(require,module,exports){
+},{"../util":76,"./op":64}],67:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6628,7 +6701,7 @@ function crossEntropyCost(math, y, target, epsilon) {
 }
 exports.crossEntropyCost = crossEntropyCost;
 
-},{"../graph":7,"../math/ndarray":22,"../util":75,"./op":63}],67:[function(require,module,exports){
+},{"../graph":7,"../math/ndarray":22,"../util":76,"./op":64}],68:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6678,7 +6751,7 @@ var Split = (function (_super) {
 }(op_1.Operation));
 exports.Split = Split;
 
-},{"../graph_util":10,"../util":75,"./op":63}],68:[function(require,module,exports){
+},{"../graph_util":10,"../util":76,"./op":64}],69:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6766,7 +6839,7 @@ var Subtract = (function (_super) {
 }(op_1.Operation));
 exports.Subtract = Subtract;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":63}],69:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":76,"./op":64}],70:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Optimizer = (function () {
@@ -6779,7 +6852,7 @@ var Optimizer = (function () {
 }());
 exports.Optimizer = Optimizer;
 
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function defaultCompare(a, b) {
@@ -6910,7 +6983,7 @@ var PriorityQueue = (function () {
 }());
 exports.PriorityQueue = PriorityQueue;
 
-},{}],71:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -7048,7 +7121,7 @@ var Session = (function () {
 }());
 exports.Session = Session;
 
-},{"./math/ndarray":22,"./operation_emitter":48,"./session_util":72,"./tensor_array_map":74,"./util":75}],72:[function(require,module,exports){
+},{"./math/ndarray":22,"./operation_emitter":49,"./session_util":73,"./tensor_array_map":75,"./util":76}],73:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -7213,7 +7286,7 @@ function addSplitNodes(nodes) {
 }
 exports.addSplitNodes = addSplitNodes;
 
-},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":75}],73:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":76}],74:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7289,7 +7362,7 @@ var SGDOptimizer = (function (_super) {
 }(optimizer_1.Optimizer));
 exports.SGDOptimizer = SGDOptimizer;
 
-},{"./math/ndarray":22,"./optimizer":69,"./session_util":72,"./tensor_array_map":74}],74:[function(require,module,exports){
+},{"./math/ndarray":22,"./optimizer":70,"./session_util":73,"./tensor_array_map":75}],75:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TensorArrayMap = (function () {
@@ -7347,7 +7420,7 @@ var TensorArrayMap = (function () {
 }());
 exports.TensorArrayMap = TensorArrayMap;
 
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function shuffle(array) {
