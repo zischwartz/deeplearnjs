@@ -71,6 +71,10 @@ var ImagenetDemo = (function (_super) {
             }
             _this.staticImgElement.src = 'images/' + event.detail.selected + '.jpg';
         });
+        var navigatorAny = navigator;
+        navigator.getUserMedia = navigator.getUserMedia ||
+            navigatorAny.webkitGetUserMedia || navigatorAny.mozGetUserMedia ||
+            navigatorAny.msGetUserMedia;
         if (navigator.getUserMedia) {
             navigator.getUserMedia({ video: true }, function (stream) {
                 _this.webcamVideoElement.src = window.URL.createObjectURL(stream);
