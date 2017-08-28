@@ -558,12 +558,16 @@ var ModelBuilder = (function (_super) {
     };
     ModelBuilder.prototype.updateSelectedDataset = function (datasetName) {
         var _this = this;
+        if (this.dataSet != null) {
+            this.dataSet.removeNormalization(IMAGE_DATA_INDEX);
+        }
         this.graphRunner.stopTraining();
         this.graphRunner.stopInferring();
         if (this.dataSet != null) {
             this.dataSet.dispose();
         }
         this.selectedDatasetName = datasetName;
+        this.selectedModelName = '';
         this.dataSet = this.dataSets[datasetName];
         this.datasetDownloaded = false;
         this.showDatasetStats = false;
@@ -575,8 +579,8 @@ var ModelBuilder = (function (_super) {
                 _this.createModel();
                 _this.startInference();
             }
+            _this.populateModelDropdown();
         });
-        this.populateModelDropdown();
         this.inputShape = this.dataSet.getDataShape(IMAGE_DATA_INDEX);
         this.labelShape = this.dataSet.getDataShape(LABEL_DATA_INDEX);
         this.layersContainer =
@@ -2541,10 +2545,11 @@ var GraphRunner = (function () {
             }
             _this.inferencePassesThisRun++;
         });
-        setTimeout(function () { return _this.inferNetwork(); }, this.inferenceExampleIntervalMs);
+        this.lastInferTimeoutID = window.setTimeout(function () { return _this.inferNetwork(); }, this.inferenceExampleIntervalMs);
     };
     GraphRunner.prototype.stopInferring = function () {
         this.isInferring = false;
+        window.clearTimeout(this.lastInferTimeoutID);
     };
     GraphRunner.prototype.isInferenceRunning = function () {
         return this.isInferring;

@@ -2394,10 +2394,11 @@ var GraphRunner = (function () {
             }
             _this.inferencePassesThisRun++;
         });
-        setTimeout(function () { return _this.inferNetwork(); }, this.inferenceExampleIntervalMs);
+        this.lastInferTimeoutID = window.setTimeout(function () { return _this.inferNetwork(); }, this.inferenceExampleIntervalMs);
     };
     GraphRunner.prototype.stopInferring = function () {
         this.isInferring = false;
+        window.clearTimeout(this.lastInferTimeoutID);
     };
     GraphRunner.prototype.isInferenceRunning = function () {
         return this.isInferring;
