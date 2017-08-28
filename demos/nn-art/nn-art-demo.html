@@ -8571,6 +8571,442 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<!--
+The `<iron-flex-layout>` component provides simple ways to use
+[CSS flexible box layout](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes),
+also known as flexbox. This component provides two different ways to use flexbox:
+
+1. [Layout classes](https://github.com/PolymerElements/iron-flex-layout/tree/master/iron-flex-layout-classes.html).
+The layout class stylesheet provides a simple set of class-based flexbox rules, that
+let you specify layout properties directly in markup. You must include this file
+in every element that needs to use them.
+
+    Sample use:
+
+    ```
+    <custom-element-demo>
+      <template>
+        <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+        <next-code-block></next-code-block>
+      </template>
+    </custom-element-demo>
+    ```
+
+    ```html
+    <link rel="import" href="iron-flex-layout-classes.html">
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+      .test { width: 100px; }
+    </style>
+    <div class="layout horizontal center-center">
+      <div class="test">horizontal layout center alignment</div>
+    </div>
+    ```
+
+2. [Custom CSS mixins](https://github.com/PolymerElements/iron-flex-layout/blob/master/iron-flex-layout.html).
+The mixin stylesheet includes custom CSS mixins that can be applied inside a CSS rule using the `@apply` function.
+
+Please note that the old [/deep/ layout classes](https://github.com/PolymerElements/iron-flex-layout/tree/master/classes)
+are deprecated, and should not be used. To continue using layout properties
+directly in markup, please switch to using the new `dom-module`-based
+[layout classes](https://github.com/PolymerElements/iron-flex-layout/tree/master/iron-flex-layout-classes.html).
+Please note that the new version does not use `/deep/`, and therefore requires you
+to import the `dom-modules` in every element that needs to use them.
+
+A complete [guide](https://elements.polymer-project.org/guides/flex-layout) to `<iron-flex-layout>` is available.
+
+@group Iron Elements
+@pseudoElement iron-flex-layout
+@demo demo/index.html
+-->
+
+<style>
+  /* IE 10 support for HTML5 hidden attr */
+  [hidden] {
+    display: none !important;
+  }
+</style>
+
+<style is="custom-style">
+  :root {
+
+    --layout: {
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+    };
+
+    --layout-inline: {
+      display: -ms-inline-flexbox;
+      display: -webkit-inline-flex;
+      display: inline-flex;
+    };
+
+    --layout-horizontal: {
+      @apply(--layout);
+
+      -ms-flex-direction: row;
+      -webkit-flex-direction: row;
+      flex-direction: row;
+    };
+
+    --layout-horizontal-reverse: {
+      @apply(--layout);
+
+      -ms-flex-direction: row-reverse;
+      -webkit-flex-direction: row-reverse;
+      flex-direction: row-reverse;
+    };
+
+    --layout-vertical: {
+      @apply(--layout);
+
+      -ms-flex-direction: column;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+    };
+
+    --layout-vertical-reverse: {
+      @apply(--layout);
+
+      -ms-flex-direction: column-reverse;
+      -webkit-flex-direction: column-reverse;
+      flex-direction: column-reverse;
+    };
+
+    --layout-wrap: {
+      -ms-flex-wrap: wrap;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+    };
+
+    --layout-no-wrap: {
+      -ms-flex-wrap: nowrap;
+      -webkit-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+    };
+
+    --layout-wrap-reverse: {
+      -ms-flex-wrap: wrap-reverse;
+      -webkit-flex-wrap: wrap-reverse;
+      flex-wrap: wrap-reverse;
+    };
+
+    --layout-flex-auto: {
+      -ms-flex: 1 1 auto;
+      -webkit-flex: 1 1 auto;
+      flex: 1 1 auto;
+    };
+
+    --layout-flex-none: {
+      -ms-flex: none;
+      -webkit-flex: none;
+      flex: none;
+    };
+
+    --layout-flex: {
+      -ms-flex: 1 1 0.000000001px;
+      -webkit-flex: 1;
+      flex: 1;
+      -webkit-flex-basis: 0.000000001px;
+      flex-basis: 0.000000001px;
+    };
+
+    --layout-flex-2: {
+      -ms-flex: 2;
+      -webkit-flex: 2;
+      flex: 2;
+    };
+
+    --layout-flex-3: {
+      -ms-flex: 3;
+      -webkit-flex: 3;
+      flex: 3;
+    };
+
+    --layout-flex-4: {
+      -ms-flex: 4;
+      -webkit-flex: 4;
+      flex: 4;
+    };
+
+    --layout-flex-5: {
+      -ms-flex: 5;
+      -webkit-flex: 5;
+      flex: 5;
+    };
+
+    --layout-flex-6: {
+      -ms-flex: 6;
+      -webkit-flex: 6;
+      flex: 6;
+    };
+
+    --layout-flex-7: {
+      -ms-flex: 7;
+      -webkit-flex: 7;
+      flex: 7;
+    };
+
+    --layout-flex-8: {
+      -ms-flex: 8;
+      -webkit-flex: 8;
+      flex: 8;
+    };
+
+    --layout-flex-9: {
+      -ms-flex: 9;
+      -webkit-flex: 9;
+      flex: 9;
+    };
+
+    --layout-flex-10: {
+      -ms-flex: 10;
+      -webkit-flex: 10;
+      flex: 10;
+    };
+
+    --layout-flex-11: {
+      -ms-flex: 11;
+      -webkit-flex: 11;
+      flex: 11;
+    };
+
+    --layout-flex-12: {
+      -ms-flex: 12;
+      -webkit-flex: 12;
+      flex: 12;
+    };
+
+    /* alignment in cross axis */
+
+    --layout-start: {
+      -ms-flex-align: start;
+      -webkit-align-items: flex-start;
+      align-items: flex-start;
+    };
+
+    --layout-center: {
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    };
+
+    --layout-end: {
+      -ms-flex-align: end;
+      -webkit-align-items: flex-end;
+      align-items: flex-end;
+    };
+
+    --layout-baseline: {
+      -ms-flex-align: baseline;
+      -webkit-align-items: baseline;
+      align-items: baseline;
+    };
+
+    /* alignment in main axis */
+
+    --layout-start-justified: {
+      -ms-flex-pack: start;
+      -webkit-justify-content: flex-start;
+      justify-content: flex-start;
+    };
+
+    --layout-center-justified: {
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+    };
+
+    --layout-end-justified: {
+      -ms-flex-pack: end;
+      -webkit-justify-content: flex-end;
+      justify-content: flex-end;
+    };
+
+    --layout-around-justified: {
+      -ms-flex-pack: distribute;
+      -webkit-justify-content: space-around;
+      justify-content: space-around;
+    };
+
+    --layout-justified: {
+      -ms-flex-pack: justify;
+      -webkit-justify-content: space-between;
+      justify-content: space-between;
+    };
+
+    --layout-center-center: {
+      @apply(--layout-center);
+      @apply(--layout-center-justified);
+    };
+
+    /* self alignment */
+
+    --layout-self-start: {
+      -ms-align-self: flex-start;
+      -webkit-align-self: flex-start;
+      align-self: flex-start;
+    };
+
+    --layout-self-center: {
+      -ms-align-self: center;
+      -webkit-align-self: center;
+      align-self: center;
+    };
+
+    --layout-self-end: {
+      -ms-align-self: flex-end;
+      -webkit-align-self: flex-end;
+      align-self: flex-end;
+    };
+
+    --layout-self-stretch: {
+      -ms-align-self: stretch;
+      -webkit-align-self: stretch;
+      align-self: stretch;
+    };
+
+    --layout-self-baseline: {
+      -ms-align-self: baseline;
+      -webkit-align-self: baseline;
+      align-self: baseline;
+    };
+
+    /* multi-line alignment in main axis */
+
+    --layout-start-aligned: {
+      -ms-flex-line-pack: start;  /* IE10 */
+      -ms-align-content: flex-start;
+      -webkit-align-content: flex-start;
+      align-content: flex-start;
+    };
+
+    --layout-end-aligned: {
+      -ms-flex-line-pack: end;  /* IE10 */
+      -ms-align-content: flex-end;
+      -webkit-align-content: flex-end;
+      align-content: flex-end;
+    };
+
+    --layout-center-aligned: {
+      -ms-flex-line-pack: center;  /* IE10 */
+      -ms-align-content: center;
+      -webkit-align-content: center;
+      align-content: center;
+    };
+
+    --layout-between-aligned: {
+      -ms-flex-line-pack: justify;  /* IE10 */
+      -ms-align-content: space-between;
+      -webkit-align-content: space-between;
+      align-content: space-between;
+    };
+
+    --layout-around-aligned: {
+      -ms-flex-line-pack: distribute;  /* IE10 */
+      -ms-align-content: space-around;
+      -webkit-align-content: space-around;
+      align-content: space-around;
+    };
+
+    /*******************************
+              Other Layout
+    *******************************/
+
+    --layout-block: {
+      display: block;
+    };
+
+    --layout-invisible: {
+      visibility: hidden !important;
+    };
+
+    --layout-relative: {
+      position: relative;
+    };
+
+    --layout-fit: {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    };
+
+    --layout-scroll: {
+      -webkit-overflow-scrolling: touch;
+      overflow: auto;
+    };
+
+    --layout-fullbleed: {
+      margin: 0;
+      height: 100vh;
+    };
+
+    /* fixed position */
+
+    --layout-fixed-top: {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    };
+
+    --layout-fixed-right: {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    };
+
+    --layout-fixed-bottom: {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    };
+
+    --layout-fixed-left: {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    };
+
+  }
+
+</style>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
 <script>
   (function() {
     'use strict';
@@ -9065,16 +9501,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <script>
 
   /**
@@ -9405,6 +9831,1267 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<!--
+@license
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+Material design: [Surface reaction](https://www.google.com/design/spec/animation/responsive-interaction.html#responsive-interaction-surface-reaction)
+
+`paper-ripple` provides a visual effect that other paper elements can
+use to simulate a rippling effect emanating from the point of contact.  The
+effect can be visualized as a concentric circle with motion.
+
+Example:
+
+    <div style="position:relative">
+      <paper-ripple></paper-ripple>
+    </div>
+
+Note, it's important that the parent container of the ripple be relative position, otherwise
+the ripple will emanate outside of the desired container.
+
+`paper-ripple` listens to "mousedown" and "mouseup" events so it would display ripple
+effect when touches on it.  You can also defeat the default behavior and
+manually route the down and up actions to the ripple element.  Note that it is
+important if you call `downAction()` you will have to make sure to call
+`upAction()` so that `paper-ripple` would end the animation loop.
+
+Example:
+
+    <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
+    ...
+    downAction: function(e) {
+      this.$.ripple.downAction({detail: {x: e.x, y: e.y}});
+    },
+    upAction: function(e) {
+      this.$.ripple.upAction();
+    }
+
+Styling ripple effect:
+
+  Use CSS color property to style the ripple:
+
+    paper-ripple {
+      color: #4285f4;
+    }
+
+  Note that CSS color property is inherited so it is not required to set it on
+  the `paper-ripple` element directly.
+
+By default, the ripple is centered on the point of contact.  Apply the `recenters`
+attribute to have the ripple grow toward the center of its container.
+
+    <paper-ripple recenters></paper-ripple>
+
+You can also  center the ripple inside its container from the start.
+
+    <paper-ripple center></paper-ripple>
+
+Apply `circle` class to make the rippling effect within a circle.
+
+    <paper-ripple class="circle"></paper-ripple>
+
+@group Paper Elements
+@element paper-ripple
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<dom-module id="paper-ripple" assetpath="../../bower_components/paper-ripple/">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        border-radius: inherit;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        /* See PolymerElements/paper-behaviors/issues/34. On non-Chrome browsers,
+         * creating a node (with a position:absolute) in the middle of an event
+         * handler "interrupts" that event handler (which happens when the
+         * ripple is created on demand) */
+        pointer-events: none;
+      }
+
+      :host([animating]) {
+        /* This resolves a rendering issue in Chrome (as of 40) where the
+           ripple is not properly clipped by its parent (which may have
+           rounded corners). See: http://jsbin.com/temexa/4
+
+           Note: We only apply this style conditionally. Otherwise, the browser
+           will create a new compositing layer for every ripple element on the
+           page, and that would be bad. */
+        -webkit-transform: translate(0, 0);
+        transform: translate3d(0, 0, 0);
+      }
+
+      #background,
+      #waves,
+      .wave-container,
+      .wave {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #background,
+      .wave {
+        opacity: 0;
+      }
+
+      #waves,
+      .wave {
+        overflow: hidden;
+      }
+
+      .wave-container,
+      .wave {
+        border-radius: 50%;
+      }
+
+      :host(.circle) #background,
+      :host(.circle) #waves {
+        border-radius: 50%;
+      }
+
+      :host(.circle) .wave-container {
+        overflow: hidden;
+      }
+    </style>
+
+    <div id="background"></div>
+    <div id="waves"></div>
+  </template>
+</dom-module>
+<script>
+  (function() {
+    var Utility = {
+      distance: function(x1, y1, x2, y2) {
+        var xDelta = (x1 - x2);
+        var yDelta = (y1 - y2);
+
+        return Math.sqrt(xDelta * xDelta + yDelta * yDelta);
+      },
+
+      now: window.performance && window.performance.now ?
+          window.performance.now.bind(window.performance) : Date.now
+    };
+
+    /**
+     * @param {HTMLElement} element
+     * @constructor
+     */
+    function ElementMetrics(element) {
+      this.element = element;
+      this.width = this.boundingRect.width;
+      this.height = this.boundingRect.height;
+
+      this.size = Math.max(this.width, this.height);
+    }
+
+    ElementMetrics.prototype = {
+      get boundingRect () {
+        return this.element.getBoundingClientRect();
+      },
+
+      furthestCornerDistanceFrom: function(x, y) {
+        var topLeft = Utility.distance(x, y, 0, 0);
+        var topRight = Utility.distance(x, y, this.width, 0);
+        var bottomLeft = Utility.distance(x, y, 0, this.height);
+        var bottomRight = Utility.distance(x, y, this.width, this.height);
+
+        return Math.max(topLeft, topRight, bottomLeft, bottomRight);
+      }
+    };
+
+    /**
+     * @param {HTMLElement} element
+     * @constructor
+     */
+    function Ripple(element) {
+      this.element = element;
+      this.color = window.getComputedStyle(element).color;
+
+      this.wave = document.createElement('div');
+      this.waveContainer = document.createElement('div');
+      this.wave.style.backgroundColor = this.color;
+      this.wave.classList.add('wave');
+      this.waveContainer.classList.add('wave-container');
+      Polymer.dom(this.waveContainer).appendChild(this.wave);
+
+      this.resetInteractionState();
+    }
+
+    Ripple.MAX_RADIUS = 300;
+
+    Ripple.prototype = {
+      get recenters() {
+        return this.element.recenters;
+      },
+
+      get center() {
+        return this.element.center;
+      },
+
+      get mouseDownElapsed() {
+        var elapsed;
+
+        if (!this.mouseDownStart) {
+          return 0;
+        }
+
+        elapsed = Utility.now() - this.mouseDownStart;
+
+        if (this.mouseUpStart) {
+          elapsed -= this.mouseUpElapsed;
+        }
+
+        return elapsed;
+      },
+
+      get mouseUpElapsed() {
+        return this.mouseUpStart ?
+          Utility.now () - this.mouseUpStart : 0;
+      },
+
+      get mouseDownElapsedSeconds() {
+        return this.mouseDownElapsed / 1000;
+      },
+
+      get mouseUpElapsedSeconds() {
+        return this.mouseUpElapsed / 1000;
+      },
+
+      get mouseInteractionSeconds() {
+        return this.mouseDownElapsedSeconds + this.mouseUpElapsedSeconds;
+      },
+
+      get initialOpacity() {
+        return this.element.initialOpacity;
+      },
+
+      get opacityDecayVelocity() {
+        return this.element.opacityDecayVelocity;
+      },
+
+      get radius() {
+        var width2 = this.containerMetrics.width * this.containerMetrics.width;
+        var height2 = this.containerMetrics.height * this.containerMetrics.height;
+        var waveRadius = Math.min(
+          Math.sqrt(width2 + height2),
+          Ripple.MAX_RADIUS
+        ) * 1.1 + 5;
+
+        var duration = 1.1 - 0.2 * (waveRadius / Ripple.MAX_RADIUS);
+        var timeNow = this.mouseInteractionSeconds / duration;
+        var size = waveRadius * (1 - Math.pow(80, -timeNow));
+
+        return Math.abs(size);
+      },
+
+      get opacity() {
+        if (!this.mouseUpStart) {
+          return this.initialOpacity;
+        }
+
+        return Math.max(
+          0,
+          this.initialOpacity - this.mouseUpElapsedSeconds * this.opacityDecayVelocity
+        );
+      },
+
+      get outerOpacity() {
+        // Linear increase in background opacity, capped at the opacity
+        // of the wavefront (waveOpacity).
+        var outerOpacity = this.mouseUpElapsedSeconds * 0.3;
+        var waveOpacity = this.opacity;
+
+        return Math.max(
+          0,
+          Math.min(outerOpacity, waveOpacity)
+        );
+      },
+
+      get isOpacityFullyDecayed() {
+        return this.opacity < 0.01 &&
+          this.radius >= Math.min(this.maxRadius, Ripple.MAX_RADIUS);
+      },
+
+      get isRestingAtMaxRadius() {
+        return this.opacity >= this.initialOpacity &&
+          this.radius >= Math.min(this.maxRadius, Ripple.MAX_RADIUS);
+      },
+
+      get isAnimationComplete() {
+        return this.mouseUpStart ?
+          this.isOpacityFullyDecayed : this.isRestingAtMaxRadius;
+      },
+
+      get translationFraction() {
+        return Math.min(
+          1,
+          this.radius / this.containerMetrics.size * 2 / Math.sqrt(2)
+        );
+      },
+
+      get xNow() {
+        if (this.xEnd) {
+          return this.xStart + this.translationFraction * (this.xEnd - this.xStart);
+        }
+
+        return this.xStart;
+      },
+
+      get yNow() {
+        if (this.yEnd) {
+          return this.yStart + this.translationFraction * (this.yEnd - this.yStart);
+        }
+
+        return this.yStart;
+      },
+
+      get isMouseDown() {
+        return this.mouseDownStart && !this.mouseUpStart;
+      },
+
+      resetInteractionState: function() {
+        this.maxRadius = 0;
+        this.mouseDownStart = 0;
+        this.mouseUpStart = 0;
+
+        this.xStart = 0;
+        this.yStart = 0;
+        this.xEnd = 0;
+        this.yEnd = 0;
+        this.slideDistance = 0;
+
+        this.containerMetrics = new ElementMetrics(this.element);
+      },
+
+      draw: function() {
+        var scale;
+        var translateString;
+        var dx;
+        var dy;
+
+        this.wave.style.opacity = this.opacity;
+
+        scale = this.radius / (this.containerMetrics.size / 2);
+        dx = this.xNow - (this.containerMetrics.width / 2);
+        dy = this.yNow - (this.containerMetrics.height / 2);
+
+
+        // 2d transform for safari because of border-radius and overflow:hidden clipping bug.
+        // https://bugs.webkit.org/show_bug.cgi?id=98538
+        this.waveContainer.style.webkitTransform = 'translate(' + dx + 'px, ' + dy + 'px)';
+        this.waveContainer.style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
+        this.wave.style.webkitTransform = 'scale(' + scale + ',' + scale + ')';
+        this.wave.style.transform = 'scale3d(' + scale + ',' + scale + ',1)';
+      },
+
+      /** @param {Event=} event */
+      downAction: function(event) {
+        var xCenter = this.containerMetrics.width / 2;
+        var yCenter = this.containerMetrics.height / 2;
+
+        this.resetInteractionState();
+        this.mouseDownStart = Utility.now();
+
+        if (this.center) {
+          this.xStart = xCenter;
+          this.yStart = yCenter;
+          this.slideDistance = Utility.distance(
+            this.xStart, this.yStart, this.xEnd, this.yEnd
+          );
+        } else {
+          this.xStart = event ?
+              event.detail.x - this.containerMetrics.boundingRect.left :
+              this.containerMetrics.width / 2;
+          this.yStart = event ?
+              event.detail.y - this.containerMetrics.boundingRect.top :
+              this.containerMetrics.height / 2;
+        }
+
+        if (this.recenters) {
+          this.xEnd = xCenter;
+          this.yEnd = yCenter;
+          this.slideDistance = Utility.distance(
+            this.xStart, this.yStart, this.xEnd, this.yEnd
+          );
+        }
+
+        this.maxRadius = this.containerMetrics.furthestCornerDistanceFrom(
+          this.xStart,
+          this.yStart
+        );
+
+        this.waveContainer.style.top =
+          (this.containerMetrics.height - this.containerMetrics.size) / 2 + 'px';
+        this.waveContainer.style.left =
+          (this.containerMetrics.width - this.containerMetrics.size) / 2 + 'px';
+
+        this.waveContainer.style.width = this.containerMetrics.size + 'px';
+        this.waveContainer.style.height = this.containerMetrics.size + 'px';
+      },
+
+      /** @param {Event=} event */
+      upAction: function(event) {
+        if (!this.isMouseDown) {
+          return;
+        }
+
+        this.mouseUpStart = Utility.now();
+      },
+
+      remove: function() {
+        Polymer.dom(this.waveContainer.parentNode).removeChild(
+          this.waveContainer
+        );
+      }
+    };
+
+    Polymer({
+      is: 'paper-ripple',
+
+      behaviors: [
+        Polymer.IronA11yKeysBehavior
+      ],
+
+      properties: {
+        /**
+         * The initial opacity set on the wave.
+         *
+         * @attribute initialOpacity
+         * @type number
+         * @default 0.25
+         */
+        initialOpacity: {
+          type: Number,
+          value: 0.25
+        },
+
+        /**
+         * How fast (opacity per second) the wave fades out.
+         *
+         * @attribute opacityDecayVelocity
+         * @type number
+         * @default 0.8
+         */
+        opacityDecayVelocity: {
+          type: Number,
+          value: 0.8
+        },
+
+        /**
+         * If true, ripples will exhibit a gravitational pull towards
+         * the center of their container as they fade away.
+         *
+         * @attribute recenters
+         * @type boolean
+         * @default false
+         */
+        recenters: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * If true, ripples will center inside its container
+         *
+         * @attribute recenters
+         * @type boolean
+         * @default false
+         */
+        center: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * A list of the visual ripples.
+         *
+         * @attribute ripples
+         * @type Array
+         * @default []
+         */
+        ripples: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+        },
+
+        /**
+         * True when there are visible ripples animating within the
+         * element.
+         */
+        animating: {
+          type: Boolean,
+          readOnly: true,
+          reflectToAttribute: true,
+          value: false
+        },
+
+        /**
+         * If true, the ripple will remain in the "down" state until `holdDown`
+         * is set to false again.
+         */
+        holdDown: {
+          type: Boolean,
+          value: false,
+          observer: '_holdDownChanged'
+        },
+
+        /**
+         * If true, the ripple will not generate a ripple effect
+         * via pointer interaction.
+         * Calling ripple's imperative api like `simulatedRipple` will
+         * still generate the ripple effect.
+         */
+        noink: {
+          type: Boolean,
+          value: false
+        },
+
+        _animating: {
+          type: Boolean
+        },
+
+        _boundAnimate: {
+          type: Function,
+          value: function() {
+            return this.animate.bind(this);
+          }
+        }
+      },
+
+      get target () {
+        return this.keyEventTarget;
+      },
+
+      keyBindings: {
+        'enter:keydown': '_onEnterKeydown',
+        'space:keydown': '_onSpaceKeydown',
+        'space:keyup': '_onSpaceKeyup'
+      },
+
+      attached: function() {
+        // Set up a11yKeysBehavior to listen to key events on the target,
+        // so that space and enter activate the ripple even if the target doesn't
+        // handle key events. The key handlers deal with `noink` themselves.
+        if (this.parentNode.nodeType == 11) { // DOCUMENT_FRAGMENT_NODE
+          this.keyEventTarget = Polymer.dom(this).getOwnerRoot().host;
+        } else {
+          this.keyEventTarget = this.parentNode;
+        }
+        var keyEventTarget = /** @type {!EventTarget} */ (this.keyEventTarget);
+        this.listen(keyEventTarget, 'up', 'uiUpAction');
+        this.listen(keyEventTarget, 'down', 'uiDownAction');
+      },
+
+      detached: function() {
+        this.unlisten(this.keyEventTarget, 'up', 'uiUpAction');
+        this.unlisten(this.keyEventTarget, 'down', 'uiDownAction');
+        this.keyEventTarget = null;
+      },
+
+      get shouldKeepAnimating () {
+        for (var index = 0; index < this.ripples.length; ++index) {
+          if (!this.ripples[index].isAnimationComplete) {
+            return true;
+          }
+        }
+
+        return false;
+      },
+
+      simulatedRipple: function() {
+        this.downAction(null);
+
+        // Please see polymer/polymer#1305
+        this.async(function() {
+          this.upAction();
+        }, 1);
+      },
+
+      /**
+       * Provokes a ripple down effect via a UI event,
+       * respecting the `noink` property.
+       * @param {Event=} event
+       */
+      uiDownAction: function(event) {
+        if (!this.noink) {
+          this.downAction(event);
+        }
+      },
+
+      /**
+       * Provokes a ripple down effect via a UI event,
+       * *not* respecting the `noink` property.
+       * @param {Event=} event
+       */
+      downAction: function(event) {
+        if (this.holdDown && this.ripples.length > 0) {
+          return;
+        }
+
+        var ripple = this.addRipple();
+
+        ripple.downAction(event);
+
+        if (!this._animating) {
+          this._animating = true;
+          this.animate();
+        }
+      },
+
+      /**
+       * Provokes a ripple up effect via a UI event,
+       * respecting the `noink` property.
+       * @param {Event=} event
+       */
+      uiUpAction: function(event) {
+        if (!this.noink) {
+          this.upAction(event);
+        }
+      },
+
+      /**
+       * Provokes a ripple up effect via a UI event,
+       * *not* respecting the `noink` property.
+       * @param {Event=} event
+       */
+      upAction: function(event) {
+        if (this.holdDown) {
+          return;
+        }
+
+        this.ripples.forEach(function(ripple) {
+          ripple.upAction(event);
+        });
+
+        this._animating = true;
+        this.animate();
+      },
+
+      onAnimationComplete: function() {
+        this._animating = false;
+        this.$.background.style.backgroundColor = null;
+        this.fire('transitionend');
+      },
+
+      addRipple: function() {
+        var ripple = new Ripple(this);
+
+        Polymer.dom(this.$.waves).appendChild(ripple.waveContainer);
+        this.$.background.style.backgroundColor = ripple.color;
+        this.ripples.push(ripple);
+
+        this._setAnimating(true);
+
+        return ripple;
+      },
+
+      removeRipple: function(ripple) {
+        var rippleIndex = this.ripples.indexOf(ripple);
+
+        if (rippleIndex < 0) {
+          return;
+        }
+
+        this.ripples.splice(rippleIndex, 1);
+
+        ripple.remove();
+
+        if (!this.ripples.length) {
+          this._setAnimating(false);
+        }
+      },
+
+      /**
+       * This conflicts with Element#antimate().
+       * https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
+       * @suppress {checkTypes}
+       */
+      animate: function() {
+        if (!this._animating) {
+          return;
+        }
+        var index;
+        var ripple;
+
+        for (index = 0; index < this.ripples.length; ++index) {
+          ripple = this.ripples[index];
+
+          ripple.draw();
+
+          this.$.background.style.opacity = ripple.outerOpacity;
+
+          if (ripple.isOpacityFullyDecayed && !ripple.isRestingAtMaxRadius) {
+            this.removeRipple(ripple);
+          }
+        }
+
+        if (!this.shouldKeepAnimating && this.ripples.length === 0) {
+          this.onAnimationComplete();
+        } else {
+          window.requestAnimationFrame(this._boundAnimate);
+        }
+      },
+
+      _onEnterKeydown: function() {
+        this.uiDownAction();
+        this.async(this.uiUpAction, 1);
+      },
+
+      _onSpaceKeydown: function() {
+        this.uiDownAction();
+      },
+
+      _onSpaceKeyup: function() {
+        this.uiUpAction();
+      },
+
+      // note: holdDown does not respect noink since it can be a focus based
+      // effect.
+      _holdDownChanged: function(newVal, oldVal) {
+        if (oldVal === undefined) {
+          return;
+        }
+        if (newVal) {
+          this.downAction();
+        } else {
+          this.upAction();
+        }
+      }
+
+      /**
+      Fired when the animation finishes.
+      This is useful if you want to wait until
+      the ripple animation finishes to perform some action.
+
+      @event transitionend
+      @param {{node: Object}} detail Contains the animated node.
+      */
+    });
+  })();
+</script>
+<script>
+  /**
+   * `Polymer.PaperRippleBehavior` dynamically implements a ripple
+   * when the element has focus via pointer or keyboard.
+   *
+   * NOTE: This behavior is intended to be used in conjunction with and after
+   * `Polymer.IronButtonState` and `Polymer.IronControlState`.
+   *
+   * @polymerBehavior Polymer.PaperRippleBehavior
+   */
+  Polymer.PaperRippleBehavior = {
+    properties: {
+      /**
+       * If true, the element will not produce a ripple effect when interacted
+       * with via the pointer.
+       */
+      noink: {
+        type: Boolean,
+        observer: '_noinkChanged'
+      },
+
+      /**
+       * @type {Element|undefined}
+       */
+      _rippleContainer: {
+        type: Object,
+      }
+    },
+
+    /**
+     * Ensures a `<paper-ripple>` element is available when the element is
+     * focused.
+     */
+    _buttonStateChanged: function() {
+      if (this.focused) {
+        this.ensureRipple();
+      }
+    },
+
+    /**
+     * In addition to the functionality provided in `IronButtonState`, ensures
+     * a ripple effect is created when the element is in a `pressed` state.
+     */
+    _downHandler: function(event) {
+      Polymer.IronButtonStateImpl._downHandler.call(this, event);
+      if (this.pressed) {
+        this.ensureRipple(event);
+      }
+    },
+
+    /**
+     * Ensures this element contains a ripple effect. For startup efficiency
+     * the ripple effect is dynamically on demand when needed.
+     * @param {!Event=} optTriggeringEvent (optional) event that triggered the
+     * ripple.
+     */
+    ensureRipple: function(optTriggeringEvent) {
+      if (!this.hasRipple()) {
+        this._ripple = this._createRipple();
+        this._ripple.noink = this.noink;
+        var rippleContainer = this._rippleContainer || this.root;
+        if (rippleContainer) {
+          Polymer.dom(rippleContainer).appendChild(this._ripple);
+        }
+        if (optTriggeringEvent) {
+          // Check if the event happened inside of the ripple container
+          // Fall back to host instead of the root because distributed text
+          // nodes are not valid event targets
+          var domContainer = Polymer.dom(this._rippleContainer || this);
+          var target = Polymer.dom(optTriggeringEvent).rootTarget;
+          if (domContainer.deepContains( /** @type {Node} */(target))) {
+            this._ripple.uiDownAction(optTriggeringEvent);
+          }
+        }
+      }
+    },
+
+    /**
+     * Returns the `<paper-ripple>` element used by this element to create
+     * ripple effects. The element's ripple is created on demand, when
+     * necessary, and calling this method will force the
+     * ripple to be created.
+     */
+    getRipple: function() {
+      this.ensureRipple();
+      return this._ripple;
+    },
+
+    /**
+     * Returns true if this element currently contains a ripple effect.
+     * @return {boolean}
+     */
+    hasRipple: function() {
+      return Boolean(this._ripple);
+    },
+
+    /**
+     * Create the element's ripple effect via creating a `<paper-ripple>`.
+     * Override this method to customize the ripple element.
+     * @return {!PaperRippleElement} Returns a `<paper-ripple>` element.
+     */
+    _createRipple: function() {
+      return /** @type {!PaperRippleElement} */ (
+          document.createElement('paper-ripple'));
+    },
+
+    _noinkChanged: function(noink) {
+      if (this.hasRipple()) {
+        this._ripple.noink = noink;
+      }
+    }
+  };
+</script>
+<script>
+  /** @polymerBehavior Polymer.PaperButtonBehavior */
+  Polymer.PaperButtonBehaviorImpl = {
+    properties: {
+      /**
+       * The z-depth of this element, from 0-5. Setting to 0 will remove the
+       * shadow, and each increasing number greater than 0 will be "deeper"
+       * than the last.
+       *
+       * @attribute elevation
+       * @type number
+       * @default 1
+       */
+      elevation: {
+        type: Number,
+        reflectToAttribute: true,
+        readOnly: true
+      }
+    },
+
+    observers: [
+      '_calculateElevation(focused, disabled, active, pressed, receivedFocusFromKeyboard)',
+      '_computeKeyboardClass(receivedFocusFromKeyboard)'
+    ],
+
+    hostAttributes: {
+      role: 'button',
+      tabindex: '0',
+      animated: true
+    },
+
+    _calculateElevation: function() {
+      var e = 1;
+      if (this.disabled) {
+        e = 0;
+      } else if (this.active || this.pressed) {
+        e = 4;
+      } else if (this.receivedFocusFromKeyboard) {
+        e = 3;
+      }
+      this._setElevation(e);
+    },
+
+    _computeKeyboardClass: function(receivedFocusFromKeyboard) {
+      this.toggleClass('keyboard-focus', receivedFocusFromKeyboard);
+    },
+
+    /**
+     * In addition to `IronButtonState` behavior, when space key goes down,
+     * create a ripple down effect.
+     *
+     * @param {!KeyboardEvent} event .
+     */
+    _spaceKeyDownHandler: function(event) {
+      Polymer.IronButtonStateImpl._spaceKeyDownHandler.call(this, event);
+      // Ensure that there is at most one ripple when the space key is held down.
+      if (this.hasRipple() && this.getRipple().ripples.length < 1) {
+        this._ripple.uiDownAction();
+      }
+    },
+
+    /**
+     * In addition to `IronButtonState` behavior, when space key goes up,
+     * create a ripple up effect.
+     *
+     * @param {!KeyboardEvent} event .
+     */
+    _spaceKeyUpHandler: function(event) {
+      Polymer.IronButtonStateImpl._spaceKeyUpHandler.call(this, event);
+      if (this.hasRipple()) {
+        this._ripple.uiUpAction();
+      }
+    }
+  };
+
+  /** @polymerBehavior */
+  Polymer.PaperButtonBehavior = [
+    Polymer.IronButtonState,
+    Polymer.IronControlState,
+    Polymer.PaperRippleBehavior,
+    Polymer.PaperButtonBehaviorImpl
+  ];
+</script>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<style is="custom-style">
+
+  :root {
+
+    --shadow-transition: {
+      transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    };
+
+    --shadow-none: {
+      box-shadow: none;
+    };
+
+    /* from http://codepen.io/shyndman/pen/c5394ddf2e8b2a5c9185904b57421cdb */
+
+    --shadow-elevation-2dp: {
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    };
+
+    --shadow-elevation-3dp: {
+      box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 8px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 3px -2px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-4dp: {
+      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 10px 0 rgba(0, 0, 0, 0.12),
+                  0 2px 4px -1px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-6dp: {
+      box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 18px 0 rgba(0, 0, 0, 0.12),
+                  0 3px 5px -1px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-8dp: {
+      box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                  0 3px 14px 2px rgba(0, 0, 0, 0.12),
+                  0 5px 5px -3px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-12dp: {
+      box-shadow: 0 12px 16px 1px rgba(0, 0, 0, 0.14),
+                  0 4px 22px 3px rgba(0, 0, 0, 0.12),
+                  0 6px 7px -4px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-16dp: {
+      box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+                  0  6px 30px 5px rgba(0, 0, 0, 0.12),
+                  0  8px 10px -5px rgba(0, 0, 0, 0.4);
+    };
+
+    --shadow-elevation-24dp: {
+      box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
+                  0 9px 46px 8px rgba(0, 0, 0, 0.12),
+                  0 11px 15px -7px rgba(0, 0, 0, 0.4);
+    };
+  }
+
+</style>
+<dom-module id="paper-material-shared-styles" assetpath="../../bower_components/paper-material/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+      }
+
+      :host([elevation="1"]) {
+        @apply(--shadow-elevation-2dp);
+      }
+
+      :host([elevation="2"]) {
+        @apply(--shadow-elevation-4dp);
+      }
+
+      :host([elevation="3"]) {
+        @apply(--shadow-elevation-6dp);
+      }
+
+      :host([elevation="4"]) {
+        @apply(--shadow-elevation-8dp);
+      }
+
+      :host([elevation="5"]) {
+        @apply(--shadow-elevation-16dp);
+      }
+    </style>
+  </template>
+</dom-module>
+<!--
+Material design: [Buttons](https://www.google.com/design/spec/components/buttons.html)
+
+`paper-button` is a button. When the user touches the button, a ripple effect emanates
+from the point of contact. It may be flat or raised. A raised button is styled with a
+shadow.
+
+Example:
+
+    <paper-button>Flat button</paper-button>
+    <paper-button raised>Raised button</paper-button>
+    <paper-button noink>No ripple effect</paper-button>
+    <paper-button toggles>Toggle-able button</paper-button>
+
+A button that has `toggles` true will remain `active` after being clicked (and
+will have an `active` attribute set). For more information, see the `Polymer.IronButtonState`
+behavior.
+
+You may use custom DOM in the button body to create a variety of buttons. For example, to
+create a button with an icon and some text:
+
+    <paper-button>
+      <iron-icon icon="favorite"></iron-icon>
+      custom button content
+    </paper-button>
+
+To use `paper-button` as a link, wrap it in an anchor tag. Since `paper-button` will already
+receive focus, you may want to prevent the anchor tag from receiving focus as well by setting
+its tabindex to -1.
+
+    <a href="https://www.polymer-project.org/" tabindex="-1">
+      <paper-button raised>Polymer Project</paper-button>
+    </a>
+
+### Styling
+
+Style the button with CSS as you would a normal DOM element.
+
+    paper-button.fancy {
+      background: green;
+      color: yellow;
+    }
+
+    paper-button.fancy:hover {
+      background: lime;
+    }
+
+    paper-button[disabled],
+    paper-button[toggles][active] {
+      background: red;
+    }
+
+By default, the ripple is the same color as the foreground at 25% opacity. You may
+customize the color using the `--paper-button-ink-color` custom property.
+
+The following custom properties and mixins are also available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-button-ink-color` | Background color of the ripple | `Based on the button's color`
+`--paper-button` | Mixin applied to the button | `{}`
+`--paper-button-disabled` | Mixin applied to the disabled button. Note that you can also use the `paper-button[disabled]` selector | `{}`
+`--paper-button-flat-keyboard-focus` | Mixin applied to a flat button after it's been focused using the keyboard | `{}`
+`--paper-button-raised-keyboard-focus` | Mixin applied to a raised button after it's been focused using the keyboard | `{}`
+
+@demo demo/index.html
+-->
+
+<dom-module id="paper-button" assetpath="../../bower_components/paper-button/">
+  <template strip-whitespace="">
+    <style include="paper-material-shared-styles">
+      :host {
+        @apply(--layout-inline);
+        @apply(--layout-center-center);
+        position: relative;
+        box-sizing: border-box;
+        min-width: 5.14em;
+        margin: 0 0.29em;
+        background: transparent;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-tap-highlight-color: transparent;
+        font: inherit;
+        text-transform: uppercase;
+        outline-width: 0;
+        border-radius: 3px;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        z-index: 0;
+        padding: 0.7em 0.57em;
+
+        @apply(--paper-font-common-base);
+        @apply(--paper-button);
+      }
+
+      :host([hidden]) {
+        display: none !important;
+      }
+
+      :host([raised].keyboard-focus) {
+        font-weight: bold;
+        @apply(--paper-button-raised-keyboard-focus);
+      }
+
+      :host(:not([raised]).keyboard-focus) {
+        font-weight: bold;
+        @apply(--paper-button-flat-keyboard-focus);
+      }
+
+      :host([disabled]) {
+        background: #eaeaea;
+        color: #a8a8a8;
+        cursor: auto;
+        pointer-events: none;
+
+        @apply(--paper-button-disabled);
+      }
+
+      :host([animated]) {
+        @apply(--shadow-transition);
+      }
+
+      paper-ripple {
+        color: var(--paper-button-ink-color);
+      }
+    </style>
+
+    <content></content>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-button',
+
+      behaviors: [
+        Polymer.PaperButtonBehavior
+      ],
+
+      properties: {
+        /**
+         * If true, the button should be styled with a shadow.
+         */
+        raised: {
+          type: Boolean,
+          reflectToAttribute: true,
+          value: false,
+          observer: '_calculateElevation'
+        }
+      },
+
+      _calculateElevation: function() {
+        if (!this.raised) {
+          this._setElevation(0);
+        } else {
+          Polymer.PaperButtonBehaviorImpl._calculateElevation.apply(this);
+        }
+      }
+
+      /**
+      Fired when the animation finishes.
+      This is useful if you want to wait until
+      the ripple animation finishes to perform some action.
+
+      @event transitionend
+      Event param: {{node: Object}} detail Contains the animated node.
+      */
+    });
+  </script>
+</dom-module>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
 <script>
   /**
   Polymer.IronFormElementBehavior enables a custom element to be included
@@ -9479,6 +11166,314 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   };
 
 </script>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<script>
+
+ /**
+ * `iron-range-behavior` provides the behavior for something with a minimum to maximum range.
+ *
+ * @demo demo/index.html
+ * @polymerBehavior
+ */
+ Polymer.IronRangeBehavior = {
+
+  properties: {
+
+    /**
+     * The number that represents the current value.
+     */
+    value: {
+      type: Number,
+      value: 0,
+      notify: true,
+      reflectToAttribute: true
+    },
+
+    /**
+     * The number that indicates the minimum value of the range.
+     */
+    min: {
+      type: Number,
+      value: 0,
+      notify: true
+    },
+
+    /**
+     * The number that indicates the maximum value of the range.
+     */
+    max: {
+      type: Number,
+      value: 100,
+      notify: true
+    },
+
+    /**
+     * Specifies the value granularity of the range's value.
+     */
+    step: {
+      type: Number,
+      value: 1,
+      notify: true
+    },
+
+    /**
+     * Returns the ratio of the value.
+     */
+    ratio: {
+      type: Number,
+      value: 0,
+      readOnly: true,
+      notify: true
+    },
+  },
+
+  observers: [
+    '_update(value, min, max, step)'
+  ],
+
+  _calcRatio: function(value) {
+    return (this._clampValue(value) - this.min) / (this.max - this.min);
+  },
+
+  _clampValue: function(value) {
+    return Math.min(this.max, Math.max(this.min, this._calcStep(value)));
+  },
+
+  _calcStep: function(value) {
+    // polymer/issues/2493
+    value = parseFloat(value);
+
+    if (!this.step) {
+      return value;
+    }
+
+    var numSteps = Math.round((value - this.min) / this.step);
+    if (this.step < 1) {
+     /**
+      * For small values of this.step, if we calculate the step using
+      * `Math.round(value / step) * step` we may hit a precision point issue
+      * eg. 0.1 * 0.2 =  0.020000000000000004
+      * http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+      *
+      * as a work around we can divide by the reciprocal of `step`
+      */
+      return numSteps / (1 / this.step) + this.min;
+    } else {
+      return numSteps * this.step + this.min;
+    }
+  },
+
+  _validateValue: function() {
+    var v = this._clampValue(this.value);
+    this.value = this.oldValue = isNaN(v) ? this.oldValue : v;
+    return this.value !== v;
+  },
+
+  _update: function() {
+    this._validateValue();
+    this._setRatio(this._calcRatio(this.value) * 100);
+  }
+
+};
+</script>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<script>
+  /**
+   * `Polymer.PaperInkyFocusBehavior` implements a ripple when the element has keyboard focus.
+   *
+   * @polymerBehavior Polymer.PaperInkyFocusBehavior
+   */
+  Polymer.PaperInkyFocusBehaviorImpl = {
+    observers: [
+      '_focusedChanged(receivedFocusFromKeyboard)'
+    ],
+
+    _focusedChanged: function(receivedFocusFromKeyboard) {
+      if (receivedFocusFromKeyboard) {
+        this.ensureRipple();
+      }
+      if (this.hasRipple()) {
+        this._ripple.holdDown = receivedFocusFromKeyboard;
+      }
+    },
+
+    _createRipple: function() {
+      var ripple = Polymer.PaperRippleBehavior._createRipple();
+      ripple.id = 'ink';
+      ripple.setAttribute('center', '');
+      ripple.classList.add('circle');
+      return ripple;
+    }
+  };
+
+  /** @polymerBehavior Polymer.PaperInkyFocusBehavior */
+  Polymer.PaperInkyFocusBehavior = [
+    Polymer.IronButtonState,
+    Polymer.IronControlState,
+    Polymer.PaperRippleBehavior,
+    Polymer.PaperInkyFocusBehaviorImpl
+  ];
+</script>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`iron-a11y-announcer` is a singleton element that is intended to add a11y
+to features that require on-demand announcement from screen readers. In
+order to make use of the announcer, it is best to request its availability
+in the announcing element.
+
+Example:
+
+    Polymer({
+
+      is: 'x-chatty',
+
+      attached: function() {
+        // This will create the singleton element if it has not
+        // been created yet:
+        Polymer.IronA11yAnnouncer.requestAvailability();
+      }
+    });
+
+After the `iron-a11y-announcer` has been made available, elements can
+make announces by firing bubbling `iron-announce` events.
+
+Example:
+
+    this.fire('iron-announce', {
+      text: 'This is an announcement!'
+    }, { bubbles: true });
+
+Note: announcements are only audible if you have a screen reader enabled.
+
+@group Iron Elements
+@demo demo/index.html
+-->
+
+<dom-module id="iron-a11y-announcer" assetpath="../../bower_components/iron-a11y-announcer/">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        position: fixed;
+        clip: rect(0px,0px,0px,0px);
+      }
+    </style>
+    <div aria-live$="[[mode]]">[[_text]]</div>
+  </template>
+
+  <script>
+
+    (function() {
+      'use strict';
+
+      Polymer.IronA11yAnnouncer = Polymer({
+        is: 'iron-a11y-announcer',
+
+        properties: {
+
+          /**
+           * The value of mode is used to set the `aria-live` attribute
+           * for the element that will be announced. Valid values are: `off`,
+           * `polite` and `assertive`.
+           */
+          mode: {
+            type: String,
+            value: 'polite'
+          },
+
+          _text: {
+            type: String,
+            value: ''
+          }
+        },
+
+        created: function() {
+          if (!Polymer.IronA11yAnnouncer.instance) {
+            Polymer.IronA11yAnnouncer.instance = this;
+          }
+
+          document.body.addEventListener('iron-announce', this._onIronAnnounce.bind(this));
+        },
+
+        /**
+         * Cause a text string to be announced by screen readers.
+         *
+         * @param {string} text The text that should be announced.
+         */
+        announce: function(text) {
+          this._text = '';
+          this.async(function() {
+            this._text = text;
+          }, 100);
+        },
+
+        _onIronAnnounce: function(event) {
+          if (event.detail && event.detail.text) {
+            this.announce(event.detail.text);
+          }
+        }
+      });
+
+      Polymer.IronA11yAnnouncer.instance = null;
+
+      Polymer.IronA11yAnnouncer.requestAvailability = function() {
+        if (!Polymer.IronA11yAnnouncer.instance) {
+          Polymer.IronA11yAnnouncer.instance = document.createElement('iron-a11y-announcer');
+        }
+
+        document.body.appendChild(Polymer.IronA11yAnnouncer.instance);
+      };
+    })();
+
+  </script>
+</dom-module>
 <!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
@@ -9820,628 +11815,6 @@ Or, in a Polymer element, you can include a meta in your template:
 
   })();
 </script>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-The `<iron-flex-layout>` component provides simple ways to use
-[CSS flexible box layout](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Flexible_boxes),
-also known as flexbox. This component provides two different ways to use flexbox:
-
-1. [Layout classes](https://github.com/PolymerElements/iron-flex-layout/tree/master/iron-flex-layout-classes.html).
-The layout class stylesheet provides a simple set of class-based flexbox rules, that
-let you specify layout properties directly in markup. You must include this file
-in every element that needs to use them.
-
-    Sample use:
-
-    ```
-    <custom-element-demo>
-      <template>
-        <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-        <next-code-block></next-code-block>
-      </template>
-    </custom-element-demo>
-    ```
-
-    ```html
-    <link rel="import" href="iron-flex-layout-classes.html">
-    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
-    <style>
-      .test { width: 100px; }
-    </style>
-    <div class="layout horizontal center-center">
-      <div class="test">horizontal layout center alignment</div>
-    </div>
-    ```
-
-2. [Custom CSS mixins](https://github.com/PolymerElements/iron-flex-layout/blob/master/iron-flex-layout.html).
-The mixin stylesheet includes custom CSS mixins that can be applied inside a CSS rule using the `@apply` function.
-
-Please note that the old [/deep/ layout classes](https://github.com/PolymerElements/iron-flex-layout/tree/master/classes)
-are deprecated, and should not be used. To continue using layout properties
-directly in markup, please switch to using the new `dom-module`-based
-[layout classes](https://github.com/PolymerElements/iron-flex-layout/tree/master/iron-flex-layout-classes.html).
-Please note that the new version does not use `/deep/`, and therefore requires you
-to import the `dom-modules` in every element that needs to use them.
-
-A complete [guide](https://elements.polymer-project.org/guides/flex-layout) to `<iron-flex-layout>` is available.
-
-@group Iron Elements
-@pseudoElement iron-flex-layout
-@demo demo/index.html
--->
-
-<style>
-  /* IE 10 support for HTML5 hidden attr */
-  [hidden] {
-    display: none !important;
-  }
-</style>
-
-<style is="custom-style">
-  :root {
-
-    --layout: {
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-    };
-
-    --layout-inline: {
-      display: -ms-inline-flexbox;
-      display: -webkit-inline-flex;
-      display: inline-flex;
-    };
-
-    --layout-horizontal: {
-      @apply(--layout);
-
-      -ms-flex-direction: row;
-      -webkit-flex-direction: row;
-      flex-direction: row;
-    };
-
-    --layout-horizontal-reverse: {
-      @apply(--layout);
-
-      -ms-flex-direction: row-reverse;
-      -webkit-flex-direction: row-reverse;
-      flex-direction: row-reverse;
-    };
-
-    --layout-vertical: {
-      @apply(--layout);
-
-      -ms-flex-direction: column;
-      -webkit-flex-direction: column;
-      flex-direction: column;
-    };
-
-    --layout-vertical-reverse: {
-      @apply(--layout);
-
-      -ms-flex-direction: column-reverse;
-      -webkit-flex-direction: column-reverse;
-      flex-direction: column-reverse;
-    };
-
-    --layout-wrap: {
-      -ms-flex-wrap: wrap;
-      -webkit-flex-wrap: wrap;
-      flex-wrap: wrap;
-    };
-
-    --layout-no-wrap: {
-      -ms-flex-wrap: nowrap;
-      -webkit-flex-wrap: nowrap;
-      flex-wrap: nowrap;
-    };
-
-    --layout-wrap-reverse: {
-      -ms-flex-wrap: wrap-reverse;
-      -webkit-flex-wrap: wrap-reverse;
-      flex-wrap: wrap-reverse;
-    };
-
-    --layout-flex-auto: {
-      -ms-flex: 1 1 auto;
-      -webkit-flex: 1 1 auto;
-      flex: 1 1 auto;
-    };
-
-    --layout-flex-none: {
-      -ms-flex: none;
-      -webkit-flex: none;
-      flex: none;
-    };
-
-    --layout-flex: {
-      -ms-flex: 1 1 0.000000001px;
-      -webkit-flex: 1;
-      flex: 1;
-      -webkit-flex-basis: 0.000000001px;
-      flex-basis: 0.000000001px;
-    };
-
-    --layout-flex-2: {
-      -ms-flex: 2;
-      -webkit-flex: 2;
-      flex: 2;
-    };
-
-    --layout-flex-3: {
-      -ms-flex: 3;
-      -webkit-flex: 3;
-      flex: 3;
-    };
-
-    --layout-flex-4: {
-      -ms-flex: 4;
-      -webkit-flex: 4;
-      flex: 4;
-    };
-
-    --layout-flex-5: {
-      -ms-flex: 5;
-      -webkit-flex: 5;
-      flex: 5;
-    };
-
-    --layout-flex-6: {
-      -ms-flex: 6;
-      -webkit-flex: 6;
-      flex: 6;
-    };
-
-    --layout-flex-7: {
-      -ms-flex: 7;
-      -webkit-flex: 7;
-      flex: 7;
-    };
-
-    --layout-flex-8: {
-      -ms-flex: 8;
-      -webkit-flex: 8;
-      flex: 8;
-    };
-
-    --layout-flex-9: {
-      -ms-flex: 9;
-      -webkit-flex: 9;
-      flex: 9;
-    };
-
-    --layout-flex-10: {
-      -ms-flex: 10;
-      -webkit-flex: 10;
-      flex: 10;
-    };
-
-    --layout-flex-11: {
-      -ms-flex: 11;
-      -webkit-flex: 11;
-      flex: 11;
-    };
-
-    --layout-flex-12: {
-      -ms-flex: 12;
-      -webkit-flex: 12;
-      flex: 12;
-    };
-
-    /* alignment in cross axis */
-
-    --layout-start: {
-      -ms-flex-align: start;
-      -webkit-align-items: flex-start;
-      align-items: flex-start;
-    };
-
-    --layout-center: {
-      -ms-flex-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-    };
-
-    --layout-end: {
-      -ms-flex-align: end;
-      -webkit-align-items: flex-end;
-      align-items: flex-end;
-    };
-
-    --layout-baseline: {
-      -ms-flex-align: baseline;
-      -webkit-align-items: baseline;
-      align-items: baseline;
-    };
-
-    /* alignment in main axis */
-
-    --layout-start-justified: {
-      -ms-flex-pack: start;
-      -webkit-justify-content: flex-start;
-      justify-content: flex-start;
-    };
-
-    --layout-center-justified: {
-      -ms-flex-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
-    };
-
-    --layout-end-justified: {
-      -ms-flex-pack: end;
-      -webkit-justify-content: flex-end;
-      justify-content: flex-end;
-    };
-
-    --layout-around-justified: {
-      -ms-flex-pack: distribute;
-      -webkit-justify-content: space-around;
-      justify-content: space-around;
-    };
-
-    --layout-justified: {
-      -ms-flex-pack: justify;
-      -webkit-justify-content: space-between;
-      justify-content: space-between;
-    };
-
-    --layout-center-center: {
-      @apply(--layout-center);
-      @apply(--layout-center-justified);
-    };
-
-    /* self alignment */
-
-    --layout-self-start: {
-      -ms-align-self: flex-start;
-      -webkit-align-self: flex-start;
-      align-self: flex-start;
-    };
-
-    --layout-self-center: {
-      -ms-align-self: center;
-      -webkit-align-self: center;
-      align-self: center;
-    };
-
-    --layout-self-end: {
-      -ms-align-self: flex-end;
-      -webkit-align-self: flex-end;
-      align-self: flex-end;
-    };
-
-    --layout-self-stretch: {
-      -ms-align-self: stretch;
-      -webkit-align-self: stretch;
-      align-self: stretch;
-    };
-
-    --layout-self-baseline: {
-      -ms-align-self: baseline;
-      -webkit-align-self: baseline;
-      align-self: baseline;
-    };
-
-    /* multi-line alignment in main axis */
-
-    --layout-start-aligned: {
-      -ms-flex-line-pack: start;  /* IE10 */
-      -ms-align-content: flex-start;
-      -webkit-align-content: flex-start;
-      align-content: flex-start;
-    };
-
-    --layout-end-aligned: {
-      -ms-flex-line-pack: end;  /* IE10 */
-      -ms-align-content: flex-end;
-      -webkit-align-content: flex-end;
-      align-content: flex-end;
-    };
-
-    --layout-center-aligned: {
-      -ms-flex-line-pack: center;  /* IE10 */
-      -ms-align-content: center;
-      -webkit-align-content: center;
-      align-content: center;
-    };
-
-    --layout-between-aligned: {
-      -ms-flex-line-pack: justify;  /* IE10 */
-      -ms-align-content: space-between;
-      -webkit-align-content: space-between;
-      align-content: space-between;
-    };
-
-    --layout-around-aligned: {
-      -ms-flex-line-pack: distribute;  /* IE10 */
-      -ms-align-content: space-around;
-      -webkit-align-content: space-around;
-      align-content: space-around;
-    };
-
-    /*******************************
-              Other Layout
-    *******************************/
-
-    --layout-block: {
-      display: block;
-    };
-
-    --layout-invisible: {
-      visibility: hidden !important;
-    };
-
-    --layout-relative: {
-      position: relative;
-    };
-
-    --layout-fit: {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    };
-
-    --layout-scroll: {
-      -webkit-overflow-scrolling: touch;
-      overflow: auto;
-    };
-
-    --layout-fullbleed: {
-      margin: 0;
-      height: 100vh;
-    };
-
-    /* fixed position */
-
-    --layout-fixed-top: {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-    };
-
-    --layout-fixed-right: {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-    };
-
-    --layout-fixed-bottom: {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    };
-
-    --layout-fixed-left: {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-    };
-
-  }
-
-</style>
-<!--
-
-The `iron-icon` element displays an icon. By default an icon renders as a 24px square.
-
-Example using src:
-
-    <iron-icon src="star.png"></iron-icon>
-
-Example setting size to 32px x 32px:
-
-    <iron-icon class="big" src="big_star.png"></iron-icon>
-
-    <style is="custom-style">
-      .big {
-        --iron-icon-height: 32px;
-        --iron-icon-width: 32px;
-      }
-    </style>
-
-The iron elements include several sets of icons.
-To use the default set of icons, import `iron-icons.html` and use the `icon` attribute to specify an icon:
-
-    <link rel="import" href="/components/iron-icons/iron-icons.html">
-
-    <iron-icon icon="menu"></iron-icon>
-
-To use a different built-in set of icons, import the specific `iron-icons/<iconset>-icons.html`, and
-specify the icon as `<iconset>:<icon>`. For example, to use a communication icon, you would
-use:
-
-    <link rel="import" href="/components/iron-icons/communication-icons.html">
-
-    <iron-icon icon="communication:email"></iron-icon>
-
-You can also create custom icon sets of bitmap or SVG icons.
-
-Example of using an icon named `cherry` from a custom iconset with the ID `fruit`:
-
-    <iron-icon icon="fruit:cherry"></iron-icon>
-
-See [iron-iconset](iron-iconset) and [iron-iconset-svg](iron-iconset-svg) for more information about
-how to create a custom iconset.
-
-See the [iron-icons demo](iron-icons?view=demo:demo/index.html) to see the icons available
-in the various iconsets.
-
-To load a subset of icons from one of the default `iron-icons` sets, you can
-use the [poly-icon](https://poly-icon.appspot.com/) tool. It allows you
-to select individual icons, and creates an iconset from them that you can
-use directly in your elements.
-
-### Styling
-
-The following custom properties are available for styling:
-
-Custom property | Description | Default
-----------------|-------------|----------
-`--iron-icon` | Mixin applied to the icon | {}
-`--iron-icon-width` | Width of the icon | `24px`
-`--iron-icon-height` | Height of the icon | `24px`
-`--iron-icon-fill-color` | Fill color of the svg icon | `currentcolor`
-`--iron-icon-stroke-color` | Stroke color of the svg icon | none
-
-@group Iron Elements
-@element iron-icon
-@demo demo/index.html
-@hero hero.svg
-@homepage polymer.github.io
--->
-
-<dom-module id="iron-icon" assetpath="../../bower_components/iron-icon/">
-  <template>
-    <style>
-      :host {
-        @apply(--layout-inline);
-        @apply(--layout-center-center);
-        position: relative;
-
-        vertical-align: middle;
-
-        fill: var(--iron-icon-fill-color, currentcolor);
-        stroke: var(--iron-icon-stroke-color, none);
-
-        width: var(--iron-icon-width, 24px);
-        height: var(--iron-icon-height, 24px);
-        @apply(--iron-icon);
-      }
-    </style>
-  </template>
-
-  <script>
-
-    Polymer({
-
-      is: 'iron-icon',
-
-      properties: {
-
-        /**
-         * The name of the icon to use. The name should be of the form:
-         * `iconset_name:icon_name`.
-         */
-        icon: {
-          type: String
-        },
-
-        /**
-         * The name of the theme to used, if one is specified by the
-         * iconset.
-         */
-        theme: {
-          type: String
-        },
-
-        /**
-         * If using iron-icon without an iconset, you can set the src to be
-         * the URL of an individual icon image file. Note that this will take
-         * precedence over a given icon attribute.
-         */
-        src: {
-          type: String
-        },
-
-        /**
-         * @type {!Polymer.IronMeta}
-         */
-        _meta: {
-          value: Polymer.Base.create('iron-meta', {type: 'iconset'})
-        }
-
-      },
-
-      observers: [
-        '_updateIcon(_meta, isAttached)',
-        '_updateIcon(theme, isAttached)',
-        '_srcChanged(src, isAttached)',
-        '_iconChanged(icon, isAttached)'
-      ],
-
-      _DEFAULT_ICONSET: 'icons',
-
-      _iconChanged: function(icon) {
-        var parts = (icon || '').split(':');
-        this._iconName = parts.pop();
-        this._iconsetName = parts.pop() || this._DEFAULT_ICONSET;
-        this._updateIcon();
-      },
-
-      _srcChanged: function(src) {
-        this._updateIcon();
-      },
-
-      _usesIconset: function() {
-        return this.icon || !this.src;
-      },
-
-      /** @suppress {visibility} */
-      _updateIcon: function() {
-        if (this._usesIconset()) {
-          if (this._img && this._img.parentNode) {
-            Polymer.dom(this.root).removeChild(this._img);
-          }
-          if (this._iconName === "") {
-            if (this._iconset) {
-              this._iconset.removeIcon(this);
-            }
-          } else if (this._iconsetName && this._meta) {
-            this._iconset = /** @type {?Polymer.Iconset} */ (
-              this._meta.byKey(this._iconsetName));
-            if (this._iconset) {
-              this._iconset.applyIcon(this, this._iconName, this.theme);
-              this.unlisten(window, 'iron-iconset-added', '_updateIcon');
-            } else {
-              this.listen(window, 'iron-iconset-added', '_updateIcon');
-            }
-          }
-        } else {
-          if (this._iconset) {
-            this._iconset.removeIcon(this);
-          }
-          if (!this._img) {
-            this._img = document.createElement('img');
-            this._img.style.width = '100%';
-            this._img.style.height = '100%';
-            this._img.draggable = false;
-          }
-          this._img.src = this.src;
-          Polymer.dom(this.root).appendChild(this._img);
-        }
-      }
-
-    });
-
-  </script>
-
-</dom-module>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <script>
   /**
    * Singleton IronMeta instance.
@@ -10578,148 +11951,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   };
 
 </script>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-`iron-a11y-announcer` is a singleton element that is intended to add a11y
-to features that require on-demand announcement from screen readers. In
-order to make use of the announcer, it is best to request its availability
-in the announcing element.
-
-Example:
-
-    Polymer({
-
-      is: 'x-chatty',
-
-      attached: function() {
-        // This will create the singleton element if it has not
-        // been created yet:
-        Polymer.IronA11yAnnouncer.requestAvailability();
-      }
-    });
-
-After the `iron-a11y-announcer` has been made available, elements can
-make announces by firing bubbling `iron-announce` events.
-
-Example:
-
-    this.fire('iron-announce', {
-      text: 'This is an announcement!'
-    }, { bubbles: true });
-
-Note: announcements are only audible if you have a screen reader enabled.
-
-@group Iron Elements
-@demo demo/index.html
--->
-
-<dom-module id="iron-a11y-announcer" assetpath="../../bower_components/iron-a11y-announcer/">
-  <template>
-    <style>
-      :host {
-        display: inline-block;
-        position: fixed;
-        clip: rect(0px,0px,0px,0px);
-      }
-    </style>
-    <div aria-live$="[[mode]]">[[_text]]</div>
-  </template>
-
-  <script>
-
-    (function() {
-      'use strict';
-
-      Polymer.IronA11yAnnouncer = Polymer({
-        is: 'iron-a11y-announcer',
-
-        properties: {
-
-          /**
-           * The value of mode is used to set the `aria-live` attribute
-           * for the element that will be announced. Valid values are: `off`,
-           * `polite` and `assertive`.
-           */
-          mode: {
-            type: String,
-            value: 'polite'
-          },
-
-          _text: {
-            type: String,
-            value: ''
-          }
-        },
-
-        created: function() {
-          if (!Polymer.IronA11yAnnouncer.instance) {
-            Polymer.IronA11yAnnouncer.instance = this;
-          }
-
-          document.body.addEventListener('iron-announce', this._onIronAnnounce.bind(this));
-        },
-
-        /**
-         * Cause a text string to be announced by screen readers.
-         *
-         * @param {string} text The text that should be announced.
-         */
-        announce: function(text) {
-          this._text = '';
-          this.async(function() {
-            this._text = text;
-          }, 100);
-        },
-
-        _onIronAnnounce: function(event) {
-          if (event.detail && event.detail.text) {
-            this.announce(event.detail.text);
-          }
-        }
-      });
-
-      Polymer.IronA11yAnnouncer.instance = null;
-
-      Polymer.IronA11yAnnouncer.requestAvailability = function() {
-        if (!Polymer.IronA11yAnnouncer.instance) {
-          Polymer.IronA11yAnnouncer.instance = document.createElement('iron-a11y-announcer');
-        }
-
-        document.body.appendChild(Polymer.IronA11yAnnouncer.instance);
-      };
-    })();
-
-  </script>
-</dom-module>
 <script>
 
 /*
@@ -13167,6 +14398,1319 @@ style this element.
     ]
   });
 </script>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+Material design: [Progress & activity](https://www.google.com/design/spec/components/progress-activity.html)
+
+The progress bars are for situations where the percentage completed can be
+determined. They give users a quick sense of how much longer an operation
+will take.
+
+Example:
+
+    <paper-progress value="10"></paper-progress>
+
+There is also a secondary progress which is useful for displaying intermediate
+progress, such as the buffer level during a streaming playback progress bar.
+
+Example:
+
+    <paper-progress value="10" secondary-progress="30"></paper-progress>
+
+### Styling progress bar:
+
+To change the active progress bar color:
+
+    paper-progress {
+       --paper-progress-active-color: #e91e63;
+    }
+
+To change the secondary progress bar color:
+
+    paper-progress {
+      --paper-progress-secondary-color: #f8bbd0;
+    }
+
+To change the progress bar background color:
+
+    paper-progress {
+      --paper-progress-container-color: #64ffda;
+    }
+
+Add the class `transiting` to a paper-progress to animate the progress bar when
+the value changed. You can also customize the transition:
+
+    paper-progress {
+      --paper-progress-transition-duration: 0.08s;
+      --paper-progress-transition-timing-function: ease;
+      --paper-progress-transition-transition-delay: 0s;
+    }
+
+To change the duration of the indeterminate cycle:
+
+    paper-progress {
+      --paper-progress-indeterminate-cycle-duration: 2s;
+    }
+
+The following mixins are available for styling:
+
+Custom property                                  | Description                                 | Default
+-------------------------------------------------|---------------------------------------------|--------------
+`--paper-progress-container`                     | Mixin applied to container                  | `{}`
+`--paper-progress-transition-duration`           | Duration of the transition                  | `0.008s`
+`--paper-progress-transition-timing-function`    | The timing function for the transition      | `ease`
+`--paper-progress-transition-delay`              | delay for the transition                    | `0s`
+`--paper-progress-container-color`               | Color of the container                      | `--google-grey-300`
+`--paper-progress-active-color`                  | The color of the active bar                 | `--google-green-500`
+`--paper-progress-secondary-color`               | The color of the secondary bar              | `--google-green-100`
+`--paper-progress-disabled-active-color`         | The color of the active bar if disabled     | `--google-grey-500`
+`--paper-progress-disabled-secondary-color`      | The color of the secondary bar if disabled  | `--google-grey-300`
+`--paper-progress-height`                        | The height of the progress bar              | `4px`
+`--paper-progress-indeterminate-cycle-duration`  | Duration of an indeterminate cycle          | `2s`
+
+@group Paper Elements
+@element paper-progress
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<dom-module id="paper-progress" assetpath="../../bower_components/paper-progress/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 200px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      :host([hidden]) {
+        display: none !important;
+      }
+
+      #progressContainer {
+        @apply(--paper-progress-container);
+        position: relative;
+      }
+
+      #progressContainer,
+      /* the stripe for the indeterminate animation*/
+      .indeterminate::after {
+        height: var(--paper-progress-height, 4px);
+      }
+
+      #primaryProgress,
+      #secondaryProgress,
+      .indeterminate::after {
+        @apply(--layout-fit);
+      }
+
+      #progressContainer,
+      .indeterminate::after {
+        background: var(--paper-progress-container-color, --google-grey-300);
+      }
+
+      :host(.transiting) #primaryProgress,
+      :host(.transiting) #secondaryProgress {
+        -webkit-transition-property: -webkit-transform;
+        transition-property: transform;
+
+        /* Duration */
+        -webkit-transition-duration: var(--paper-progress-transition-duration, 0.08s);
+        transition-duration: var(--paper-progress-transition-duration, 0.08s);
+
+        /* Timing function */
+        -webkit-transition-timing-function: var(--paper-progress-transition-timing-function, ease);
+        transition-timing-function: var(--paper-progress-transition-timing-function, ease);
+
+        /* Delay */
+        -webkit-transition-delay: var(--paper-progress-transition-delay, 0s);
+        transition-delay: var(--paper-progress-transition-delay, 0s);
+      }
+
+      #primaryProgress,
+      #secondaryProgress {
+        @apply(--layout-fit);
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+        -webkit-transform: scaleX(0);
+        transform: scaleX(0);
+        will-change: transform;
+      }
+
+      #primaryProgress {
+        background: var(--paper-progress-active-color, --google-green-500);
+      }
+
+      #secondaryProgress {
+        background: var(--paper-progress-secondary-color, --google-green-100);
+      }
+
+      :host([disabled]) #primaryProgress {
+        background: var(--paper-progress-disabled-active-color, --google-grey-500);
+      }
+
+      :host([disabled]) #secondaryProgress {
+        background: var(--paper-progress-disabled-secondary-color, --google-grey-300);
+      }
+
+      :host(:not([disabled])) #primaryProgress.indeterminate {
+        -webkit-transform-origin: right center;
+        transform-origin: right center;
+        -webkit-animation: indeterminate-bar var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+        animation: indeterminate-bar var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+      }
+
+      :host(:not([disabled])) #primaryProgress.indeterminate::after {
+        content: "";
+        -webkit-transform-origin: center center;
+        transform-origin: center center;
+
+        -webkit-animation: indeterminate-splitter var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+        animation: indeterminate-splitter var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+      }
+
+      @-webkit-keyframes indeterminate-bar {
+        0% {
+          -webkit-transform: scaleX(1) translateX(-100%);
+        }
+        50% {
+          -webkit-transform: scaleX(1) translateX(0%);
+        }
+        75% {
+          -webkit-transform: scaleX(1) translateX(0%);
+          -webkit-animation-timing-function: cubic-bezier(.28,.62,.37,.91);
+        }
+        100% {
+          -webkit-transform: scaleX(0) translateX(0%);
+        }
+      }
+
+      @-webkit-keyframes indeterminate-splitter {
+        0% {
+          -webkit-transform: scaleX(.75) translateX(-125%);
+        }
+        30% {
+          -webkit-transform: scaleX(.75) translateX(-125%);
+          -webkit-animation-timing-function: cubic-bezier(.42,0,.6,.8);
+        }
+        90% {
+          -webkit-transform: scaleX(.75) translateX(125%);
+        }
+        100% {
+          -webkit-transform: scaleX(.75) translateX(125%);
+        }
+      }
+
+      @keyframes indeterminate-bar {
+        0% {
+          transform: scaleX(1) translateX(-100%);
+        }
+        50% {
+          transform: scaleX(1) translateX(0%);
+        }
+        75% {
+          transform: scaleX(1) translateX(0%);
+          animation-timing-function: cubic-bezier(.28,.62,.37,.91);
+        }
+        100% {
+          transform: scaleX(0) translateX(0%);
+        }
+      }
+
+      @keyframes indeterminate-splitter {
+        0% {
+          transform: scaleX(.75) translateX(-125%);
+        }
+        30% {
+          transform: scaleX(.75) translateX(-125%);
+          animation-timing-function: cubic-bezier(.42,0,.6,.8);
+        }
+        90% {
+          transform: scaleX(.75) translateX(125%);
+        }
+        100% {
+          transform: scaleX(.75) translateX(125%);
+        }
+      }
+    </style>
+
+    <div id="progressContainer">
+      <div id="secondaryProgress" hidden$="[[_hideSecondaryProgress(secondaryRatio)]]"></div>
+      <div id="primaryProgress"></div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'paper-progress',
+
+    behaviors: [
+      Polymer.IronRangeBehavior
+    ],
+
+    properties: {
+      /**
+       * The number that represents the current secondary progress.
+       */
+      secondaryProgress: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * The secondary ratio
+       */
+      secondaryRatio: {
+        type: Number,
+        value: 0,
+        readOnly: true
+      },
+
+      /**
+       * Use an indeterminate progress indicator.
+       */
+      indeterminate: {
+        type: Boolean,
+        value: false,
+        observer: '_toggleIndeterminate'
+      },
+
+      /**
+       * True if the progress is disabled.
+       */
+      disabled: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+        observer: '_disabledChanged'
+      }
+    },
+
+    observers: [
+      '_progressChanged(secondaryProgress, value, min, max)'
+    ],
+
+    hostAttributes: {
+      role: 'progressbar'
+    },
+
+    _toggleIndeterminate: function(indeterminate) {
+      // If we use attribute/class binding, the animation sometimes doesn't translate properly
+      // on Safari 7.1. So instead, we toggle the class here in the update method.
+      this.toggleClass('indeterminate', indeterminate, this.$.primaryProgress);
+    },
+
+    _transformProgress: function(progress, ratio) {
+      var transform = 'scaleX(' + (ratio / 100) + ')';
+      progress.style.transform = progress.style.webkitTransform = transform;
+    },
+
+    _mainRatioChanged: function(ratio) {
+      this._transformProgress(this.$.primaryProgress, ratio);
+    },
+
+    _progressChanged: function(secondaryProgress, value, min, max) {
+      secondaryProgress = this._clampValue(secondaryProgress);
+      value = this._clampValue(value);
+
+      var secondaryRatio = this._calcRatio(secondaryProgress) * 100;
+      var mainRatio = this._calcRatio(value) * 100;
+
+      this._setSecondaryRatio(secondaryRatio);
+      this._transformProgress(this.$.secondaryProgress, secondaryRatio);
+      this._transformProgress(this.$.primaryProgress, mainRatio);
+
+      this.secondaryProgress = secondaryProgress;
+
+      this.setAttribute('aria-valuenow', value);
+      this.setAttribute('aria-valuemin', min);
+      this.setAttribute('aria-valuemax', max);
+    },
+
+    _disabledChanged: function(disabled) {
+      this.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    },
+
+    _hideSecondaryProgress: function(secondaryRatio) {
+      return secondaryRatio === 0;
+    }
+  });
+</script>
+<!--
+Material design: [Sliders](https://www.google.com/design/spec/components/sliders.html)
+
+`paper-slider` allows user to select a value from a range of values by
+moving the slider thumb.  The interactive nature of the slider makes it a
+great choice for settings that reflect intensity levels, such as volume,
+brightness, or color saturation.
+
+Example:
+
+    <paper-slider></paper-slider>
+
+Use `min` and `max` to specify the slider range.  Default is 0 to 100.
+
+Example:
+
+    <paper-slider min="10" max="200" value="110"></paper-slider>
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-slider-container-color` | The background color of the bar | `--paper-grey-400`
+`--paper-slider-bar-color` | The background color of the slider | `transparent`
+`--paper-slider-active-color` | The progress bar color | `--google-blue-700`
+`--paper-slider-secondary-color` | The secondary progress bar color | `--google-blue-300`
+`--paper-slider-knob-color` | The knob color | `--google-blue-700`
+`--paper-slider-disabled-knob-color` | The disabled knob color | `--paper-grey-400`
+`--paper-slider-pin-color` | The pin color | `--google-blue-700`
+`--paper-slider-font-color` | The pin's text color | `#fff`
+`--paper-slider-markers-color` | The snaps markers color | `#000`
+`--paper-slider-disabled-active-color` | The disabled progress bar color | `--paper-grey-400`
+`--paper-slider-disabled-secondary-color` | The disabled secondary progress bar color | `--paper-grey-400`
+`--paper-slider-knob-start-color` | The fill color of the knob at the far left | `transparent`
+`--paper-slider-knob-start-border-color` | The border color of the knob at the far left | `--paper-grey-400`
+`--paper-slider-pin-start-color` | The color of the pin at the far left | `--paper-grey-400`
+`--paper-slider-height` | Height of the progress bar | `2px`
+`--paper-slider-input` | Mixin applied to the input in editable mode | `{}`
+
+@group Paper Elements
+@element paper-slider
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="paper-slider" assetpath="../../bower_components/paper-slider/">
+  <template strip-whitespace="">
+    <style>
+      :host {
+        @apply(--layout);
+        @apply(--layout-justified);
+        @apply(--layout-center);
+        width: 200px;
+        cursor: default;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        --paper-progress-active-color: var(--paper-slider-active-color, --google-blue-700);
+        --paper-progress-secondary-color: var(--paper-slider-secondary-color, --google-blue-300);
+        --paper-progress-disabled-active-color: var(--paper-slider-disabled-active-color, --paper-grey-400);
+        --paper-progress-disabled-secondary-color: var(--paper-slider-disabled-secondary-color, --paper-grey-400);
+        --calculated-paper-slider-height: var(--paper-slider-height, 2px);
+      }
+
+      /* focus shows the ripple */
+      :host(:focus) {
+        outline: none;
+      }
+        
+      :host-context([dir="rtl"]) #sliderContainer {
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+      }
+
+      #sliderContainer {
+        position: relative;
+        width: 100%;
+        height: calc(30px + var(--calculated-paper-slider-height));
+        margin-left: calc(15px + var(--calculated-paper-slider-height)/2);
+        margin-right: calc(15px + var(--calculated-paper-slider-height)/2);
+      }
+
+      #sliderContainer:focus {
+        outline: 0;
+      }
+
+      #sliderContainer.editable {
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+
+      .bar-container {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      .ring > .bar-container {
+        left: calc(5px + var(--calculated-paper-slider-height)/2);
+        transition: left 0.18s ease;
+      }
+
+      .ring.expand.dragging > .bar-container {
+        transition: none;
+      }
+
+      .ring.expand:not(.pin) > .bar-container {
+        left: calc(8px + var(--calculated-paper-slider-height)/2);
+      }
+
+      #sliderBar {
+        padding: 15px 0;
+        width: 100%;
+        background-color: var(--paper-slider-bar-color, transparent);
+        --paper-progress-container-color: var(--paper-slider-container-color, --paper-grey-400);
+        --paper-progress-height: var(--calculated-paper-slider-height);
+      }
+
+      .slider-markers {
+        position: absolute;
+        top: calc(14px + var(--paper-slider-height,2px)/2);
+        height: var(--calculated-paper-slider-height);
+        left: 0;
+        right: -1px;
+        box-sizing: border-box;
+        pointer-events: none;
+        @apply(--layout-horizontal);
+      }
+
+      .slider-marker {
+        @apply(--layout-flex);
+      }
+      .slider-markers::after,
+      .slider-marker::after {
+        content: "";
+        display: block;
+        margin-left: -1px;
+        width: 2px;
+        height: var(--calculated-paper-slider-height);
+        border-radius: 50%;
+        background-color: var(--paper-slider-markers-color, #000);
+      }
+
+      .slider-knob {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin-left: calc(-15px - var(--calculated-paper-slider-height)/2);
+        width: calc(30px + var(--calculated-paper-slider-height));
+        height: calc(30px + var(--calculated-paper-slider-height));
+      }
+
+      .transiting > .slider-knob {
+        transition: left 0.08s ease;
+      }
+
+      .slider-knob:focus {
+        outline: none;
+      }
+
+      .slider-knob.dragging {
+        transition: none;
+      }
+
+      .snaps > .slider-knob.dragging {
+        transition: -webkit-transform 0.08s ease;
+        transition: transform 0.08s ease;
+      }
+
+      .slider-knob-inner {
+        margin: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+        background-color: var(--paper-slider-knob-color, --google-blue-700);
+        border: 2px solid var(--paper-slider-knob-color, --google-blue-700);
+        border-radius: 50%;
+
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+
+        transition-property: -webkit-transform, background-color, border;
+        transition-property: transform, background-color, border;
+        transition-duration: 0.18s;
+        transition-timing-function: ease;
+      }
+
+      .expand:not(.pin) > .slider-knob > .slider-knob-inner {
+        -webkit-transform: scale(1.5);
+        transform: scale(1.5);
+      }
+
+      .ring > .slider-knob > .slider-knob-inner {
+        background-color: var(--paper-slider-knob-start-color, transparent);
+        border: 2px solid var(--paper-slider-knob-start-border-color, --paper-grey-400);
+      }
+
+      .slider-knob-inner::before {
+        background-color: var(--paper-slider-pin-color, --google-blue-700);
+      }
+
+      .pin > .slider-knob > .slider-knob-inner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -13px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50% 50% 50% 0;
+
+        -webkit-transform: rotate(-45deg) scale(0) translate(0);
+        transform: rotate(-45deg) scale(0) translate(0);
+      }
+
+      .slider-knob-inner::before,
+      .slider-knob-inner::after {
+        transition: -webkit-transform .18s ease, background-color .18s ease;
+        transition: transform .18s ease, background-color .18s ease;
+      }
+
+      .pin.ring > .slider-knob > .slider-knob-inner::before {
+        background-color: var(--paper-slider-pin-start-color, --paper-grey-400);
+      }
+
+      .pin.expand > .slider-knob > .slider-knob-inner::before {
+        -webkit-transform: rotate(-45deg) scale(1) translate(17px, -17px);
+        transform: rotate(-45deg) scale(1) translate(17px, -17px);
+      }
+
+      .pin > .slider-knob > .slider-knob-inner::after {
+        content: attr(value);
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -16px;
+        width: 32px;
+        height: 26px;
+        text-align: center;
+        color: var(--paper-slider-font-color, #fff);
+        font-size: 10px;
+
+        -webkit-transform: scale(0) translate(0);
+        transform: scale(0) translate(0);
+      }
+
+      .pin.expand > .slider-knob > .slider-knob-inner::after {
+        -webkit-transform: scale(1) translate(0, -17px);
+        transform: scale(1) translate(0, -17px);
+      }
+
+      /* paper-input */
+      .slider-input {
+        width: 50px;
+        overflow: hidden;
+        --paper-input-container-input: {
+          text-align: center;
+        };
+        @apply(--paper-slider-input);
+      }
+
+      /* disabled state */
+      #sliderContainer.disabled {
+        pointer-events: none;
+      }
+
+      .disabled > .slider-knob > .slider-knob-inner {
+        background-color: var(--paper-slider-disabled-knob-color, --paper-grey-400);
+        border: 2px solid var(--paper-slider-disabled-knob-color, --paper-grey-400);
+        -webkit-transform: scale3d(0.75, 0.75, 1);
+        transform: scale3d(0.75, 0.75, 1);
+      }
+
+      .disabled.ring > .slider-knob > .slider-knob-inner {
+        background-color: var(--paper-slider-knob-start-color, transparent);
+        border: 2px solid var(--paper-slider-knob-start-border-color, --paper-grey-400);
+      }
+
+      paper-ripple {
+        color: var(--paper-slider-knob-color, --google-blue-700);
+      }
+    </style>
+
+    <div id="sliderContainer" class$="[[_getClassNames(disabled, pin, snaps, immediateValue, min, expand, dragging, transiting, editable)]]">
+      <div class="bar-container">
+        <paper-progress disabled$="[[disabled]]" id="sliderBar" aria-hidden="true" min="[[min]]" max="[[max]]" step="[[step]]" value="[[immediateValue]]" secondary-progress="[[secondaryProgress]]" on-down="_bardown" on-up="_resetKnob" on-track="_onTrack">
+        </paper-progress>
+      </div>
+
+      <template is="dom-if" if="[[snaps]]">
+        <div class="slider-markers">
+          <template is="dom-repeat" items="[[markers]]">
+            <div class="slider-marker"></div>
+          </template>
+        </div>
+      </template>
+
+      <div id="sliderKnob" class="slider-knob" on-down="_knobdown" on-up="_resetKnob" on-track="_onTrack" on-transitionend="_knobTransitionEnd">
+          <div class="slider-knob-inner" value$="[[immediateValue]]"></div>
+      </div>
+    </div>
+
+    <template is="dom-if" if="[[editable]]">
+      <paper-input id="input" type="number" step="[[step]]" min="[[min]]" max="[[max]]" class="slider-input" disabled$="[[disabled]]" value="[[immediateValue]]" on-change="_changeValue" on-keydown="_inputKeyDown" no-label-float="">
+      </paper-input>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-slider',
+
+      behaviors: [
+        Polymer.IronA11yKeysBehavior,
+        Polymer.IronFormElementBehavior,
+        Polymer.PaperInkyFocusBehavior,
+        Polymer.IronRangeBehavior
+      ],
+
+      properties: {
+        /**
+         * If true, the slider thumb snaps to tick marks evenly spaced based
+         * on the `step` property value.
+         */
+        snaps: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        /**
+         * If true, a pin with numeric value label is shown when the slider thumb
+         * is pressed. Use for settings for which users need to know the exact
+         * value of the setting.
+         */
+        pin: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        /**
+         * The number that represents the current secondary progress.
+         */
+        secondaryProgress: {
+          type: Number,
+          value: 0,
+          notify: true,
+          observer: '_secondaryProgressChanged'
+        },
+
+        /**
+         * If true, an input is shown and user can use it to set the slider value.
+         */
+        editable: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * The immediate value of the slider.  This value is updated while the user
+         * is dragging the slider.
+         */
+        immediateValue: {
+          type: Number,
+          value: 0,
+          readOnly: true,
+          notify: true
+        },
+
+        /**
+         * The maximum number of markers
+         */
+        maxMarkers: {
+          type: Number,
+          value: 0,
+          notify: true
+        },
+
+        /**
+         * If true, the knob is expanded
+         */
+        expand: {
+          type: Boolean,
+          value: false,
+          readOnly: true
+        },
+
+        /**
+         * True when the user is dragging the slider.
+         */
+        dragging: {
+          type: Boolean,
+          value: false,
+          readOnly: true
+        },
+
+        transiting: {
+          type: Boolean,
+          value: false,
+          readOnly: true
+        },
+
+        markers: {
+          type: Array,
+          readOnly: true,
+          value: function() {
+              return [];
+          }
+        },
+      },
+
+      observers: [
+        '_updateKnob(value, min, max, snaps, step)',
+        '_valueChanged(value)',
+        '_immediateValueChanged(immediateValue)',
+        '_updateMarkers(maxMarkers, min, max, snaps)'
+      ],
+
+      hostAttributes: {
+        role: 'slider',
+        tabindex: 0
+      },
+
+      keyBindings: {
+        'left': '_leftKey',
+        'right': '_rightKey',
+        'down pagedown home': '_decrementKey',
+        'up pageup end': '_incrementKey'
+      },
+
+      /**
+       * Increases value by `step` but not above `max`.
+       * @method increment
+       */
+      increment: function() {
+        this.value = this._clampValue(this.value + this.step);
+      },
+
+      /**
+       * Decreases value by `step` but not below `min`.
+       * @method decrement
+       */
+      decrement: function() {
+        this.value = this._clampValue(this.value - this.step);
+      },
+
+      _updateKnob: function(value, min, max, snaps, step) {
+        this.setAttribute('aria-valuemin', min);
+        this.setAttribute('aria-valuemax', max);
+        this.setAttribute('aria-valuenow', value);
+
+        this._positionKnob(this._calcRatio(value));
+      },
+
+      _valueChanged: function() {
+        this.fire('value-change');
+      },
+
+      _immediateValueChanged: function() {
+        if (this.dragging) {
+          this.fire('immediate-value-change');
+        } else {
+          this.value = this.immediateValue;
+        }
+      },
+
+      _secondaryProgressChanged: function() {
+        this.secondaryProgress = this._clampValue(this.secondaryProgress);
+      },
+
+      _expandKnob: function() {
+        this._setExpand(true);
+      },
+
+      _resetKnob: function() {
+        this.cancelDebouncer('expandKnob');
+        this._setExpand(false);
+      },
+
+      _positionKnob: function(ratio) {
+        this._setImmediateValue(this._calcStep(this._calcKnobPosition(ratio)));
+        this._setRatio(this._calcRatio(this.immediateValue));
+
+        this.$.sliderKnob.style.left = (this.ratio * 100) + '%';
+        if (this.dragging) {
+          this._knobstartx = this.ratio * this._w;
+          this.translate3d(0, 0, 0, this.$.sliderKnob);
+        }
+      },
+
+      _calcKnobPosition: function(ratio) {
+        return (this.max - this.min) * ratio + this.min;
+      },
+
+      _onTrack: function(event) {
+        event.stopPropagation();
+        switch (event.detail.state) {
+          case 'start':
+            this._trackStart(event);
+            break;
+          case 'track':
+            this._trackX(event);
+            break;
+          case 'end':
+            this._trackEnd();
+            break;
+        }
+      },
+
+      _trackStart: function(event) {
+        this._w = this.$.sliderBar.offsetWidth;
+        this._x = this.ratio * this._w;
+        this._startx = this._x;
+        this._knobstartx = this._startx;
+        this._minx = - this._startx;
+        this._maxx = this._w - this._startx;
+        this.$.sliderKnob.classList.add('dragging');
+        this._setDragging(true);
+      },
+
+      _trackX: function(event) {
+        if (!this.dragging) {
+          this._trackStart(event);
+        }
+
+        var direction = this._isRTL ? -1 : 1;
+        var dx = Math.min(
+            this._maxx, Math.max(this._minx, event.detail.dx * direction));
+        this._x = this._startx + dx;
+
+        var immediateValue = this._calcStep(this._calcKnobPosition(this._x / this._w));
+        this._setImmediateValue(immediateValue);
+
+        // update knob's position
+        var translateX = ((this._calcRatio(this.immediateValue) * this._w) - this._knobstartx);
+        this.translate3d(translateX + 'px', 0, 0, this.$.sliderKnob);
+      },
+
+      _trackEnd: function() {
+        var s = this.$.sliderKnob.style;
+
+        this.$.sliderKnob.classList.remove('dragging');
+        this._setDragging(false);
+        this._resetKnob();
+        this.value = this.immediateValue;
+
+        s.transform = s.webkitTransform = '';
+
+        this.fire('change');
+      },
+
+      _knobdown: function(event) {
+        this._expandKnob();
+
+        // cancel selection
+        event.preventDefault();
+
+        // set the focus manually because we will called prevent default
+        this.focus();
+      },
+
+      _bardown: function(event) {
+        this._w = this.$.sliderBar.offsetWidth;
+        var rect = this.$.sliderBar.getBoundingClientRect();
+        var ratio = (event.detail.x - rect.left) / this._w;
+        if (this._isRTL) {
+          ratio = 1 - ratio;
+        }
+        var prevRatio = this.ratio;
+
+        this._setTransiting(true);
+
+        this._positionKnob(ratio);
+
+        this.debounce('expandKnob', this._expandKnob, 60);
+
+        // if the ratio doesn't change, sliderKnob's animation won't start
+        // and `_knobTransitionEnd` won't be called
+        // Therefore, we need to manually update the `transiting` state
+
+        if (prevRatio === this.ratio) {
+          this._setTransiting(false);
+        }
+
+        this.async(function() {
+          this.fire('change');
+        });
+
+        // cancel selection
+        event.preventDefault();
+
+        // set the focus manually because we will called prevent default
+        this.focus();
+      },
+
+      _knobTransitionEnd: function(event) {
+        if (event.target === this.$.sliderKnob) {
+          this._setTransiting(false);
+        }
+      },
+
+      _updateMarkers: function(maxMarkers, min, max, snaps) {
+        if (!snaps) {
+          this._setMarkers([]);
+        }
+        var steps = Math.round((max - min) / this.step);
+        if (steps > maxMarkers) {
+          steps = maxMarkers;
+        }
+        if (steps < 0 || !isFinite(steps)) {
+          steps = 0;
+        }
+        this._setMarkers(new Array(steps));
+      },
+
+      _mergeClasses: function(classes) {
+        return Object.keys(classes).filter(
+          function(className) {
+            return classes[className];
+          }).join(' ');
+      },
+
+      _getClassNames: function() {
+        return this._mergeClasses({
+          disabled: this.disabled,
+          pin: this.pin,
+          snaps: this.snaps,
+          ring: this.immediateValue <= this.min,
+          expand: this.expand,
+          dragging: this.dragging,
+          transiting: this.transiting,
+          editable: this.editable
+        });
+      },
+
+      get _isRTL() {
+        if (this.__isRTL === undefined) {
+          this.__isRTL = window.getComputedStyle(this)['direction'] === 'rtl';
+        }
+        return this.__isRTL;
+      },
+
+      _leftKey: function(event) {
+        if (this._isRTL)
+          this._incrementKey(event);
+        else
+          this._decrementKey(event);
+      },
+
+      _rightKey: function(event) {
+        if (this._isRTL)
+          this._decrementKey(event);
+        else
+          this._incrementKey(event);
+      },
+
+      _incrementKey: function(event) {
+        if (!this.disabled) {
+          if (event.detail.key === 'end') {
+            this.value = this.max;
+          } else {
+            this.increment();
+          }
+          this.fire('change');
+          event.preventDefault();
+        }
+      },
+
+      _decrementKey: function(event) {
+        if (!this.disabled) {
+          if (event.detail.key === 'home') {
+            this.value = this.min;
+          } else {
+            this.decrement();
+          }
+          this.fire('change');
+          event.preventDefault();
+        }
+      },
+
+      _changeValue: function(event) {
+        this.value = event.target.value;
+        this.fire('change');
+      },
+
+      _inputKeyDown: function(event) {
+        event.stopPropagation();
+      },
+
+      // create the element ripple inside the `sliderKnob`
+      _createRipple: function() {
+        this._rippleContainer = this.$.sliderKnob;
+        return Polymer.PaperInkyFocusBehaviorImpl._createRipple.call(this);
+      },
+
+      // Hide the ripple when user is not interacting with keyboard.
+      // This behavior is different from other ripple-y controls, but is
+      // according to spec: https://www.google.com/design/spec/components/sliders.html
+      _focusedChanged: function(receivedFocusFromKeyboard) {
+        if (receivedFocusFromKeyboard) {
+          this.ensureRipple();
+        }
+        if (this.hasRipple()) {
+          // note, ripple must be un-hidden prior to setting `holdDown`
+          if (receivedFocusFromKeyboard) {
+            this._ripple.style.display = '';
+          } else {
+            this._ripple.style.display = 'none';
+          }
+          this._ripple.holdDown = receivedFocusFromKeyboard;
+        }
+      }
+    });
+
+    /**
+     * Fired when the slider's value changes.
+     *
+     * @event value-change
+     */
+
+    /**
+     * Fired when the slider's immediateValue changes. Only occurs while the
+     * user is dragging.
+     *
+     * To detect changes to immediateValue that happen for any input (i.e.
+     * dragging, tapping, clicking, etc.) listen for immediate-value-changed
+     * instead.
+     *
+     * @event immediate-value-change
+     */
+
+    /**
+     * Fired when the slider's value changes due to user interaction.
+     *
+     * Changes to the slider's value due to changes in an underlying
+     * bound variable will not trigger this event.
+     *
+     * @event change
+     */
+  </script>
+</dom-module>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+
+The `iron-icon` element displays an icon. By default an icon renders as a 24px square.
+
+Example using src:
+
+    <iron-icon src="star.png"></iron-icon>
+
+Example setting size to 32px x 32px:
+
+    <iron-icon class="big" src="big_star.png"></iron-icon>
+
+    <style is="custom-style">
+      .big {
+        --iron-icon-height: 32px;
+        --iron-icon-width: 32px;
+      }
+    </style>
+
+The iron elements include several sets of icons.
+To use the default set of icons, import `iron-icons.html` and use the `icon` attribute to specify an icon:
+
+    <link rel="import" href="/components/iron-icons/iron-icons.html">
+
+    <iron-icon icon="menu"></iron-icon>
+
+To use a different built-in set of icons, import the specific `iron-icons/<iconset>-icons.html`, and
+specify the icon as `<iconset>:<icon>`. For example, to use a communication icon, you would
+use:
+
+    <link rel="import" href="/components/iron-icons/communication-icons.html">
+
+    <iron-icon icon="communication:email"></iron-icon>
+
+You can also create custom icon sets of bitmap or SVG icons.
+
+Example of using an icon named `cherry` from a custom iconset with the ID `fruit`:
+
+    <iron-icon icon="fruit:cherry"></iron-icon>
+
+See [iron-iconset](iron-iconset) and [iron-iconset-svg](iron-iconset-svg) for more information about
+how to create a custom iconset.
+
+See the [iron-icons demo](iron-icons?view=demo:demo/index.html) to see the icons available
+in the various iconsets.
+
+To load a subset of icons from one of the default `iron-icons` sets, you can
+use the [poly-icon](https://poly-icon.appspot.com/) tool. It allows you
+to select individual icons, and creates an iconset from them that you can
+use directly in your elements.
+
+### Styling
+
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--iron-icon` | Mixin applied to the icon | {}
+`--iron-icon-width` | Width of the icon | `24px`
+`--iron-icon-height` | Height of the icon | `24px`
+`--iron-icon-fill-color` | Fill color of the svg icon | `currentcolor`
+`--iron-icon-stroke-color` | Stroke color of the svg icon | none
+
+@group Iron Elements
+@element iron-icon
+@demo demo/index.html
+@hero hero.svg
+@homepage polymer.github.io
+-->
+
+<dom-module id="iron-icon" assetpath="../../bower_components/iron-icon/">
+  <template>
+    <style>
+      :host {
+        @apply(--layout-inline);
+        @apply(--layout-center-center);
+        position: relative;
+
+        vertical-align: middle;
+
+        fill: var(--iron-icon-fill-color, currentcolor);
+        stroke: var(--iron-icon-stroke-color, none);
+
+        width: var(--iron-icon-width, 24px);
+        height: var(--iron-icon-height, 24px);
+        @apply(--iron-icon);
+      }
+    </style>
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'iron-icon',
+
+      properties: {
+
+        /**
+         * The name of the icon to use. The name should be of the form:
+         * `iconset_name:icon_name`.
+         */
+        icon: {
+          type: String
+        },
+
+        /**
+         * The name of the theme to used, if one is specified by the
+         * iconset.
+         */
+        theme: {
+          type: String
+        },
+
+        /**
+         * If using iron-icon without an iconset, you can set the src to be
+         * the URL of an individual icon image file. Note that this will take
+         * precedence over a given icon attribute.
+         */
+        src: {
+          type: String
+        },
+
+        /**
+         * @type {!Polymer.IronMeta}
+         */
+        _meta: {
+          value: Polymer.Base.create('iron-meta', {type: 'iconset'})
+        }
+
+      },
+
+      observers: [
+        '_updateIcon(_meta, isAttached)',
+        '_updateIcon(theme, isAttached)',
+        '_srcChanged(src, isAttached)',
+        '_iconChanged(icon, isAttached)'
+      ],
+
+      _DEFAULT_ICONSET: 'icons',
+
+      _iconChanged: function(icon) {
+        var parts = (icon || '').split(':');
+        this._iconName = parts.pop();
+        this._iconsetName = parts.pop() || this._DEFAULT_ICONSET;
+        this._updateIcon();
+      },
+
+      _srcChanged: function(src) {
+        this._updateIcon();
+      },
+
+      _usesIconset: function() {
+        return this.icon || !this.src;
+      },
+
+      /** @suppress {visibility} */
+      _updateIcon: function() {
+        if (this._usesIconset()) {
+          if (this._img && this._img.parentNode) {
+            Polymer.dom(this.root).removeChild(this._img);
+          }
+          if (this._iconName === "") {
+            if (this._iconset) {
+              this._iconset.removeIcon(this);
+            }
+          } else if (this._iconsetName && this._meta) {
+            this._iconset = /** @type {?Polymer.Iconset} */ (
+              this._meta.byKey(this._iconsetName));
+            if (this._iconset) {
+              this._iconset.applyIcon(this, this._iconName, this.theme);
+              this.unlisten(window, 'iron-iconset-added', '_updateIcon');
+            } else {
+              this.listen(window, 'iron-iconset-added', '_updateIcon');
+            }
+          }
+        } else {
+          if (this._iconset) {
+            this._iconset.removeIcon(this);
+          }
+          if (!this._img) {
+            this._img = document.createElement('img');
+            this._img.style.width = '100%';
+            this._img.style.height = '100%';
+            this._img.draggable = false;
+          }
+          this._img.src = this.src;
+          Polymer.dom(this.root).appendChild(this._img);
+        }
+      }
+
+    });
+
+  </script>
+
+</dom-module>
 <!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
@@ -16594,80 +19138,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<style is="custom-style">
-
-  :root {
-
-    --shadow-transition: {
-      transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-    };
-
-    --shadow-none: {
-      box-shadow: none;
-    };
-
-    /* from http://codepen.io/shyndman/pen/c5394ddf2e8b2a5c9185904b57421cdb */
-
-    --shadow-elevation-2dp: {
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 5px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 1px -2px rgba(0, 0, 0, 0.2);
-    };
-
-    --shadow-elevation-3dp: {
-      box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 8px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 3px -2px rgba(0, 0, 0, 0.4);
-    };
-
-    --shadow-elevation-4dp: {
-      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 10px 0 rgba(0, 0, 0, 0.12),
-                  0 2px 4px -1px rgba(0, 0, 0, 0.4);
-    };
-
-    --shadow-elevation-6dp: {
-      box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
-                  0 1px 18px 0 rgba(0, 0, 0, 0.12),
-                  0 3px 5px -1px rgba(0, 0, 0, 0.4);
-    };
-
-    --shadow-elevation-8dp: {
-      box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                  0 3px 14px 2px rgba(0, 0, 0, 0.12),
-                  0 5px 5px -3px rgba(0, 0, 0, 0.4);
-    };
-
-    --shadow-elevation-12dp: {
-      box-shadow: 0 12px 16px 1px rgba(0, 0, 0, 0.14),
-                  0 4px 22px 3px rgba(0, 0, 0, 0.12),
-                  0 6px 7px -4px rgba(0, 0, 0, 0.4);
-    };
-
-    --shadow-elevation-16dp: {
-      box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
-                  0  6px 30px 5px rgba(0, 0, 0, 0.12),
-                  0  8px 10px -5px rgba(0, 0, 0, 0.4);
-    };
-
-    --shadow-elevation-24dp: {
-      box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
-                  0 9px 46px 8px rgba(0, 0, 0, 0.12),
-                  0 11px 15px -7px rgba(0, 0, 0, 0.4);
-    };
-  }
-
-</style>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <script>
   Polymer({
     is: 'paper-menu-grow-height-animation',
@@ -17208,766 +19678,6 @@ Custom property | Description | Default
     })();
   </script>
 </dom-module>
-<!--
-@license
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-Material design: [Surface reaction](https://www.google.com/design/spec/animation/responsive-interaction.html#responsive-interaction-surface-reaction)
-
-`paper-ripple` provides a visual effect that other paper elements can
-use to simulate a rippling effect emanating from the point of contact.  The
-effect can be visualized as a concentric circle with motion.
-
-Example:
-
-    <div style="position:relative">
-      <paper-ripple></paper-ripple>
-    </div>
-
-Note, it's important that the parent container of the ripple be relative position, otherwise
-the ripple will emanate outside of the desired container.
-
-`paper-ripple` listens to "mousedown" and "mouseup" events so it would display ripple
-effect when touches on it.  You can also defeat the default behavior and
-manually route the down and up actions to the ripple element.  Note that it is
-important if you call `downAction()` you will have to make sure to call
-`upAction()` so that `paper-ripple` would end the animation loop.
-
-Example:
-
-    <paper-ripple id="ripple" style="pointer-events: none;"></paper-ripple>
-    ...
-    downAction: function(e) {
-      this.$.ripple.downAction({detail: {x: e.x, y: e.y}});
-    },
-    upAction: function(e) {
-      this.$.ripple.upAction();
-    }
-
-Styling ripple effect:
-
-  Use CSS color property to style the ripple:
-
-    paper-ripple {
-      color: #4285f4;
-    }
-
-  Note that CSS color property is inherited so it is not required to set it on
-  the `paper-ripple` element directly.
-
-By default, the ripple is centered on the point of contact.  Apply the `recenters`
-attribute to have the ripple grow toward the center of its container.
-
-    <paper-ripple recenters></paper-ripple>
-
-You can also  center the ripple inside its container from the start.
-
-    <paper-ripple center></paper-ripple>
-
-Apply `circle` class to make the rippling effect within a circle.
-
-    <paper-ripple class="circle"></paper-ripple>
-
-@group Paper Elements
-@element paper-ripple
-@hero hero.svg
-@demo demo/index.html
--->
-
-<dom-module id="paper-ripple" assetpath="../../bower_components/paper-ripple/">
-
-  <template>
-    <style>
-      :host {
-        display: block;
-        position: absolute;
-        border-radius: inherit;
-        overflow: hidden;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
-        /* See PolymerElements/paper-behaviors/issues/34. On non-Chrome browsers,
-         * creating a node (with a position:absolute) in the middle of an event
-         * handler "interrupts" that event handler (which happens when the
-         * ripple is created on demand) */
-        pointer-events: none;
-      }
-
-      :host([animating]) {
-        /* This resolves a rendering issue in Chrome (as of 40) where the
-           ripple is not properly clipped by its parent (which may have
-           rounded corners). See: http://jsbin.com/temexa/4
-
-           Note: We only apply this style conditionally. Otherwise, the browser
-           will create a new compositing layer for every ripple element on the
-           page, and that would be bad. */
-        -webkit-transform: translate(0, 0);
-        transform: translate3d(0, 0, 0);
-      }
-
-      #background,
-      #waves,
-      .wave-container,
-      .wave {
-        pointer-events: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-
-      #background,
-      .wave {
-        opacity: 0;
-      }
-
-      #waves,
-      .wave {
-        overflow: hidden;
-      }
-
-      .wave-container,
-      .wave {
-        border-radius: 50%;
-      }
-
-      :host(.circle) #background,
-      :host(.circle) #waves {
-        border-radius: 50%;
-      }
-
-      :host(.circle) .wave-container {
-        overflow: hidden;
-      }
-    </style>
-
-    <div id="background"></div>
-    <div id="waves"></div>
-  </template>
-</dom-module>
-<script>
-  (function() {
-    var Utility = {
-      distance: function(x1, y1, x2, y2) {
-        var xDelta = (x1 - x2);
-        var yDelta = (y1 - y2);
-
-        return Math.sqrt(xDelta * xDelta + yDelta * yDelta);
-      },
-
-      now: window.performance && window.performance.now ?
-          window.performance.now.bind(window.performance) : Date.now
-    };
-
-    /**
-     * @param {HTMLElement} element
-     * @constructor
-     */
-    function ElementMetrics(element) {
-      this.element = element;
-      this.width = this.boundingRect.width;
-      this.height = this.boundingRect.height;
-
-      this.size = Math.max(this.width, this.height);
-    }
-
-    ElementMetrics.prototype = {
-      get boundingRect () {
-        return this.element.getBoundingClientRect();
-      },
-
-      furthestCornerDistanceFrom: function(x, y) {
-        var topLeft = Utility.distance(x, y, 0, 0);
-        var topRight = Utility.distance(x, y, this.width, 0);
-        var bottomLeft = Utility.distance(x, y, 0, this.height);
-        var bottomRight = Utility.distance(x, y, this.width, this.height);
-
-        return Math.max(topLeft, topRight, bottomLeft, bottomRight);
-      }
-    };
-
-    /**
-     * @param {HTMLElement} element
-     * @constructor
-     */
-    function Ripple(element) {
-      this.element = element;
-      this.color = window.getComputedStyle(element).color;
-
-      this.wave = document.createElement('div');
-      this.waveContainer = document.createElement('div');
-      this.wave.style.backgroundColor = this.color;
-      this.wave.classList.add('wave');
-      this.waveContainer.classList.add('wave-container');
-      Polymer.dom(this.waveContainer).appendChild(this.wave);
-
-      this.resetInteractionState();
-    }
-
-    Ripple.MAX_RADIUS = 300;
-
-    Ripple.prototype = {
-      get recenters() {
-        return this.element.recenters;
-      },
-
-      get center() {
-        return this.element.center;
-      },
-
-      get mouseDownElapsed() {
-        var elapsed;
-
-        if (!this.mouseDownStart) {
-          return 0;
-        }
-
-        elapsed = Utility.now() - this.mouseDownStart;
-
-        if (this.mouseUpStart) {
-          elapsed -= this.mouseUpElapsed;
-        }
-
-        return elapsed;
-      },
-
-      get mouseUpElapsed() {
-        return this.mouseUpStart ?
-          Utility.now () - this.mouseUpStart : 0;
-      },
-
-      get mouseDownElapsedSeconds() {
-        return this.mouseDownElapsed / 1000;
-      },
-
-      get mouseUpElapsedSeconds() {
-        return this.mouseUpElapsed / 1000;
-      },
-
-      get mouseInteractionSeconds() {
-        return this.mouseDownElapsedSeconds + this.mouseUpElapsedSeconds;
-      },
-
-      get initialOpacity() {
-        return this.element.initialOpacity;
-      },
-
-      get opacityDecayVelocity() {
-        return this.element.opacityDecayVelocity;
-      },
-
-      get radius() {
-        var width2 = this.containerMetrics.width * this.containerMetrics.width;
-        var height2 = this.containerMetrics.height * this.containerMetrics.height;
-        var waveRadius = Math.min(
-          Math.sqrt(width2 + height2),
-          Ripple.MAX_RADIUS
-        ) * 1.1 + 5;
-
-        var duration = 1.1 - 0.2 * (waveRadius / Ripple.MAX_RADIUS);
-        var timeNow = this.mouseInteractionSeconds / duration;
-        var size = waveRadius * (1 - Math.pow(80, -timeNow));
-
-        return Math.abs(size);
-      },
-
-      get opacity() {
-        if (!this.mouseUpStart) {
-          return this.initialOpacity;
-        }
-
-        return Math.max(
-          0,
-          this.initialOpacity - this.mouseUpElapsedSeconds * this.opacityDecayVelocity
-        );
-      },
-
-      get outerOpacity() {
-        // Linear increase in background opacity, capped at the opacity
-        // of the wavefront (waveOpacity).
-        var outerOpacity = this.mouseUpElapsedSeconds * 0.3;
-        var waveOpacity = this.opacity;
-
-        return Math.max(
-          0,
-          Math.min(outerOpacity, waveOpacity)
-        );
-      },
-
-      get isOpacityFullyDecayed() {
-        return this.opacity < 0.01 &&
-          this.radius >= Math.min(this.maxRadius, Ripple.MAX_RADIUS);
-      },
-
-      get isRestingAtMaxRadius() {
-        return this.opacity >= this.initialOpacity &&
-          this.radius >= Math.min(this.maxRadius, Ripple.MAX_RADIUS);
-      },
-
-      get isAnimationComplete() {
-        return this.mouseUpStart ?
-          this.isOpacityFullyDecayed : this.isRestingAtMaxRadius;
-      },
-
-      get translationFraction() {
-        return Math.min(
-          1,
-          this.radius / this.containerMetrics.size * 2 / Math.sqrt(2)
-        );
-      },
-
-      get xNow() {
-        if (this.xEnd) {
-          return this.xStart + this.translationFraction * (this.xEnd - this.xStart);
-        }
-
-        return this.xStart;
-      },
-
-      get yNow() {
-        if (this.yEnd) {
-          return this.yStart + this.translationFraction * (this.yEnd - this.yStart);
-        }
-
-        return this.yStart;
-      },
-
-      get isMouseDown() {
-        return this.mouseDownStart && !this.mouseUpStart;
-      },
-
-      resetInteractionState: function() {
-        this.maxRadius = 0;
-        this.mouseDownStart = 0;
-        this.mouseUpStart = 0;
-
-        this.xStart = 0;
-        this.yStart = 0;
-        this.xEnd = 0;
-        this.yEnd = 0;
-        this.slideDistance = 0;
-
-        this.containerMetrics = new ElementMetrics(this.element);
-      },
-
-      draw: function() {
-        var scale;
-        var translateString;
-        var dx;
-        var dy;
-
-        this.wave.style.opacity = this.opacity;
-
-        scale = this.radius / (this.containerMetrics.size / 2);
-        dx = this.xNow - (this.containerMetrics.width / 2);
-        dy = this.yNow - (this.containerMetrics.height / 2);
-
-
-        // 2d transform for safari because of border-radius and overflow:hidden clipping bug.
-        // https://bugs.webkit.org/show_bug.cgi?id=98538
-        this.waveContainer.style.webkitTransform = 'translate(' + dx + 'px, ' + dy + 'px)';
-        this.waveContainer.style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
-        this.wave.style.webkitTransform = 'scale(' + scale + ',' + scale + ')';
-        this.wave.style.transform = 'scale3d(' + scale + ',' + scale + ',1)';
-      },
-
-      /** @param {Event=} event */
-      downAction: function(event) {
-        var xCenter = this.containerMetrics.width / 2;
-        var yCenter = this.containerMetrics.height / 2;
-
-        this.resetInteractionState();
-        this.mouseDownStart = Utility.now();
-
-        if (this.center) {
-          this.xStart = xCenter;
-          this.yStart = yCenter;
-          this.slideDistance = Utility.distance(
-            this.xStart, this.yStart, this.xEnd, this.yEnd
-          );
-        } else {
-          this.xStart = event ?
-              event.detail.x - this.containerMetrics.boundingRect.left :
-              this.containerMetrics.width / 2;
-          this.yStart = event ?
-              event.detail.y - this.containerMetrics.boundingRect.top :
-              this.containerMetrics.height / 2;
-        }
-
-        if (this.recenters) {
-          this.xEnd = xCenter;
-          this.yEnd = yCenter;
-          this.slideDistance = Utility.distance(
-            this.xStart, this.yStart, this.xEnd, this.yEnd
-          );
-        }
-
-        this.maxRadius = this.containerMetrics.furthestCornerDistanceFrom(
-          this.xStart,
-          this.yStart
-        );
-
-        this.waveContainer.style.top =
-          (this.containerMetrics.height - this.containerMetrics.size) / 2 + 'px';
-        this.waveContainer.style.left =
-          (this.containerMetrics.width - this.containerMetrics.size) / 2 + 'px';
-
-        this.waveContainer.style.width = this.containerMetrics.size + 'px';
-        this.waveContainer.style.height = this.containerMetrics.size + 'px';
-      },
-
-      /** @param {Event=} event */
-      upAction: function(event) {
-        if (!this.isMouseDown) {
-          return;
-        }
-
-        this.mouseUpStart = Utility.now();
-      },
-
-      remove: function() {
-        Polymer.dom(this.waveContainer.parentNode).removeChild(
-          this.waveContainer
-        );
-      }
-    };
-
-    Polymer({
-      is: 'paper-ripple',
-
-      behaviors: [
-        Polymer.IronA11yKeysBehavior
-      ],
-
-      properties: {
-        /**
-         * The initial opacity set on the wave.
-         *
-         * @attribute initialOpacity
-         * @type number
-         * @default 0.25
-         */
-        initialOpacity: {
-          type: Number,
-          value: 0.25
-        },
-
-        /**
-         * How fast (opacity per second) the wave fades out.
-         *
-         * @attribute opacityDecayVelocity
-         * @type number
-         * @default 0.8
-         */
-        opacityDecayVelocity: {
-          type: Number,
-          value: 0.8
-        },
-
-        /**
-         * If true, ripples will exhibit a gravitational pull towards
-         * the center of their container as they fade away.
-         *
-         * @attribute recenters
-         * @type boolean
-         * @default false
-         */
-        recenters: {
-          type: Boolean,
-          value: false
-        },
-
-        /**
-         * If true, ripples will center inside its container
-         *
-         * @attribute recenters
-         * @type boolean
-         * @default false
-         */
-        center: {
-          type: Boolean,
-          value: false
-        },
-
-        /**
-         * A list of the visual ripples.
-         *
-         * @attribute ripples
-         * @type Array
-         * @default []
-         */
-        ripples: {
-          type: Array,
-          value: function() {
-            return [];
-          }
-        },
-
-        /**
-         * True when there are visible ripples animating within the
-         * element.
-         */
-        animating: {
-          type: Boolean,
-          readOnly: true,
-          reflectToAttribute: true,
-          value: false
-        },
-
-        /**
-         * If true, the ripple will remain in the "down" state until `holdDown`
-         * is set to false again.
-         */
-        holdDown: {
-          type: Boolean,
-          value: false,
-          observer: '_holdDownChanged'
-        },
-
-        /**
-         * If true, the ripple will not generate a ripple effect
-         * via pointer interaction.
-         * Calling ripple's imperative api like `simulatedRipple` will
-         * still generate the ripple effect.
-         */
-        noink: {
-          type: Boolean,
-          value: false
-        },
-
-        _animating: {
-          type: Boolean
-        },
-
-        _boundAnimate: {
-          type: Function,
-          value: function() {
-            return this.animate.bind(this);
-          }
-        }
-      },
-
-      get target () {
-        return this.keyEventTarget;
-      },
-
-      keyBindings: {
-        'enter:keydown': '_onEnterKeydown',
-        'space:keydown': '_onSpaceKeydown',
-        'space:keyup': '_onSpaceKeyup'
-      },
-
-      attached: function() {
-        // Set up a11yKeysBehavior to listen to key events on the target,
-        // so that space and enter activate the ripple even if the target doesn't
-        // handle key events. The key handlers deal with `noink` themselves.
-        if (this.parentNode.nodeType == 11) { // DOCUMENT_FRAGMENT_NODE
-          this.keyEventTarget = Polymer.dom(this).getOwnerRoot().host;
-        } else {
-          this.keyEventTarget = this.parentNode;
-        }
-        var keyEventTarget = /** @type {!EventTarget} */ (this.keyEventTarget);
-        this.listen(keyEventTarget, 'up', 'uiUpAction');
-        this.listen(keyEventTarget, 'down', 'uiDownAction');
-      },
-
-      detached: function() {
-        this.unlisten(this.keyEventTarget, 'up', 'uiUpAction');
-        this.unlisten(this.keyEventTarget, 'down', 'uiDownAction');
-        this.keyEventTarget = null;
-      },
-
-      get shouldKeepAnimating () {
-        for (var index = 0; index < this.ripples.length; ++index) {
-          if (!this.ripples[index].isAnimationComplete) {
-            return true;
-          }
-        }
-
-        return false;
-      },
-
-      simulatedRipple: function() {
-        this.downAction(null);
-
-        // Please see polymer/polymer#1305
-        this.async(function() {
-          this.upAction();
-        }, 1);
-      },
-
-      /**
-       * Provokes a ripple down effect via a UI event,
-       * respecting the `noink` property.
-       * @param {Event=} event
-       */
-      uiDownAction: function(event) {
-        if (!this.noink) {
-          this.downAction(event);
-        }
-      },
-
-      /**
-       * Provokes a ripple down effect via a UI event,
-       * *not* respecting the `noink` property.
-       * @param {Event=} event
-       */
-      downAction: function(event) {
-        if (this.holdDown && this.ripples.length > 0) {
-          return;
-        }
-
-        var ripple = this.addRipple();
-
-        ripple.downAction(event);
-
-        if (!this._animating) {
-          this._animating = true;
-          this.animate();
-        }
-      },
-
-      /**
-       * Provokes a ripple up effect via a UI event,
-       * respecting the `noink` property.
-       * @param {Event=} event
-       */
-      uiUpAction: function(event) {
-        if (!this.noink) {
-          this.upAction(event);
-        }
-      },
-
-      /**
-       * Provokes a ripple up effect via a UI event,
-       * *not* respecting the `noink` property.
-       * @param {Event=} event
-       */
-      upAction: function(event) {
-        if (this.holdDown) {
-          return;
-        }
-
-        this.ripples.forEach(function(ripple) {
-          ripple.upAction(event);
-        });
-
-        this._animating = true;
-        this.animate();
-      },
-
-      onAnimationComplete: function() {
-        this._animating = false;
-        this.$.background.style.backgroundColor = null;
-        this.fire('transitionend');
-      },
-
-      addRipple: function() {
-        var ripple = new Ripple(this);
-
-        Polymer.dom(this.$.waves).appendChild(ripple.waveContainer);
-        this.$.background.style.backgroundColor = ripple.color;
-        this.ripples.push(ripple);
-
-        this._setAnimating(true);
-
-        return ripple;
-      },
-
-      removeRipple: function(ripple) {
-        var rippleIndex = this.ripples.indexOf(ripple);
-
-        if (rippleIndex < 0) {
-          return;
-        }
-
-        this.ripples.splice(rippleIndex, 1);
-
-        ripple.remove();
-
-        if (!this.ripples.length) {
-          this._setAnimating(false);
-        }
-      },
-
-      /**
-       * This conflicts with Element#antimate().
-       * https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
-       * @suppress {checkTypes}
-       */
-      animate: function() {
-        if (!this._animating) {
-          return;
-        }
-        var index;
-        var ripple;
-
-        for (index = 0; index < this.ripples.length; ++index) {
-          ripple = this.ripples[index];
-
-          ripple.draw();
-
-          this.$.background.style.opacity = ripple.outerOpacity;
-
-          if (ripple.isOpacityFullyDecayed && !ripple.isRestingAtMaxRadius) {
-            this.removeRipple(ripple);
-          }
-        }
-
-        if (!this.shouldKeepAnimating && this.ripples.length === 0) {
-          this.onAnimationComplete();
-        } else {
-          window.requestAnimationFrame(this._boundAnimate);
-        }
-      },
-
-      _onEnterKeydown: function() {
-        this.uiDownAction();
-        this.async(this.uiUpAction, 1);
-      },
-
-      _onSpaceKeydown: function() {
-        this.uiDownAction();
-      },
-
-      _onSpaceKeyup: function() {
-        this.uiUpAction();
-      },
-
-      // note: holdDown does not respect noink since it can be a focus based
-      // effect.
-      _holdDownChanged: function(newVal, oldVal) {
-        if (oldVal === undefined) {
-          return;
-        }
-        if (newVal) {
-          this.downAction();
-        } else {
-          this.upAction();
-        }
-      }
-
-      /**
-      Fired when the animation finishes.
-      This is useful if you want to wait until
-      the ripple animation finishes to perform some action.
-
-      @event transitionend
-      @param {{node: Object}} detail Contains the animated node.
-      */
-    });
-  })();
-</script>
 <!--
 @license
 Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
@@ -20016,68 +21726,48 @@ This element has `role="listitem"` by default. Depending on usage, it may be mor
       margin-left: 20px;
       margin-top: 20px;
     }
-
-    li.mdl-menu__item {
-      height: 40px;
-      line-height: 40px;
-    }
-    .getmdl-select .mdl-icon-toggle__label {
-        float: right;
-        margin-top: -30px;
-        color: rgba(0,0,0,0.4);
+    #random {
+      color: rgb(66,66,66);
+      background-color: rgb(255,171,64);
     }
   </style>
 <template>
   <div class="container">
     <canvas id="inference"></canvas>
     <br>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height">
-      <input class="mdl-textfield__input" type="text" id="colormode" value="rgb" readonly="" tabindex="-1">
-      <label for="colormode">
-        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-      </label>
-      <label for="colormode" class="mdl-textfield__label">Color mode</label>
-      <ul for="colormode" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="color-selector">
-        <li class="mdl-menu__item" data-val="rgb">rgb</li>
-        <li class="mdl-menu__item" data-val="rgba">rgba</li>
-        <li class="mdl-menu__item" data-val="hsv">hsv</li>
-        <li class="mdl-menu__item" data-val="hsva">hsva</li>
-        <li class="mdl-menu__item" data-val="yuv">yuv</li>
-        <li class="mdl-menu__item" data-val="yuva">yuva</li>
-        <li class="mdl-menu__item" data-val="bw">bw</li>
-      </ul>
+    <div>
+      <paper-dropdown-menu no-animations="" label="Color mode">
+        <paper-listbox attr-for-selected="value" id="color-mode-dropdown" class="dropdown-content" selected="{{selectedColorModeName}}" slot="dropdown-content">
+          <template is="dom-repeat" items="[[colorModeNames]]">
+            <paper-item value="[[item]]" label="[[item]]">
+              [[item]]
+            </paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
     </div>
-    <br>
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height">
-      <input class="mdl-textfield__input" type="text" id="activation-fn" value="tanh" readonly="" tabindex="-1">
-      <label for="activation-fn">
-        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
-      </label>
-      <label for="activation-fn" class="mdl-textfield__label">Activation function</label>
-      <ul for="activation-fn" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" id="activation-selector">
-        <li class="mdl-menu__item" data-val="tanh">tanh</li>
-        <li class="mdl-menu__item" data-val="sin">sin</li>
-        <li class="mdl-menu__item" data-val="relu">relu</li>
-        <li class="mdl-menu__item" data-val="step">step</li>
-      </ul>
+    <div>
+      <paper-dropdown-menu no-animations="" label="Activation function">
+        <paper-listbox attr-for-selected="value" id="activation-function-dropdown" class="dropdown-content" selected="{{selectedActivationFunctionName}}" slot="dropdown-content">
+          <template is="dom-repeat" items="[[activationFunctionNames]]">
+            <paper-item value="[[item]]" label="[[item]]">
+              [[item]]
+            </paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
     </div>
     <br>
     <div>Number of layers: <div id="layers-count" style="display: inline-block"></div></div>
-
-    <p style="width:200px">
-      <input class="mdl-slider mdl-js-slider" type="range" min="0" max="7" value="3" tabindex="1" id="layers-slider">
-    </p>
+    <paper-slider pin="" min="0" max="10" value="3" id="layers-slider"></paper-slider>
 
     <div>z1 time coefficient</div>
-    <p style="width:200px">
-      <input class="mdl-slider mdl-js-slider" type="range" min="1" max="1000" value="100" tabindex="2" id="z1-slider">
-    </p>
-    <div>z2 time coefficient</div>
-    <p style="width:200px">
-      <input class="mdl-slider mdl-js-slider" type="range" min="1" max="1000" value="100" tabindex="3" id="z2-slider">
-    </p>
+    <paper-slider min="1" max="100" value="1" id="z1-slider"></paper-slider>
 
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="button" id="random">randomize</button>
+    <div>z2 time coefficient</div>
+    <paper-slider min="1" max="100" value="1" id="z2-slider"></paper-slider>
+
+    <paper-button type="button" id="random">randomize</paper-button>
     <br><br>
     <a href="http://blog.otoro.net/2016/03/25/generating-abstract-patterns-with-tensorflow/" target="_blank">What is a CPPN?</a>
   </div>
@@ -20721,10 +22411,6 @@ function isMobile() {
   return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4));
 }
 
-function isFirefox() {
-  return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-}
-
 function isWebGLEnabled() {
   var canvas = document.createElement('canvas');
 
@@ -20741,11 +22427,11 @@ function isWebGLEnabled() {
 }
 
 function isNotSupported() {
-  return isMobile() || isSafari() || isFirefox() || !isWebGLEnabled();
+  return isMobile() || isSafari() || !isWebGLEnabled();
 }
 
 function inializePolymerPage() {
-  document.addEventListener("DOMContentLoaded", function(event) {
+  document.addEventListener("WebComponentsReady", function(event) {
     if (isNotSupported()) {
       var dialogContainer = document.createElement('div');
       dialogContainer.innerHTML = `

@@ -143,7 +143,12 @@ var cppn_1 = require("./cppn");
 var CANVAS_UPSCALE_FACTOR = 3;
 var MAT_WIDTH = 30;
 var WEIGHTS_STDEV = .6;
-var NNArtPolymer = polymer_spec_1.PolymerElement({ is: 'nn-art', properties: {} });
+var NNArtPolymer = polymer_spec_1.PolymerElement({ is: 'nn-art', properties: {
+        colorModeNames: Array,
+        selectedColorModeName: String,
+        activationFunctionNames: Array,
+        selectedActivationFunctionName: String
+    } });
 var NNArt = (function (_super) {
     __extends(NNArt, _super);
     function NNArt() {
@@ -158,26 +163,24 @@ var NNArt = (function (_super) {
             this.inferenceCanvas.width * CANVAS_UPSCALE_FACTOR + 'px';
         this.inferenceCanvas.style.height =
             this.inferenceCanvas.height * CANVAS_UPSCALE_FACTOR + 'px';
-        var currentColorElement = this.querySelector('#colormode');
-        this.querySelector('#color-selector')
-            .addEventListener('click', function (event) {
-            var colorMode = event.target.getAttribute('data-val');
-            currentColorElement.value = colorMode;
-            _this.cppn.setColorMode(colorMode);
+        this.colorModeNames = ['rgb', 'rgba', 'hsv', 'hsva', 'yuv', 'yuva', 'bw'];
+        this.selectedColorModeName = 'rgb';
+        this.cppn.setColorMode(this.selectedColorModeName);
+        this.querySelector('#color-mode-dropdown').addEventListener('iron-activate', function (event) {
+            _this.selectedColorModeName = event.detail.selected;
+            _this.cppn.setColorMode(_this.selectedColorModeName);
         });
-        this.cppn.setColorMode('rgb');
-        var currentActivationFnElement = this.querySelector('#activation-fn');
-        this.querySelector('#activation-selector')
-            .addEventListener('click', function (event) {
-            var activationFn = event.target.getAttribute('data-val');
-            currentActivationFnElement.value = activationFn;
-            _this.cppn.setActivationFunction(activationFn);
+        this.activationFunctionNames = ['tanh', 'sin', 'relu', 'step'];
+        this.selectedActivationFunctionName = 'tanh';
+        this.cppn.setActivationFunction(this.selectedActivationFunctionName);
+        this.querySelector('#activation-function-dropdown').addEventListener('iron-activate', function (event) {
+            _this.selectedActivationFunctionName = event.detail.selected;
+            _this.cppn.setActivationFunction(_this.selectedActivationFunctionName);
         });
-        this.cppn.setActivationFunction('tanh');
         var layersSlider = this.querySelector('#layers-slider');
         var layersCountElement = this.querySelector('#layers-count');
-        layersSlider.addEventListener('input', function (event) {
-            _this.numLayers = parseInt(event.target.value, 10);
+        layersSlider.addEventListener('immediate-value-changed', function (event) {
+            _this.numLayers = parseInt(event.target.immediateValue, 10);
             layersCountElement.innerText = '' + _this.numLayers;
             _this.cppn.setNumLayers(_this.numLayers);
         });
@@ -185,19 +188,19 @@ var NNArt = (function (_super) {
         layersCountElement.innerText = '' + this.numLayers;
         this.cppn.setNumLayers(this.numLayers);
         var z1Slider = this.querySelector('#z1-slider');
-        z1Slider.addEventListener('input', function (event) {
-            _this.z1Scale = parseInt(event.target.value, 10);
-            _this.cppn.setZ1Scale(_this.z1Scale);
+        z1Slider.addEventListener('immediate-value-changed', function (event) {
+            _this.z1Scale = parseInt(event.target.immediateValue, 10);
+            _this.cppn.setZ1Scale(convertZScale(_this.z1Scale));
         });
         this.z1Scale = parseInt(z1Slider.value, 10);
-        this.cppn.setZ1Scale(this.z1Scale);
+        this.cppn.setZ1Scale(convertZScale(this.z1Scale));
         var z2Slider = this.querySelector('#z2-slider');
-        z2Slider.addEventListener('input', function (event) {
-            _this.z2Scale = parseInt(event.target.value, 10);
-            _this.cppn.setZ2Scale(_this.z1Scale);
+        z2Slider.addEventListener('immediate-value-changed', function (event) {
+            _this.z2Scale = parseInt(event.target.immediateValue, 10);
+            _this.cppn.setZ2Scale(convertZScale(_this.z2Scale));
         });
         this.z2Scale = parseInt(z2Slider.value, 10);
-        this.cppn.setZ2Scale(this.z2Scale);
+        this.cppn.setZ2Scale(convertZScale(this.z2Scale));
         var randomizeButton = this.querySelector('#random');
         randomizeButton.addEventListener('click', function () {
             _this.cppn.generateWeights(MAT_WIDTH, WEIGHTS_STDEV);
@@ -207,6 +210,9 @@ var NNArt = (function (_super) {
     };
     return NNArt;
 }(NNArtPolymer));
+function convertZScale(z) {
+    return (103 - z);
+}
 document.registerElement(NNArt.prototype.is, NNArt);
 
 },{"../demo-footer":2,"../demo-header":3,"../polymer-spec":7,"./cppn":4}],6:[function(require,module,exports){
