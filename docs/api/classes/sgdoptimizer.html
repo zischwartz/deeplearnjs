@@ -85,10 +85,15 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="sgdoptimizer.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected">
+						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="sgdoptimizer.html#c" class="tsd-kind-icon">c</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="sgdoptimizer.html#learningrate" class="tsd-kind-icon">learning<wbr>Rate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="sgdoptimizer.html#one" class="tsd-kind-icon">one</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="sgdoptimizer.html#prevbatchsize" class="tsd-kind-icon">prev<wbr>Batch<wbr>Size</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="sgdoptimizer.html#specifiedvariablenodes" class="tsd-kind-icon">specified<wbr>Variable<wbr>Nodes</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="sgdoptimizer.html#variablegradients" class="tsd-kind-icon">variable<wbr>Gradients</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="sgdoptimizer.html#variablenodes" class="tsd-kind-icon">variable<wbr>Nodes</a></li>
 							</ul>
 						</section>
@@ -118,7 +123,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/sgd_optimizer.ts#L24">sgd_optimizer.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L24">sgd_optimizer.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -135,8 +140,48 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="c" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> c</h3>
+					<div class="tsd-signature tsd-kind-icon">c<span class="tsd-signature-symbol">:</span> <a href="scalar.html" class="tsd-signature-type">Scalar</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L92">sgd_optimizer.ts:92</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="learningrate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> learning<wbr>Rate</h3>
+					<div class="tsd-signature tsd-kind-icon">learning<wbr>Rate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L25">sgd_optimizer.ts:25</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="one" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> one</h3>
+					<div class="tsd-signature tsd-kind-icon">one<span class="tsd-signature-symbol">:</span> <a href="scalar.html" class="tsd-signature-type">Scalar</a><span class="tsd-signature-symbol"> =&nbsp;Scalar.new(1)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L91">sgd_optimizer.ts:91</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="prevbatchsize" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> prev<wbr>Batch<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">prev<wbr>Batch<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L90">sgd_optimizer.ts:90</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="specifiedvariablenodes" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> specified<wbr>Variable<wbr>Nodes</h3>
@@ -144,7 +189,17 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#specifiedvariablenodes">specifiedVariableNodes</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/optimizer.ts#L23">optimizer.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/optimizer.ts#L23">optimizer.ts:23</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="variablegradients" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> variable<wbr>Gradients</h3>
+					<div class="tsd-signature tsd-kind-icon">variable<wbr>Gradients<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TensorArrayMap</span><span class="tsd-signature-symbol"> =&nbsp;new TensorArrayMap()</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L89">sgd_optimizer.ts:89</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -155,7 +210,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#variablenodes">variableNodes</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/optimizer.ts#L22">optimizer.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/optimizer.ts#L22">optimizer.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -173,7 +228,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#afterbatch">afterBatch</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/sgd_optimizer.ts#L58">sgd_optimizer.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L58">sgd_optimizer.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -209,7 +264,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#afterexample">afterExample</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/sgd_optimizer.ts#L44">sgd_optimizer.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L44">sgd_optimizer.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -242,7 +297,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#beforebatch">beforeBatch</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/sgd_optimizer.ts#L29">sgd_optimizer.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L29">sgd_optimizer.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -278,7 +333,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="optimizer.html">Optimizer</a>.<a href="optimizer.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/sgd_optimizer.ts#L78">sgd_optimizer.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L78">sgd_optimizer.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -295,7 +350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/27ca171/src/sgd_optimizer.ts#L85">sgd_optimizer.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/8876407/src/sgd_optimizer.ts#L85">sgd_optimizer.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -328,8 +383,23 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="sgdoptimizer.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="sgdoptimizer.html#c" class="tsd-kind-icon">c</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="sgdoptimizer.html#learningrate" class="tsd-kind-icon">learning<wbr>Rate</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="sgdoptimizer.html#one" class="tsd-kind-icon">one</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="sgdoptimizer.html#prevbatchsize" class="tsd-kind-icon">prev<wbr>Batch<wbr>Size</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="sgdoptimizer.html#specifiedvariablenodes" class="tsd-kind-icon">specified<wbr>Variable<wbr>Nodes</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="sgdoptimizer.html#variablegradients" class="tsd-kind-icon">variable<wbr>Gradients</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="sgdoptimizer.html#variablenodes" class="tsd-kind-icon">variable<wbr>Nodes</a>

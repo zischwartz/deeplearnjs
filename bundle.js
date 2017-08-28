@@ -2269,6 +2269,9 @@ var NDArrayMath = (function () {
     NDArrayMath.prototype.log = function (ndarray) {
         return this.track(this.logInternal(ndarray));
     };
+    NDArrayMath.prototype.sqrt = function (ndarray) {
+        return this.track(this.sqrtInternal(ndarray));
+    };
     NDArrayMath.prototype.relu = function (ndarray) {
         return this.track(this.reluInternal(ndarray));
     };
@@ -2690,6 +2693,15 @@ var NDArrayMathCPU = (function (_super) {
         for (var i = 0; i < values.length; ++i) {
             var value = values[i];
             newValues[i] = Math.log(value);
+        }
+        return ndarray_1.NDArray.make(ndarray.shape, { values: newValues });
+    };
+    NDArrayMathCPU.prototype.sqrtInternal = function (ndarray) {
+        var values = ndarray.getValues();
+        var newValues = new Float32Array(values.length);
+        for (var i = 0; i < values.length; ++i) {
+            var value = values[i];
+            newValues[i] = Math.sqrt(value);
         }
         return ndarray_1.NDArray.make(ndarray.shape, { values: newValues });
     };
@@ -3293,6 +3305,10 @@ var NDArrayMathGPU = (function (_super) {
     };
     NDArrayMathGPU.prototype.logInternal = function (a) {
         var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.LOG);
+        return this.compileAndRun(program, [a]);
+    };
+    NDArrayMathGPU.prototype.sqrtInternal = function (a) {
+        var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.SQRT);
         return this.compileAndRun(program, [a]);
     };
     NDArrayMathGPU.prototype.reluInternal = function (a) {
@@ -5087,12 +5103,13 @@ var UnaryOp;
 (function (UnaryOp) {
     UnaryOp[UnaryOp["EXP"] = 0] = "EXP";
     UnaryOp[UnaryOp["LOG"] = 1] = "LOG";
-    UnaryOp[UnaryOp["NEG"] = 2] = "NEG";
-    UnaryOp[UnaryOp["RELU"] = 3] = "RELU";
-    UnaryOp[UnaryOp["SIGMOID"] = 4] = "SIGMOID";
-    UnaryOp[UnaryOp["STEP"] = 5] = "STEP";
-    UnaryOp[UnaryOp["SIN"] = 6] = "SIN";
-    UnaryOp[UnaryOp["TANH"] = 7] = "TANH";
+    UnaryOp[UnaryOp["SQRT"] = 2] = "SQRT";
+    UnaryOp[UnaryOp["NEG"] = 3] = "NEG";
+    UnaryOp[UnaryOp["RELU"] = 4] = "RELU";
+    UnaryOp[UnaryOp["SIGMOID"] = 5] = "SIGMOID";
+    UnaryOp[UnaryOp["STEP"] = 6] = "STEP";
+    UnaryOp[UnaryOp["SIN"] = 7] = "SIN";
+    UnaryOp[UnaryOp["TANH"] = 8] = "TANH";
 })(UnaryOp = exports.UnaryOp || (exports.UnaryOp = {}));
 var UnaryOpProgram = (function () {
     function UnaryOpProgram(aShape, op) {
@@ -5104,12 +5121,16 @@ var UnaryOpProgram = (function () {
     return UnaryOpProgram;
 }());
 exports.UnaryOpProgram = UnaryOpProgram;
+var CHECK_NAN_SNIPPET = "\n  if (isNaN(v)) {\n    setOutput(v);\n    return;\n  }\n";
 function getOpSnippet(op) {
     switch (op) {
         case UnaryOp.EXP:
             return 'float r = exp(v);';
         case UnaryOp.LOG:
             return 'float r = log(v);';
+        case UnaryOp.SQRT:
+            return CHECK_NAN_SNIPPET +
+                'float r = sqrt(v);';
         case UnaryOp.NEG:
             return 'float r = -v;';
         case UnaryOp.RELU:
@@ -5119,7 +5140,8 @@ function getOpSnippet(op) {
         case UnaryOp.STEP:
             return 'float r = (v == v) ? (v > 0.0 ? 1.0 : 0.0) : v;';
         case UnaryOp.SIN:
-            return 'float r = sin(v);';
+            return CHECK_NAN_SNIPPET +
+                'float r = sin(v);';
         case UnaryOp.TANH:
             return "float e2x = exp(-2.0 * abs(v));\n              float r = sign(v) * (1.0 - e2x) / (1.0 + e2x);";
         default:
