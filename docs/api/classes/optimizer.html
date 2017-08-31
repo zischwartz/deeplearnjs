@@ -116,7 +116,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L23">optimizer.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L23">optimizer.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -138,7 +138,7 @@
 					<div class="tsd-signature tsd-kind-icon">specified<wbr>Variable<wbr>Nodes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">VariableNode</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L23">optimizer.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L23">optimizer.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -148,7 +148,7 @@
 					<div class="tsd-signature tsd-kind-icon">variable<wbr>Nodes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">VariableNode</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L22">optimizer.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L22">optimizer.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,13 +159,13 @@
 					<a name="afterbatch" class="tsd-anchor"></a>
 					<h3>after<wbr>Batch</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">after<wbr>Batch<span class="tsd-signature-symbol">(</span>math<span class="tsd-signature-symbol">: </span><a href="ndarraymath.html" class="tsd-signature-type">NDArrayMath</a>, batchSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, runtime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SessionRuntime</span>, activationArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span>, gradientArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">after<wbr>Batch<span class="tsd-signature-symbol">(</span>math<span class="tsd-signature-symbol">: </span><a href="ndarraymath.html" class="tsd-signature-type">NDArrayMath</a>, batchSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, runtime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SessionRuntime</span>, activationArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span>, gradientArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SummedTensorArrayMap</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L41">optimizer.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L41">optimizer.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -183,7 +183,7 @@
 									<h5>activationArrayMap: <span class="tsd-signature-type">TensorArrayMap</span></h5>
 								</li>
 								<li>
-									<h5>gradientArrayMap: <span class="tsd-signature-type">TensorArrayMap</span></h5>
+									<h5>gradientArrayMap: <span class="tsd-signature-type">SummedTensorArrayMap</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -194,13 +194,13 @@
 					<a name="afterexample" class="tsd-anchor"></a>
 					<h3>after<wbr>Example</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">after<wbr>Example<span class="tsd-signature-symbol">(</span>math<span class="tsd-signature-symbol">: </span><a href="ndarraymath.html" class="tsd-signature-type">NDArrayMath</a>, runtime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SessionRuntime</span>, activationArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span>, gradientArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">after<wbr>Example<span class="tsd-signature-symbol">(</span>math<span class="tsd-signature-symbol">: </span><a href="ndarraymath.html" class="tsd-signature-type">NDArrayMath</a>, runtime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SessionRuntime</span>, activationArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span>, gradientArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SummedTensorArrayMap</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L36">optimizer.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L36">optimizer.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -215,7 +215,7 @@
 									<h5>activationArrayMap: <span class="tsd-signature-type">TensorArrayMap</span></h5>
 								</li>
 								<li>
-									<h5>gradientArrayMap: <span class="tsd-signature-type">TensorArrayMap</span></h5>
+									<h5>gradientArrayMap: <span class="tsd-signature-type">SummedTensorArrayMap</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -226,13 +226,13 @@
 					<a name="beforebatch" class="tsd-anchor"></a>
 					<h3>before<wbr>Batch</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">before<wbr>Batch<span class="tsd-signature-symbol">(</span>math<span class="tsd-signature-symbol">: </span><a href="ndarraymath.html" class="tsd-signature-type">NDArrayMath</a>, batchSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, runtime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SessionRuntime</span>, activationArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span>, gradientArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">before<wbr>Batch<span class="tsd-signature-symbol">(</span>math<span class="tsd-signature-symbol">: </span><a href="ndarraymath.html" class="tsd-signature-type">NDArrayMath</a>, batchSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, runtime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SessionRuntime</span>, activationArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TensorArrayMap</span>, gradientArrayMap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SummedTensorArrayMap</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L31">optimizer.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L31">optimizer.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -250,7 +250,7 @@
 									<h5>activationArrayMap: <span class="tsd-signature-type">TensorArrayMap</span></h5>
 								</li>
 								<li>
-									<h5>gradientArrayMap: <span class="tsd-signature-type">TensorArrayMap</span></h5>
+									<h5>gradientArrayMap: <span class="tsd-signature-type">SummedTensorArrayMap</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -267,7 +267,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/6f495b2/src/optimizer.ts#L46">optimizer.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/PAIR-code/deeplearnjs/blob/a05f8b1/src/optimizer.ts#L46">optimizer.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

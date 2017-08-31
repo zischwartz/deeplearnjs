@@ -583,7 +583,7 @@ var InMemoryDataset = (function () {
 }());
 exports.InMemoryDataset = InMemoryDataset;
 
-},{"./math/ndarray":22,"./util":76}],7:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":75}],7:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -1156,26 +1156,8 @@ var ArgMaxEqualsNode = (function (_super) {
     return ArgMaxEqualsNode;
 }(Node));
 exports.ArgMaxEqualsNode = ArgMaxEqualsNode;
-var SplitNode = (function (_super) {
-    __extends(SplitNode, _super);
-    function SplitNode(graph, x) {
-        var _this = _super.call(this, graph, 'SplitNode', { x: x }, new Tensor(x.shape)) || this;
-        _this.outputs = [];
-        return _this;
-    }
-    SplitNode.prototype.getNewOutputTensor = function () {
-        var output = new Tensor(this.inputs[SplitNode.X].shape);
-        output.node = this;
-        this.outputs.push(output);
-        return output;
-    };
-    SplitNode.prototype.validate = function () { };
-    SplitNode.X = 'x';
-    return SplitNode;
-}(Node));
-exports.SplitNode = SplitNode;
 
-},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":76}],8:[function(require,module,exports){
+},{"./graph_layers":8,"./math/concat3d_util":15,"./math/conv_util":16,"./math/ndarray":22,"./util":75}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var initializers_1 = require("./initializers");
@@ -1426,7 +1408,7 @@ var GraphRunner = (function () {
 }());
 exports.GraphRunner = GraphRunner;
 
-},{"./math/ndarray":22,"./session":72}],10:[function(require,module,exports){
+},{"./math/ndarray":22,"./session":71}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -1503,7 +1485,7 @@ function isPassthroughNode(node, map) {
 }
 exports.isPassthroughNode = isPassthroughNode;
 
-},{"./graph":7,"./priority_queue":71}],11:[function(require,module,exports){
+},{"./graph":7,"./priority_queue":70}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("./math/conv_util");
@@ -1564,7 +1546,7 @@ exports.SGDOptimizer = sgd_optimizer_1.SGDOptimizer;
 var momentumOptimizer_1 = require("./momentumOptimizer");
 exports.MomentumOptimizer = momentumOptimizer_1.MomentumOptimizer;
 
-},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./momentumOptimizer":48,"./optimizer":70,"./session":72,"./sgd_optimizer":74,"./util":76}],12:[function(require,module,exports){
+},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./momentumOptimizer":48,"./optimizer":69,"./session":71,"./sgd_optimizer":73,"./util":75}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1791,7 +1773,7 @@ var InGPUMemoryShuffledInputProviderBuilder = (function (_super) {
 }(InMemoryShuffledInputProviderBuilder));
 exports.InGPUMemoryShuffledInputProviderBuilder = InGPUMemoryShuffledInputProviderBuilder;
 
-},{"./math/ndarray":22,"./util":76}],14:[function(require,module,exports){
+},{"./math/ndarray":22,"./util":75}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./ndarray");
@@ -1887,7 +1869,7 @@ function computeConcat3DOutputShape(x1Shape, x2Shape, axis) {
 }
 exports.computeConcat3DOutputShape = computeConcat3DOutputShape;
 
-},{"../util":76}],16:[function(require,module,exports){
+},{"../util":75}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -1925,7 +1907,7 @@ function computeDilatedRC(rc, origStride) {
 }
 exports.computeDilatedRC = computeDilatedRC;
 
-},{"../util":76}],17:[function(require,module,exports){
+},{"../util":75}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function validateShapes(sourceSize, destSize) {
@@ -2445,7 +2427,7 @@ var MatrixOrientation;
     MatrixOrientation[MatrixOrientation["TRANSPOSED"] = 1] = "TRANSPOSED";
 })(MatrixOrientation = exports.MatrixOrientation || (exports.MatrixOrientation = {}));
 
-},{"../util":76,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
+},{"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3121,7 +3103,7 @@ var NDArrayMathCPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathCPU = NDArrayMathCPU;
 
-},{"../math/conv_util":16,"../util":76,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3844,7 +3826,7 @@ function toTypedArray(a) {
     return (a instanceof Float32Array) ? a : new Float32Array(util.flatten(a));
 }
 
-},{"../util":76,"./webgl/webgl_util":47}],23:[function(require,module,exports){
+},{"../util":75,"./webgl/webgl_util":47}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -3860,7 +3842,7 @@ var AddScaledMatProgram = (function () {
 }());
 exports.AddScaledMatProgram = AddScaledMatProgram;
 
-},{"../../util":76}],24:[function(require,module,exports){
+},{"../../util":75}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var argminmax_gpu = require("./argminmax_gpu");
@@ -3929,7 +3911,7 @@ var BatchNormProgram = (function () {
 }());
 exports.BatchNormProgram = BatchNormProgram;
 
-},{"../../util":76}],27:[function(require,module,exports){
+},{"../../util":75}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -3945,7 +3927,7 @@ var BinaryOpProgram = (function () {
 }());
 exports.BinaryOpProgram = BinaryOpProgram;
 
-},{"../../util":76}],28:[function(require,module,exports){
+},{"../../util":75}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var concat3d_util = require("../concat3d_util");
@@ -4354,7 +4336,7 @@ function makeShaderKey(program, inputs, output) {
 }
 exports.makeShaderKey = makeShaderKey;
 
-},{"../../util":76,"./shader_compiler":43}],34:[function(require,module,exports){
+},{"../../util":75,"./shader_compiler":43}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tex_util = require("./tex_util");
@@ -4858,7 +4840,7 @@ function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
     return "\n    float " + funcName + "() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + outTexShape[1] + ".0, 1.0));\n      " + broadcastSnippet + "\n      float texR = floor(index / " + inTexShape[1] + ".0);\n      float texC = mod(index, " + inTexShape[1] + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 
-},{"../../util":76}],44:[function(require,module,exports){
+},{"../../util":75}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getUnpackedMatrixTextureShapeWidthHeight(rows, columns) {
@@ -5467,7 +5449,7 @@ function getTextureShapeFromLogicalShape(gl, logShape, preferredTexShape) {
 }
 exports.getTextureShapeFromLogicalShape = getTextureShapeFromLogicalShape;
 
-},{"../../util":76}],48:[function(require,module,exports){
+},{"../../util":75}],48:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5538,7 +5520,7 @@ var MomentumOptimizer = (function (_super) {
 }(sgd_optimizer_1.SGDOptimizer));
 exports.MomentumOptimizer = MomentumOptimizer;
 
-},{"./math/ndarray":22,"./sgd_optimizer":74,"./tensor_array_map":75}],49:[function(require,module,exports){
+},{"./math/ndarray":22,"./sgd_optimizer":73,"./tensor_array_map":74}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -5560,7 +5542,6 @@ var multiply_1 = require("./ops/multiply");
 var reduce_sum_1 = require("./ops/reduce_sum");
 var reshape_1 = require("./ops/reshape");
 var softmax_1 = require("./ops/softmax");
-var split_1 = require("./ops/split");
 var subtract_1 = require("./ops/subtract");
 function emitFromGraphNodes(nodes) {
     var ops = [];
@@ -5642,9 +5623,6 @@ function emitOpFromNode(node) {
     else if (node instanceof graph_1.DivideNode) {
         return [new divide_1.Divide(node.inputs[graph_1.DivideNode.T1], node.inputs[graph_1.DivideNode.T2], node.output)];
     }
-    else if (node instanceof graph_1.SplitNode) {
-        return [new split_1.Split(node.inputs[graph_1.SplitNode.X], node.outputs)];
-    }
     else if (node instanceof graph_1.ReduceSumNode) {
         return [new reduce_sum_1.ReduceSum(node.inputs[graph_1.ReduceSumNode.X], node.output)];
     }
@@ -5656,7 +5634,7 @@ function emitOpFromNode(node) {
     }
 }
 
-},{"./graph":7,"./graph_util":10,"./ops/add":50,"./ops/argmax":51,"./ops/argmaxequals":52,"./ops/concat3d":53,"./ops/convolution":54,"./ops/divide":55,"./ops/element_wise_activation":56,"./ops/element_wise_cost":57,"./ops/exp":58,"./ops/linear_combination":59,"./ops/log":60,"./ops/matmul":61,"./ops/max_pool":62,"./ops/multiply":63,"./ops/reduce_sum":65,"./ops/reshape":66,"./ops/softmax":67,"./ops/split":68,"./ops/subtract":69}],50:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./ops/add":50,"./ops/argmax":51,"./ops/argmaxequals":52,"./ops/concat3d":53,"./ops/convolution":54,"./ops/divide":55,"./ops/element_wise_activation":56,"./ops/element_wise_cost":57,"./ops/exp":58,"./ops/linear_combination":59,"./ops/log":60,"./ops/matmul":61,"./ops/max_pool":62,"./ops/multiply":63,"./ops/reduce_sum":65,"./ops/reshape":66,"./ops/softmax":67,"./ops/subtract":68}],50:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5707,17 +5685,17 @@ var Add = (function (_super) {
     Add.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
         var _this = this;
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
                 if (util.isScalarShape(_this.x1Tensor.shape)) {
                     var sum = math.sum(dy);
                     if (_this.dySizeScalar == null) {
                         _this.dySizeScalar = ndarray_1.Scalar.new(dy.size);
                     }
-                    gradientArrays.set(_this.x1Tensor, keep(math.divide(sum, _this.dySizeScalar)));
+                    gradientArrays.add(_this.x1Tensor, math.divide(sum, _this.dySizeScalar));
                 }
                 else {
-                    gradientArrays.set(_this.x1Tensor, dy);
+                    gradientArrays.add(_this.x1Tensor, dy);
                 }
             }
             if (graph_util.shouldBackProp(_this.x2Tensor)) {
@@ -5726,10 +5704,10 @@ var Add = (function (_super) {
                     if (_this.dySizeScalar == null) {
                         _this.dySizeScalar = ndarray_1.Scalar.new(dy.size);
                     }
-                    gradientArrays.set(_this.x2Tensor, keep(math.divide(sum, _this.dySizeScalar)));
+                    gradientArrays.add(_this.x2Tensor, math.divide(sum, _this.dySizeScalar));
                 }
                 else {
-                    gradientArrays.set(_this.x2Tensor, dy);
+                    gradientArrays.add(_this.x2Tensor, dy);
                 }
             }
         });
@@ -5743,7 +5721,7 @@ var Add = (function (_super) {
 }(op_1.Operation));
 exports.Add = Add;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":76,"./op":64}],51:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":64}],51:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5909,11 +5887,11 @@ var Convolution2D = (function (_super) {
         var weights = inferenceArrays.get(this.wTensor);
         var x = inferenceArrays.get(this.xTensor);
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             var _a = math.conv2dBackProp(x, dy, weights, _this.stride, _this.zeroPad), dw = _a.dw, db = _a.db, dx = _a.dx;
-            gradientArrays.set(_this.wTensor, keep(dw));
-            gradientArrays.set(_this.bTensor, keep(db));
-            gradientArrays.set(_this.xTensor, keep(dx));
+            gradientArrays.add(_this.wTensor, dw);
+            gradientArrays.add(_this.bTensor, db);
+            gradientArrays.add(_this.xTensor, dx);
         });
     };
     Convolution2D.prototype.assertWeightsShape = function (weightsShape) {
@@ -5928,7 +5906,7 @@ var Convolution2D = (function (_super) {
 }(op_1.Operation));
 exports.Convolution2D = Convolution2D;
 
-},{"../math/conv_util":16,"../util":76,"./op":64}],55:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":75,"./op":64}],55:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5982,18 +5960,18 @@ var Divide = (function (_super) {
         var dy = gradientArrays.get(this.yTensor);
         var x1IsScalar = util.isScalarShape(x1.shape);
         var x2IsScalar = util.isScalarShape(x2.shape);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
                 if (x1IsScalar) {
                     var div = math.divide(dy, x2);
-                    gradientArrays.set(_this.x1Tensor, keep(math.sum(div)));
+                    gradientArrays.add(_this.x1Tensor, math.sum(div));
                     div.dispose();
                 }
                 else if (x2IsScalar) {
-                    gradientArrays.set(_this.x1Tensor, keep(math.arrayDividedByScalar(dy, x2)));
+                    gradientArrays.add(_this.x1Tensor, math.arrayDividedByScalar(dy, x2));
                 }
                 else {
-                    gradientArrays.set(_this.x1Tensor, keep(math.divide(dy, x2)));
+                    gradientArrays.add(_this.x1Tensor, math.divide(dy, x2));
                 }
             }
             if (graph_util.shouldBackProp(_this.x2Tensor)) {
@@ -6011,10 +5989,10 @@ var Divide = (function (_super) {
                 var dx2 = math.neg(x1OverX2Squared);
                 var dyTimesDerivative = math.elementWiseMul(dy, dx2);
                 if (x2IsScalar) {
-                    gradientArrays.set(_this.x2Tensor, keep(math.sum(dyTimesDerivative)));
+                    gradientArrays.add(_this.x2Tensor, math.sum(dyTimesDerivative));
                 }
                 else {
-                    gradientArrays.set(_this.x2Tensor, keep(dyTimesDerivative));
+                    gradientArrays.add(_this.x2Tensor, dyTimesDerivative);
                 }
             }
         });
@@ -6023,7 +6001,7 @@ var Divide = (function (_super) {
 }(op_1.Operation));
 exports.Divide = Divide;
 
-},{"../graph_util":10,"../util":76,"./op":64}],56:[function(require,module,exports){
+},{"../graph_util":10,"../util":75,"./op":64}],56:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6059,9 +6037,9 @@ var ElementWiseActivation = (function (_super) {
         var x = inferenceArrays.get(this.xTensor);
         var y = inferenceArrays.get(this.yTensor);
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             var dydx = _this.func.der(math, x, y);
-            gradientArrays.set(_this.xTensor, keep(math.elementWiseMul(dy, dydx)));
+            gradientArrays.add(_this.xTensor, math.elementWiseMul(dy, dydx));
             dydx.dispose();
         });
     };
@@ -6145,12 +6123,12 @@ var ElementWiseCost = (function (_super) {
         var _this = this;
         var x1 = inferenceArrays.get(this.x1Tensor);
         var x2 = inferenceArrays.get(this.x2Tensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
-                gradientArrays.set(_this.x1Tensor, keep(_this.func.der(math, x1, x2)));
+                gradientArrays.add(_this.x1Tensor, _this.func.der(math, x1, x2));
             }
             if (graph_util.shouldBackProp(_this.x2Tensor)) {
-                gradientArrays.set(_this.x2Tensor, keep(_this.func.der(math, x2, x1)));
+                gradientArrays.add(_this.x2Tensor, _this.func.der(math, x2, x1));
             }
         });
     };
@@ -6170,7 +6148,7 @@ var MeanSquaredCost = (function (_super) {
 }(ElementWiseCost));
 exports.MeanSquaredCost = MeanSquaredCost;
 
-},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":76,"./op":64}],58:[function(require,module,exports){
+},{"../graph_util":10,"../math/cost_functions":18,"../math/ndarray":22,"../util":75,"./op":64}],58:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6204,9 +6182,9 @@ var Exp = (function (_super) {
         var _this = this;
         var y = inferenceArrays.get(this.yTensor);
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.xTensor)) {
-                gradientArrays.set(_this.xTensor, keep(math.elementWiseMul(y, dy)));
+                gradientArrays.add(_this.xTensor, math.elementWiseMul(y, dy));
             }
         });
     };
@@ -6257,20 +6235,20 @@ var LinearCombination = (function (_super) {
         var c1 = inferenceArrays.get(this.c1Tensor);
         var c2 = inferenceArrays.get(this.c2Tensor);
         var dy = gradientArrays.get(this.outTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
-                gradientArrays.set(_this.x1Tensor, keep(math.scalarTimesArray(c1, dy)));
+                gradientArrays.add(_this.x1Tensor, math.scalarTimesArray(c1, dy));
             }
             if (graph_util.shouldBackProp(_this.x2Tensor)) {
-                gradientArrays.set(_this.x2Tensor, keep(math.scalarTimesArray(c2, dy)));
+                gradientArrays.add(_this.x2Tensor, math.scalarTimesArray(c2, dy));
             }
             if (graph_util.shouldBackProp(_this.c1Tensor)) {
                 var dotProduct1 = math.elementWiseMul(x1, dy);
-                gradientArrays.set(_this.c1Tensor, keep(math.sum(dotProduct1)));
+                gradientArrays.add(_this.c1Tensor, math.sum(dotProduct1));
             }
             if (graph_util.shouldBackProp(_this.c2Tensor)) {
                 var dotProduct2 = math.elementWiseMul(x2, dy);
-                gradientArrays.set(_this.c2Tensor, keep(math.sum(dotProduct2)));
+                gradientArrays.add(_this.c2Tensor, math.sum(dotProduct2));
             }
         });
     };
@@ -6312,9 +6290,9 @@ var Log = (function (_super) {
         var _this = this;
         var x = inferenceArrays.get(this.xTensor);
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.xTensor)) {
-                gradientArrays.set(_this.xTensor, keep(math.divide(dy, x)));
+                gradientArrays.add(_this.xTensor, math.divide(dy, x));
             }
         });
     };
@@ -6376,14 +6354,14 @@ var MatMul = (function (_super) {
             x2 = x2.reshape([x2.size, 1]);
             dy = dy.reshape([dy.size, 1]);
         }
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
                 var dx1 = math.matMul(dy, x2, math_1.MatrixOrientation.REGULAR, math_1.MatrixOrientation.TRANSPOSED);
-                gradientArrays.set(_this.x1Tensor, keep(_this.x1Tensor.shape.length === 1 ? dx1.as1D() : dx1));
+                gradientArrays.add(_this.x1Tensor, _this.x1Tensor.shape.length === 1 ? dx1.as1D() : dx1);
             }
             if (graph_util.shouldBackProp(_this.x2Tensor)) {
                 var dx2 = math.matMul(x1, dy, math_1.MatrixOrientation.TRANSPOSED, math_1.MatrixOrientation.REGULAR);
-                gradientArrays.set(_this.x2Tensor, keep(_this.x2Tensor.shape.length === 1 ? dx2.as1D() : dx2));
+                gradientArrays.add(_this.x2Tensor, _this.x2Tensor.shape.length === 1 ? dx2.as1D() : dx2);
             }
         });
     };
@@ -6437,15 +6415,15 @@ var MaxPool = (function (_super) {
         var _this = this;
         var x = inferenceArrays.get(this.xTensor);
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
-            gradientArrays.set(_this.xTensor, keep(math.maxPoolBackprop(dy, x, _this.fieldSize, _this.stride, _this.pad)));
+        math.scope(function () {
+            gradientArrays.add(_this.xTensor, math.maxPoolBackprop(dy, x, _this.fieldSize, _this.stride, _this.pad));
         });
     };
     return MaxPool;
 }(op_1.Operation));
 exports.MaxPool = MaxPool;
 
-},{"../math/conv_util":16,"../util":76,"./op":64}],63:[function(require,module,exports){
+},{"../math/conv_util":16,"../util":75,"./op":64}],63:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6497,29 +6475,29 @@ var Multiply = (function (_super) {
         var x1 = inferenceArrays.get(this.x1Tensor);
         var x2 = inferenceArrays.get(this.x2Tensor);
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.x1Tensor)) {
                 if (util.isScalarShape(_this.x1Tensor.shape)) {
                     var mul = math.elementWiseMul(dy, x2);
-                    gradientArrays.set(_this.x1Tensor, keep(math.sum(mul)));
+                    gradientArrays.add(_this.x1Tensor, math.sum(mul));
                 }
                 else if (util.isScalarShape(x2.shape)) {
-                    gradientArrays.set(_this.x1Tensor, keep(math.scalarTimesArray(x2, dy)));
+                    gradientArrays.add(_this.x1Tensor, math.scalarTimesArray(x2, dy));
                 }
                 else {
-                    gradientArrays.set(_this.x1Tensor, keep(math.elementWiseMul(x2, dy)));
+                    gradientArrays.add(_this.x1Tensor, math.elementWiseMul(x2, dy));
                 }
             }
             if (graph_util.shouldBackProp(_this.x2Tensor)) {
                 if (util.isScalarShape(_this.x2Tensor.shape)) {
                     var mul = math.elementWiseMul(dy, x1);
-                    gradientArrays.set(_this.x2Tensor, keep(math.sum(mul)));
+                    gradientArrays.add(_this.x2Tensor, math.sum(mul));
                 }
                 else if (util.isScalarShape(x1.shape)) {
-                    gradientArrays.set(_this.x2Tensor, keep(math.scalarTimesArray(x1, dy)));
+                    gradientArrays.add(_this.x2Tensor, math.scalarTimesArray(x1, dy));
                 }
                 else {
-                    gradientArrays.set(_this.x2Tensor, keep(math.elementWiseMul(x1, dy)));
+                    gradientArrays.add(_this.x2Tensor, math.elementWiseMul(x1, dy));
                 }
             }
         });
@@ -6528,7 +6506,7 @@ var Multiply = (function (_super) {
 }(op_1.Operation));
 exports.Multiply = Multiply;
 
-},{"../graph_util":10,"../util":76,"./op":64}],64:[function(require,module,exports){
+},{"../graph_util":10,"../util":75,"./op":64}],64:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Operation = (function () {
@@ -6578,21 +6556,21 @@ var ReduceSum = (function (_super) {
         if (!graph_util.shouldBackProp(this.x)) {
             return;
         }
-        math.scope(function (keep) {
+        math.scope(function () {
             var dy = gradientArrays.get(_this.outTensor);
             if (_this.ones == null) {
                 var xArray = inferenceArrays.get(_this.x);
                 _this.ones = ndarray_1.NDArray.zerosLike(xArray);
                 _this.ones.fill(1);
             }
-            gradientArrays.set(_this.x, keep(math.scalarTimesArray(dy, _this.ones)));
+            gradientArrays.add(_this.x, math.scalarTimesArray(dy, _this.ones));
         });
     };
     return ReduceSum;
 }(op_1.Operation));
 exports.ReduceSum = ReduceSum;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":76,"./op":64}],66:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":64}],66:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6628,15 +6606,15 @@ var Reshape = (function (_super) {
     Reshape.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
         var _this = this;
         var dy = gradientArrays.get(this.yTensor);
-        math.scope(function (keep) {
-            gradientArrays.set(_this.xTensor, keep(dy.reshape(_this.xTensor.shape)));
+        math.scope(function () {
+            gradientArrays.add(_this.xTensor, dy.reshape(_this.xTensor.shape));
         });
     };
     return Reshape;
 }(op_1.Operation));
 exports.Reshape = Reshape;
 
-},{"../util":76,"./op":64}],67:[function(require,module,exports){
+},{"../util":75,"./op":64}],67:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6699,8 +6677,8 @@ var SoftmaxCrossEntropyCost = (function (_super) {
         var _this = this;
         var softmax = inferenceArrays.get(this.softmaxTensor);
         var label = inferenceArrays.get(this.labelTensor);
-        math.scope(function (keep) {
-            gradientArrays.set(_this.logitsTensor, keep(math.sub(softmax, label)));
+        math.scope(function () {
+            gradientArrays.add(_this.logitsTensor, math.sub(softmax, label));
         });
     };
     SoftmaxCrossEntropyCost.prototype.disposeTransientArrays = function (inferenceArrays, gradientArrays) {
@@ -6724,57 +6702,7 @@ function crossEntropyCost(math, y, target, epsilon) {
 }
 exports.crossEntropyCost = crossEntropyCost;
 
-},{"../graph":7,"../math/ndarray":22,"../util":76,"./op":64}],68:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var graph_util = require("../graph_util");
-var util = require("../util");
-var op_1 = require("./op");
-var Split = (function (_super) {
-    __extends(Split, _super);
-    function Split(input, outputs) {
-        var _this = _super.call(this) || this;
-        _this.input = input;
-        _this.outputs = outputs;
-        outputs.forEach(function (output) {
-            util.assertShapesMatch(input.shape, output.shape);
-        });
-        return _this;
-    }
-    Split.prototype.feedForward = function (math, inferenceArrays) {
-        var inputArray = inferenceArrays.get(this.input);
-        this.outputs.forEach(function (output) {
-            inferenceArrays.set(output, inputArray);
-        });
-    };
-    Split.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
-        var _this = this;
-        if (!graph_util.shouldBackProp(this.input)) {
-            return;
-        }
-        math.scope(function (keep) {
-            var dx = math.add(gradientArrays.get(_this.outputs[0]), gradientArrays.get(_this.outputs[1]));
-            _this.outputs.slice(2).forEach(function (output) {
-                dx = math.add(dx, gradientArrays.get(output));
-            });
-            gradientArrays.set(_this.input, keep(dx));
-        });
-    };
-    return Split;
-}(op_1.Operation));
-exports.Split = Split;
-
-},{"../graph_util":10,"../util":76,"./op":64}],69:[function(require,module,exports){
+},{"../graph":7,"../math/ndarray":22,"../util":75,"./op":64}],68:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6825,17 +6753,17 @@ var Subtract = (function (_super) {
     Subtract.prototype.backProp = function (math, inferenceArrays, gradientArrays) {
         var _this = this;
         var dy = gradientArrays.get(this.outTensor);
-        math.scope(function (keep) {
+        math.scope(function () {
             if (graph_util.shouldBackProp(_this.t1)) {
                 if (util.isScalarShape(_this.t1.shape)) {
                     var sum = math.sum(dy);
                     if (_this.dySizeScalar == null) {
                         _this.dySizeScalar = ndarray_1.Scalar.new(dy.size);
                     }
-                    gradientArrays.set(_this.t1, keep(math.divide(sum, _this.dySizeScalar)));
+                    gradientArrays.add(_this.t1, math.divide(sum, _this.dySizeScalar));
                 }
                 else {
-                    gradientArrays.set(_this.t1, keep(dy));
+                    gradientArrays.add(_this.t1, dy);
                 }
             }
             if (graph_util.shouldBackProp(_this.t2)) {
@@ -6845,10 +6773,10 @@ var Subtract = (function (_super) {
                     if (_this.dySizeScalar == null) {
                         _this.dySizeScalar = ndarray_1.Scalar.new(dy.size);
                     }
-                    gradientArrays.set(_this.t2, keep(math.divide(negSum, _this.dySizeScalar)));
+                    gradientArrays.add(_this.t2, math.divide(negSum, _this.dySizeScalar));
                 }
                 else {
-                    gradientArrays.set(_this.t2, keep(math.neg(dy)));
+                    gradientArrays.add(_this.t2, math.neg(dy));
                 }
             }
         });
@@ -6862,7 +6790,7 @@ var Subtract = (function (_super) {
 }(op_1.Operation));
 exports.Subtract = Subtract;
 
-},{"../graph_util":10,"../math/ndarray":22,"../util":76,"./op":64}],70:[function(require,module,exports){
+},{"../graph_util":10,"../math/ndarray":22,"../util":75,"./op":64}],69:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Optimizer = (function () {
@@ -6875,7 +6803,7 @@ var Optimizer = (function () {
 }());
 exports.Optimizer = Optimizer;
 
-},{}],71:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function defaultCompare(a, b) {
@@ -7006,7 +6934,7 @@ var PriorityQueue = (function () {
 }());
 exports.PriorityQueue = PriorityQueue;
 
-},{}],72:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -7035,9 +6963,9 @@ var Session = (function () {
     function Session(graph, math) {
         this.math = math;
         this.activationArrayMap = new tensor_array_map_1.TensorArrayMap();
-        this.gradientArrayMap = new tensor_array_map_1.TensorArrayMap();
         this.runtimeCache = {};
         this.oneScalar = ndarray_1.Scalar.new(1);
+        this.gradientArrayMap = new tensor_array_map_1.SummedTensorArrayMap(this.math);
     }
     Session.prototype.dispose = function () {
         var _this = this;
@@ -7089,7 +7017,8 @@ var Session = (function () {
         var backPropOperations = runtime.operations.slice().reverse();
         var activations = this.activationArrayMap;
         var gradients = this.gradientArrayMap;
-        gradients.set(costTensor, this.oneScalar);
+        gradients.nullify(costTensor);
+        gradients.add(costTensor, this.oneScalar);
         session_util.addPersistentArraysToTensorArrayMap(runtime.nodes, activations);
         optimizer.beforeBatch(this.math, batchSize, runtime, activations, gradients);
         return this.math.scope(function (keep, track) {
@@ -7127,7 +7056,6 @@ var Session = (function () {
         var runtime = this.runtimeCache[key];
         if (runtime === undefined) {
             var nodes = session_util.getOrderedEvaluationSetFromEvalTensor(tensors, feed);
-            nodes = session_util.addSplitNodes(nodes);
             session_util.removeFeedDictionaryNodesFromEvaluationSet(feed, nodes);
             session_util.throwErrorIfEvaluationSetContainsPlaceholderNodes(nodes);
             var operations = operation_emitter.emitFromGraphNodes(nodes);
@@ -7144,7 +7072,7 @@ var Session = (function () {
 }());
 exports.Session = Session;
 
-},{"./math/ndarray":22,"./operation_emitter":49,"./session_util":73,"./tensor_array_map":75,"./util":76}],73:[function(require,module,exports){
+},{"./math/ndarray":22,"./operation_emitter":49,"./session_util":72,"./tensor_array_map":74,"./util":75}],72:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -7252,7 +7180,7 @@ function disposeAndInitializeOperationInputGradients(evaluationSet, gradients) {
             if (gradients.get(input, true) !== gradients.get(node.output, true)) {
                 gradients.disposeArray(input);
             }
-            gradients.set(input, null);
+            gradients.nullify(input);
         });
     });
 }
@@ -7271,45 +7199,8 @@ function throwErrorIfEvaluationSetContainsPlaceholderNodes(evaluationSet) {
     });
 }
 exports.throwErrorIfEvaluationSetContainsPlaceholderNodes = throwErrorIfEvaluationSetContainsPlaceholderNodes;
-function addSplitNodes(nodes) {
-    var nodeIdToNumConsumers = [];
-    var nodeIdToSplitNode = {};
-    nodes.forEach(function (node) {
-        var keys = Object.keys(node.inputs);
-        keys.forEach(function (key) {
-            var inputTensor = node.inputs[key];
-            var input = inputTensor.node;
-            if (nodeIdToNumConsumers[input.id] == null) {
-                nodeIdToNumConsumers[input.id] = 0;
-            }
-            nodeIdToNumConsumers[input.id]++;
-            if (nodeIdToNumConsumers[input.id] > 1 &&
-                nodeIdToSplitNode[input.id] == null) {
-                nodeIdToSplitNode[input.id] = new graph_1.SplitNode(input.graph, inputTensor);
-            }
-        });
-    });
-    var newNodes = [];
-    nodes.forEach(function (node) {
-        newNodes.push(node);
-        if (node.id in nodeIdToSplitNode) {
-            var splitNode = nodeIdToSplitNode[node.id];
-            newNodes.push(splitNode);
-        }
-        var keys = Object.keys(node.inputs);
-        keys.forEach(function (key) {
-            var inputTensor = node.inputs[key];
-            var inputId = inputTensor.node.id;
-            if (inputId in nodeIdToSplitNode) {
-                node.inputs[key] = nodeIdToSplitNode[inputId].getNewOutputTensor();
-            }
-        });
-    });
-    return newNodes;
-}
-exports.addSplitNodes = addSplitNodes;
 
-},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":76}],74:[function(require,module,exports){
+},{"./graph":7,"./graph_util":10,"./math/ndarray":22,"./util":75}],73:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7385,17 +7276,24 @@ var SGDOptimizer = (function (_super) {
 }(optimizer_1.Optimizer));
 exports.SGDOptimizer = SGDOptimizer;
 
-},{"./math/ndarray":22,"./optimizer":70,"./session_util":73,"./tensor_array_map":75}],75:[function(require,module,exports){
+},{"./math/ndarray":22,"./optimizer":69,"./session_util":72,"./tensor_array_map":74}],74:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var TensorArrayMap = (function () {
-    function TensorArrayMap() {
+var TensorArrayMapBase = (function () {
+    function TensorArrayMapBase() {
         this.dict = {};
     }
-    TensorArrayMap.prototype.set = function (tensor, array) {
-        this.dict[tensor.id] = array;
-    };
-    TensorArrayMap.prototype.get = function (tensor, skipChecks) {
+    TensorArrayMapBase.prototype.get = function (tensor, skipChecks) {
         if (skipChecks === void 0) { skipChecks = false; }
         if (!skipChecks && this.dict[tensor.id] === undefined) {
             throw new Error('tensor ' + tensor.id + ' not in array map.');
@@ -7406,10 +7304,13 @@ var TensorArrayMap = (function () {
         }
         return nda;
     };
-    TensorArrayMap.prototype.delete = function (tensor) {
+    TensorArrayMapBase.prototype.delete = function (tensor) {
         delete this.dict[tensor.id];
     };
-    TensorArrayMap.prototype.disposeArray = function (tensor) {
+    TensorArrayMapBase.prototype.nullify = function (tensor) {
+        this.dict[tensor.id] = null;
+    };
+    TensorArrayMapBase.prototype.disposeArray = function (tensor) {
         if (this.dict[tensor.id] === undefined) {
             return;
         }
@@ -7420,10 +7321,10 @@ var TensorArrayMap = (function () {
         nda.dispose();
         this.dict[tensor.id] = null;
     };
-    TensorArrayMap.prototype.size = function () {
+    TensorArrayMapBase.prototype.size = function () {
         return Object.keys(this.dict).length;
     };
-    TensorArrayMap.prototype.dispose = function () {
+    TensorArrayMapBase.prototype.dispose = function () {
         var _this = this;
         Object.keys(this.dict).forEach(function (tensorID) {
             var nda = _this.dict[+tensorID];
@@ -7433,17 +7334,49 @@ var TensorArrayMap = (function () {
         });
         this.dict = {};
     };
-    TensorArrayMap.prototype.hasNullArray = function (tensor) {
+    TensorArrayMapBase.prototype.hasNullArray = function (tensor) {
         if (this.dict[tensor.id] === undefined) {
             throw new Error('tensor ' + tensor.id + ' not in array map.');
         }
         return this.dict[tensor.id] === null;
     };
-    return TensorArrayMap;
+    return TensorArrayMapBase;
 }());
+exports.TensorArrayMapBase = TensorArrayMapBase;
+var TensorArrayMap = (function (_super) {
+    __extends(TensorArrayMap, _super);
+    function TensorArrayMap() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TensorArrayMap.prototype.set = function (tensor, array) {
+        this.dict[tensor.id] = array;
+    };
+    return TensorArrayMap;
+}(TensorArrayMapBase));
 exports.TensorArrayMap = TensorArrayMap;
+var SummedTensorArrayMap = (function (_super) {
+    __extends(SummedTensorArrayMap, _super);
+    function SummedTensorArrayMap(math) {
+        var _this = _super.call(this) || this;
+        _this.math = math;
+        return _this;
+    }
+    SummedTensorArrayMap.prototype.add = function (tensor, array) {
+        if (this.dict[tensor.id] == null) {
+            this.dict[tensor.id] = this.math.keep(array);
+        }
+        else {
+            var oldValue = this.get(tensor);
+            var newValue = this.math.keep(this.math.addStrict(oldValue, array));
+            this.dict[tensor.id] = newValue;
+            oldValue.dispose();
+        }
+    };
+    return SummedTensorArrayMap;
+}(TensorArrayMapBase));
+exports.SummedTensorArrayMap = SummedTensorArrayMap;
 
-},{}],76:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function shuffle(array) {
