@@ -1543,10 +1543,10 @@ exports.CostReduction = session_1.CostReduction;
 exports.Session = session_1.Session;
 var sgd_optimizer_1 = require("./sgd_optimizer");
 exports.SGDOptimizer = sgd_optimizer_1.SGDOptimizer;
-var momentumOptimizer_1 = require("./momentumOptimizer");
-exports.MomentumOptimizer = momentumOptimizer_1.MomentumOptimizer;
+var momentum_optimizer_1 = require("./momentum_optimizer");
+exports.MomentumOptimizer = momentum_optimizer_1.MomentumOptimizer;
 
-},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./momentumOptimizer":48,"./optimizer":69,"./session":71,"./sgd_optimizer":73,"./util":75}],12:[function(require,module,exports){
+},{"./checkpoint_loader":5,"./dataset":6,"./graph":7,"./graph_runner":9,"./initializers":12,"./input_provider":13,"./math/conv_util":16,"./math/math":19,"./math/math_cpu":20,"./math/math_gpu":21,"./math/ndarray":22,"./math/webgl/gpgpu_context":32,"./math/webgl/gpgpu_util":34,"./math/webgl/render_ndarray_gpu_util":41,"./math/webgl/webgl_util":47,"./momentum_optimizer":48,"./optimizer":69,"./session":71,"./sgd_optimizer":73,"./util":75}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1873,19 +1873,68 @@ exports.computeConcat3DOutputShape = computeConcat3DOutputShape;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
-function computeOutputShape3D(inputShapeRowColDepth, fieldSize, depth, stride, zeroPad) {
-    if (zeroPad == null) {
-        zeroPad = computeDefaultPad(inputShapeRowColDepth, fieldSize, stride);
+function computeConvInfo(inShape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad) {
+    if (typeof pad === 'number') {
+        var outShape_1 = computeOutputShape3D(inShape, filterHeight, outDepth, strideHeight, pad);
+        return {
+            inShape: inShape,
+            outShape: outShape_1,
+            padInfo: { top: pad, bottom: pad, left: pad, right: pad },
+            strideHeight: strideHeight,
+            strideWidth: strideWidth,
+            filterHeight: filterHeight,
+            filterWidth: filterWidth
+        };
     }
-    var inputRows = inputShapeRowColDepth[0];
-    var inputCols = inputShapeRowColDepth[1];
+    var inHeight = inShape[0];
+    var inWidth = inShape[1];
+    var outShape;
+    var padInfo;
+    if (pad === 'same') {
+        var outHeight = Math.ceil(inHeight / strideHeight);
+        var outWidth = Math.ceil(inWidth / strideWidth);
+        outShape = [outHeight, outWidth, outDepth];
+        var padAlongHeight = (outHeight - 1) * strideHeight + filterHeight - inHeight;
+        var padAlongWidth = (outWidth - 1) * strideWidth + filterWidth - inWidth;
+        var top_1 = Math.floor(padAlongHeight / 2);
+        var bottom = padAlongHeight - top_1;
+        var left = Math.floor(padAlongWidth / 2);
+        var right = padAlongWidth - left;
+        padInfo = { top: top_1, bottom: bottom, left: left, right: right };
+    }
+    else if (pad === 'valid') {
+        var outHeight = Math.ceil((inHeight - filterHeight + 1) / strideHeight);
+        var outWidth = Math.ceil((inWidth - filterWidth + 1) / strideWidth);
+        outShape = [outHeight, outWidth, outDepth];
+        padInfo = { top: 0, bottom: 0, left: 0, right: 0 };
+    }
+    else {
+        throw Error("Unknown padding parameter: " + pad);
+    }
+    return {
+        inShape: inShape,
+        outShape: outShape,
+        padInfo: padInfo,
+        strideHeight: strideHeight,
+        strideWidth: strideWidth,
+        filterHeight: filterHeight,
+        filterWidth: filterWidth
+    };
+}
+exports.computeConvInfo = computeConvInfo;
+function computeOutputShape3D(inShape, fieldSize, outDepth, stride, zeroPad) {
+    if (zeroPad == null) {
+        zeroPad = computeDefaultPad(inShape, fieldSize, stride);
+    }
+    var inputRows = inShape[0];
+    var inputCols = inShape[1];
     var outputRows = (inputRows - fieldSize + 2 * zeroPad) / stride + 1;
     util.assert(util.isInt(outputRows), "The output # of rows (" + outputRows + ") must be an integer. Change the " +
         "stride and/or zero pad parameters");
     var outputCols = (inputCols - fieldSize + 2 * zeroPad) / stride + 1;
     util.assert(util.isInt(outputCols), "The output # of columns (" + outputCols + ") must be an integer. Change " +
         "the stride and/or zero pad parameters");
-    return [outputRows, outputCols, depth];
+    return [outputRows, outputCols, outDepth];
 }
 exports.computeOutputShape3D = computeOutputShape3D;
 function computeDefaultPad(inputShape, fieldSize, stride) {
@@ -1896,8 +1945,8 @@ function computeTexShapeFrom3D(shapeRowColDepth) {
     return [shapeRowColDepth[0], shapeRowColDepth[1] * shapeRowColDepth[2]];
 }
 exports.computeTexShapeFrom3D = computeTexShapeFrom3D;
-function computeWeightsShape4D(inputDepth, outputDepth, fSize) {
-    return [fSize, fSize, inputDepth, outputDepth];
+function computeWeightsShape4D(inputDepth, outputDepth, filterHeight, filterWidth) {
+    return [filterHeight, filterWidth, inputDepth, outputDepth];
 }
 exports.computeWeightsShape4D = computeWeightsShape4D;
 function computeDilatedRC(rc, origStride) {
@@ -1953,6 +2002,7 @@ exports.SquareCostFunc = SquareCostFunc;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
 var concat3d_util = require("./concat3d_util");
+var conv_util = require("./conv_util");
 var copy2d_util = require("./copy2d_util");
 var ndarray_1 = require("./ndarray");
 var NDArrayMath = (function () {
@@ -2041,18 +2091,14 @@ var NDArrayMath = (function () {
         this.activeScopeNDArraysToKeep.push(result);
         return result;
     };
-    NDArrayMath.prototype.checkForNaN = function (arr) {
-        var vals = arr.getValues();
+    NDArrayMath.prototype.checkForNaN = function (vals, name) {
         for (var i = 0; i < vals.length; i++) {
             if (isNaN(vals[i])) {
-                throw Error('The result NDArray of the last math call has NaNs.');
+                throw Error("The result of the last math." + name + " has NaNs.");
             }
         }
     };
     NDArrayMath.prototype.track = function (result) {
-        if (this.debugMode) {
-            this.checkForNaN(result);
-        }
         if (this.activeScope == null) {
             if (this.safeMode) {
                 throw new Error('You are using math in safe mode. Enclose all ' +
@@ -2066,6 +2112,7 @@ var NDArrayMath = (function () {
         return result;
     };
     NDArrayMath.prototype.matMul = function (a, b, aOrientation, bOrientation) {
+        var _this = this;
         if (aOrientation === void 0) { aOrientation = MatrixOrientation.REGULAR; }
         if (bOrientation === void 0) { bOrientation = MatrixOrientation.REGULAR; }
         var innerShapeA = (aOrientation === MatrixOrientation.REGULAR) ? a.shape[1] : a.shape[0];
@@ -2076,7 +2123,25 @@ var NDArrayMath = (function () {
             (innerShapeB + ") of NDArrays with shapes " + a.shape + " and ") +
             (b.shape + " and orientations " + MatrixOrientation[aOrientation]) +
             (" and " + MatrixOrientation[bOrientation] + " must match."));
-        return this.track(this.matMulInternal(a, b, aOrientation, bOrientation));
+        return this.executeOp('matMul', function () { return _this.matMulInternal(a, b, aOrientation, bOrientation); });
+    };
+    NDArrayMath.prototype.executeOp = function (name, f) {
+        var start;
+        if (this.debugMode) {
+            start = performance.now();
+        }
+        var result = f();
+        if (this.debugMode) {
+            var vals = result.getValues();
+            var time = util.rightPad((performance.now() - start) + 'ms', 9);
+            var paddedName = util.rightPad(name, 25);
+            var rank = result.rank;
+            var size = result.size;
+            var shape = util.rightPad(result.shape + '', 14);
+            console.log("%c" + paddedName + "\t%c" + time + "\t%c" + rank + "D " + shape + "\t%c" + size, 'font-weight:bold', 'color:red', 'color:blue', 'color: orange');
+            this.checkForNaN(vals, name);
+        }
+        return this.track(result);
     };
     NDArrayMath.prototype.vectorTimesMatrix = function (v, matrix) {
         util.assert(v.rank === 1, "Error in vectorTimesMatrix: first input must be rank 1, but got " +
@@ -2111,7 +2176,8 @@ var NDArrayMath = (function () {
         return this.matMul(v1.as2D(v1.size, 1), v2.as2D(1, v2.size));
     };
     NDArrayMath.prototype.clone = function (ndarray) {
-        return this.track(this.cloneInternal(ndarray));
+        var _this = this;
+        return this.executeOp('clone', function () { return _this.cloneInternal(ndarray); });
     };
     NDArrayMath.prototype.reshape = function (ndarray, newShape) {
         console.warn('math.reshape() is deprecated. Please call reshape() ' +
@@ -2119,12 +2185,14 @@ var NDArrayMath = (function () {
         return ndarray.reshape(newShape);
     };
     NDArrayMath.prototype.slice2D = function (input, begin, size) {
+        var _this = this;
         util.assert(begin[0] + size[0] <= input.shape[0] &&
             begin[1] + size[1] <= input.shape[1], "Error in slice2D: requested start position " + begin + " and size " +
             (size + " would overflow input of shape " + input.shape + "."));
-        return this.track(this.slice2DInternal(input, begin, size));
+        return this.executeOp('slice2D', function () { return _this.slice2DInternal(input, begin, size); });
     };
     NDArrayMath.prototype.copy2D = function (source, sourceBegin, sourceSize, dest, destBegin, destSize) {
+        var _this = this;
         util.assert(sourceBegin[0] + sourceSize[0] <= source.shape[0] &&
             sourceBegin[1] + sourceSize[1] <= source.shape[1], "Error in copy2D: requested source start position " + sourceBegin + " " +
             ("and source size " + sourceSize + " would overflow source NDArray") +
@@ -2134,54 +2202,72 @@ var NDArrayMath = (function () {
             ("and source size " + destSize + " would overflow dest NDArray of") +
             ("shape " + dest.shape + "."));
         copy2d_util.validateShapes(sourceSize, destSize);
-        return this.copy2DInternal(source, sourceBegin, sourceSize, dest, destBegin, destSize);
+        this.executeOp('copy2D', function () {
+            _this.copy2DInternal(source, sourceBegin, sourceSize, dest, destBegin, destSize);
+            return dest;
+        });
     };
     NDArrayMath.prototype.concat3D = function (ndarray1, ndarray2, axis) {
+        var _this = this;
         concat3d_util.assertConcat3DShapesMatch(ndarray1.shape, ndarray2.shape, axis, 'Error in concat3d: ');
-        return this.track(this.concat3DInternal(ndarray1, ndarray2, axis));
+        return this.executeOp('concat3D', function () { return _this.concat3DInternal(ndarray1, ndarray2, axis); });
     };
     NDArrayMath.prototype.logSumExp = function (ndarray) {
-        return this.track(this.logSumExpInternal(ndarray));
+        var _this = this;
+        return this.executeOp('logSumExp', function () { return _this.logSumExpInternal(ndarray); });
     };
     NDArrayMath.prototype.sum = function (ndarray) {
-        return this.track(this.sumInternal(ndarray));
+        var _this = this;
+        return this.executeOp('sum', function () { return _this.sumInternal(ndarray); });
     };
     NDArrayMath.prototype.argMin = function (ndarray) {
-        return this.track(this.argMinInternal(ndarray));
+        var _this = this;
+        return this.executeOp('argMin', function () { return _this.argMinInternal(ndarray); });
     };
     NDArrayMath.prototype.argMax = function (ndarray) {
-        return this.track(this.argMaxInternal(ndarray));
+        var _this = this;
+        return this.executeOp('argMax', function () { return _this.argMaxInternal(ndarray); });
     };
     NDArrayMath.prototype.argMaxEquals = function (x1, x2) {
+        var _this = this;
         util.assertShapesMatch(x1.shape, x2.shape, 'Error in argMaxEquals: ');
-        return this.track(this.argMaxEqualsInternal(x1, x2));
+        return this.executeOp('argMaxEquals', function () { return _this.argMaxEqualsInternal(x1, x2); });
     };
     NDArrayMath.prototype.topK = function (ndarray, k) {
+        var _this = this;
         util.assert(k <= ndarray.size, "Error in topK: k value (" + k + ") must be less than size of input " +
             ("ndarray, got shape " + ndarray.shape + "."));
-        var result = this.topKInternal(ndarray, k);
-        this.track(result.values);
+        var result;
+        this.executeOp('topK', function () {
+            result = _this.topKInternal(ndarray, k);
+            return result.values;
+        });
         this.track(result.indices);
         return result;
     };
     NDArrayMath.prototype.min = function (ndarray) {
-        return this.track(this.minInternal(ndarray));
+        var _this = this;
+        return this.executeOp('min', function () { return _this.minInternal(ndarray); });
     };
     NDArrayMath.prototype.max = function (ndarray) {
-        return this.track(this.maxInternal(ndarray));
+        var _this = this;
+        return this.executeOp('max', function () { return _this.maxInternal(ndarray); });
     };
     NDArrayMath.prototype.softmax = function (x) {
         var _this = this;
-        return this.scope(function () {
-            var lse = _this.logSumExp(x);
-            var logResult = _this.arrayMinusScalar(x, lse);
-            return _this.exp(logResult);
+        return this.executeOp('softmax', function () {
+            return _this.scope(function () {
+                var lse = _this.logSumExp(x);
+                var logResult = _this.arrayMinusScalar(x, lse);
+                return _this.exp(logResult);
+            });
         });
     };
     NDArrayMath.prototype.switchDim = function (a, newDim) {
+        var _this = this;
         util.assert(a.rank === newDim.length, "Error in switchDim: length of input shape " + a.shape + " " +
             ("must match size of newDim array " + newDim + "."));
-        return this.track(this.switchDimInternal(a, newDim));
+        return this.executeOp('switchDim', function () { return _this.switchDimInternal(a, newDim); });
     };
     NDArrayMath.prototype.scalarPlusArray = function (c, a) {
         util.assert(c.size === 1, "Error in scalarPlusArray: first argument must be rank 0, but got " +
@@ -2199,27 +2285,31 @@ var NDArrayMath = (function () {
         return this.sub(a, c);
     };
     NDArrayMath.prototype.neg = function (a) {
-        return this.track(this.negInternal(a));
+        var _this = this;
+        return this.executeOp('neg', function () { return _this.negInternal(a); });
     };
     NDArrayMath.prototype.add = function (a, b) {
+        var _this = this;
         util.assertAndGetBroadcastedShape(a.shape, b.shape);
-        return this.track(this.addInternal(a, b));
+        return this.executeOp('add', function () { return _this.addInternal(a, b); });
     };
     NDArrayMath.prototype.addStrict = function (a, b) {
         util.assertShapesMatch(a.shape, b.shape, 'Error in addStrict: ');
         return this.add(a, b);
     };
     NDArrayMath.prototype.sub = function (a, b) {
+        var _this = this;
         util.assertAndGetBroadcastedShape(a.shape, b.shape);
-        return this.track(this.subInternal(a, b));
+        return this.executeOp('sub', function () { return _this.subInternal(a, b); });
     };
     NDArrayMath.prototype.subStrict = function (a, b) {
         util.assertShapesMatch(a.shape, b.shape, 'Error in subStrict: ');
         return this.sub(a, b);
     };
     NDArrayMath.prototype.multiply = function (a, b) {
+        var _this = this;
         util.assertAndGetBroadcastedShape(a.shape, b.shape);
-        return this.track(this.multiplyInternal(a, b));
+        return this.executeOp('multiply', function () { return _this.multiplyInternal(a, b); });
     };
     NDArrayMath.prototype.elementWiseMul = function (a, b) {
         return this.multiplyStrict(a, b);
@@ -2229,8 +2319,9 @@ var NDArrayMath = (function () {
         return this.multiply(a, b);
     };
     NDArrayMath.prototype.divide = function (a, b) {
+        var _this = this;
         util.assertAndGetBroadcastedShape(a.shape, b.shape);
-        return this.track(this.divideInternal(a, b));
+        return this.executeOp('divide', function () { return _this.divideInternal(a, b); });
     };
     NDArrayMath.prototype.divideStrict = function (a, b) {
         util.assertShapesMatch(a.shape, b.shape, 'Error in divideStrict: ');
@@ -2247,36 +2338,45 @@ var NDArrayMath = (function () {
         return this.divide(a, c);
     };
     NDArrayMath.prototype.exp = function (ndarray) {
-        return this.track(this.expInternal(ndarray));
+        var _this = this;
+        return this.executeOp('exp', function () { return _this.expInternal(ndarray); });
     };
     NDArrayMath.prototype.log = function (ndarray) {
-        return this.track(this.logInternal(ndarray));
+        var _this = this;
+        return this.executeOp('log', function () { return _this.logInternal(ndarray); });
     };
     NDArrayMath.prototype.sqrt = function (ndarray) {
-        return this.track(this.sqrtInternal(ndarray));
+        var _this = this;
+        return this.executeOp('sqrt', function () { return _this.sqrtInternal(ndarray); });
     };
     NDArrayMath.prototype.relu = function (ndarray) {
-        return this.track(this.reluInternal(ndarray));
+        var _this = this;
+        return this.executeOp('relu', function () { return _this.reluInternal(ndarray); });
     };
     NDArrayMath.prototype.sigmoid = function (ndarray) {
-        return this.track(this.sigmoidInternal(ndarray));
+        var _this = this;
+        return this.executeOp('sigmoid', function () { return _this.sigmoidInternal(ndarray); });
     };
     NDArrayMath.prototype.tanh = function (ndarray) {
-        return this.track(this.tanhInternal(ndarray));
+        var _this = this;
+        return this.executeOp('tanh', function () { return _this.tanhInternal(ndarray); });
     };
     NDArrayMath.prototype.sin = function (ndarray) {
-        return this.track(this.sinInternal(ndarray));
+        var _this = this;
+        return this.executeOp('sin', function () { return _this.sinInternal(ndarray); });
     };
     NDArrayMath.prototype.step = function (ndarray) {
-        return this.track(this.stepInternal(ndarray));
+        var _this = this;
+        return this.executeOp('step', function () { return _this.stepInternal(ndarray); });
     };
     NDArrayMath.prototype.scaledArrayAdd = function (c1, a, c2, b) {
+        var _this = this;
         util.assert(c1.size === 1, "Error in scaledArrayAdd: first argument must rank 0, but got " +
             (" rank " + c1.rank + "."));
         util.assert(c2.size === 1, "Error in scaledArrayAdd: third argument must be rank 0, but got " +
             ("NDArray of rank " + c2.rank + "."));
         util.assertShapesMatch(a.shape, b.shape, 'Error in scaledArrayAdd: ');
-        return this.track(this.scaledArrayAddInternal(c1, a, c2, b));
+        return this.executeOp('scaledArrayAdd', function () { return _this.scaledArrayAddInternal(c1, a, c2, b); });
     };
     NDArrayMath.prototype.scalarTimesArray = function (c, a) {
         util.assert(c.size === 1, "Error in arrayDividedByScalar: first argument must be rank 0, but " +
@@ -2290,74 +2390,123 @@ var NDArrayMath = (function () {
             ("rank 2, but got rank " + b.rank + "."));
         return this.multiply(a, b);
     };
-    NDArrayMath.prototype.conv2d = function (x, weights, biases, stride, zeroPad) {
+    NDArrayMath.prototype.conv2d = function (x, filter, bias, strides, pad) {
+        var _this = this;
         util.assert(x.rank === 3, "Error in conv2d: x must be rank 3, but got rank " + x.rank + ".");
-        util.assert(weights.rank === 4, "Error in conv2d: weights must be rank 4, but got rank " +
-            (weights.rank + "."));
-        if (biases != null) {
-            util.assert(biases.rank === 1, "Error in conv2d: biases must be rank 1, but got rank " +
-                (biases.rank + "."));
+        util.assert(filter.rank === 4, "Error in conv2d: filter must be rank 4, but got rank " +
+            (filter.rank + "."));
+        if (bias != null) {
+            util.assert(bias.rank === 1, "Error in conv2d: bias must be rank 1, but got rank " +
+                (bias.rank + "."));
         }
-        util.assert(x.shape[2] === weights.shape[2], "Error in conv2d: depth of input (" + x.shape[2] + ") must match  " +
-            ("input depth for weights " + weights.shape[2] + "."));
-        return this.track(this.conv2dInternal(x, weights, biases, stride, zeroPad));
+        util.assert(x.shape[2] === filter.shape[2], "Error in conv2d: depth of input (" + x.shape[2] + ") must match  " +
+            ("input depth for filter " + filter.shape[2] + "."));
+        var filterHeight = filter.shape[0];
+        var filterWidth = filter.shape[1];
+        var outDepth = filter.shape[3];
+        var _a = parseTupleParam(strides), strideHeight = _a[0], strideWidth = _a[1];
+        var convInfo = conv_util.computeConvInfo(x.shape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.executeOp('conv2d', function () { return _this.conv2dInternal(x, filter, bias, convInfo); });
     };
-    NDArrayMath.prototype.conv2dBackProp = function (x, dy, weights, stride, pad) {
-        util.assert(x.rank === 3, "Error in conv2dBackProp: x must be rank 3, but got shape " +
+    NDArrayMath.prototype.conv2dBackProp = function (x, dy, filter, strides, pad) {
+        var dw = this.conv2dDerFilter(x, dy, filter.shape, strides, pad);
+        var db = this.conv2dDerBias(dy);
+        var dx = this.conv2dDerInput(x.shape, dy, filter, strides, pad);
+        return { db: db, dw: dw, dx: dx };
+    };
+    NDArrayMath.prototype.conv2dDerInput = function (inShape, dy, filter, strides, pad) {
+        var _this = this;
+        var inDepth = inShape[2];
+        var outDepth = dy.shape[2];
+        util.assert(inShape.length === 3, "Error in conv2dDerInput: x must be rank 3, but got rank " +
+            (inShape.length + "."));
+        util.assert(dy.rank === 3, "Error in conv2dDerInput: dy must be rank 3, but got " +
+            ("rank " + dy.rank));
+        util.assert(filter.rank === 4, "Error in conv2dDerInput: filter must be rank 4, but got " +
+            ("rank " + filter.rank));
+        util.assert(inDepth === filter.shape[2], "Error in conv2dDerInput: depth of input (" + inDepth + ") must " +
+            ("match input depth for filter " + filter.shape[2] + "."));
+        util.assert(outDepth === filter.shape[3], "Error in conv2dDerInput: depth of output (" + outDepth + ") must" +
+            ("match output depth for filter " + filter.shape[3] + "."));
+        var filterHeight = filter.shape[0];
+        var filterWidth = filter.shape[1];
+        var _a = parseTupleParam(strides), strideHeight = _a[0], strideWidth = _a[1];
+        var convInfo = conv_util.computeConvInfo(inShape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.executeOp('conv2dDerInput', function () { return _this.conv2dDerInputInternal(dy, filter, convInfo); });
+    };
+    NDArrayMath.prototype.conv2dDerBias = function (dy) {
+        return this.track(this.conv2dDerBiasInternal(dy));
+    };
+    NDArrayMath.prototype.conv2dDerFilter = function (x, dy, filterSize, strides, pad) {
+        util.assert(x.rank === 3, "Error in conv2dDerFilter: x must be rank 3, but got shape " +
             (x.shape + "."));
-        util.assert(dy.rank === 3, "Error in conv2dBackProp: dy must be rank 3, but got shape " +
+        util.assert(dy.rank === 3, "Error in conv2dDerFilter: dy must be rank 3, but got shape " +
             (dy.shape + "."));
-        util.assert(weights.rank === 4, "Error in conv2dBackProp: weights must be rank 4, but got shape " +
-            (weights.shape + "."));
-        util.assert(x.shape[2] === weights.shape[2], "Error in conv2dBackProp: depth of x " + x.shape[2] + ") must " +
-            ("match input depth for weights (" + weights.shape[2] + "."));
-        util.assert(dy.shape[2] === weights.shape[3], "Error in conv2dBackProp: depth of dy (" + dy.shape[2] + ") must " +
-            ("match output depth for weights (" + weights.shape[3] + ")."));
-        var backpropResult = this.conv2dBackPropInternal(x, dy, weights, stride, pad);
-        this.track(backpropResult.db);
-        this.track(backpropResult.dw);
-        this.track(backpropResult.dx);
-        return backpropResult;
+        util.assert(filterSize.length === 4, "Error in conv2dDerFilter: filterSize must be length 4, but got " +
+            (filterSize + "."));
+        util.assert(x.shape[2] === filterSize[2], "Error in conv2dDerFilter: depth of x " + x.shape[2] + ") must " +
+            ("match input depth in filter (" + filterSize[2] + "."));
+        util.assert(dy.shape[2] === filterSize[3], "Error in conv2dDerFilter: depth of dy (" + dy.shape[2] + ") must " +
+            ("match output depth for filter (" + filterSize[3] + ")."));
+        var filterHeight = filterSize[0];
+        var filterWidth = filterSize[1];
+        var outDepth = filterSize[3];
+        var _a = parseTupleParam(strides), strideHeight = _a[0], strideWidth = _a[1];
+        var convInfo = conv_util.computeConvInfo(x.shape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.track(this.conv2dDerFilterInternal(x, dy, convInfo));
     };
-    NDArrayMath.prototype.conv2dTranspose = function (x, weights, biases, stride, pad) {
-        util.assert(x.rank === 3, "Error in conv2dTranspose: x must be rank 3, but got rank " +
-            (x.rank + "."));
-        util.assert(weights.rank === 4, "Error in conv2dTranspose: weights must be rank 4, but got " +
-            ("rank " + weights.rank));
-        if (biases != null) {
-            util.assert(biases.rank === 1, "Error in conv2dTranspose: biases must be rank 1, but got ' +\n              'rank " + biases.rank + ".");
-        }
-        util.assert(x.shape[2] === weights.shape[3], "Error in conv2dTranspose: depth of input (" + x.shape[2] + ") must " +
-            ("match input depth for weights " + weights.shape[3] + "."));
-        return this.track(this.conv2dTransposeInternal(x, weights, biases, stride, pad));
+    NDArrayMath.prototype.conv2dTranspose = function (x, filter, outputShape, strides, pad) {
+        return this.conv2dDerInput(outputShape, x, filter, strides, pad);
     };
-    NDArrayMath.prototype.maxPool = function (x, fSize, stride, pad) {
+    NDArrayMath.prototype.maxPool = function (x, filterSize, strides, pad) {
+        var _this = this;
         util.assert(x.rank === 3, 'Error in maxPool: x must be rank 3 but got rank ' + x.rank + '.');
-        return this.track(this.maxPoolInternal(x, fSize, stride, pad));
+        var _a = parseTupleParam(filterSize), filterHeight = _a[0], filterWidth = _a[1];
+        var outDepth = x.shape[2];
+        var _b = parseTupleParam(strides), strideHeight = _b[0], strideWidth = _b[1];
+        var convInfo = conv_util.computeConvInfo(x.shape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.executeOp('maxPool', function () { return _this.maxPoolInternal(x, convInfo); });
     };
-    NDArrayMath.prototype.maxPoolBackprop = function (dy, x, fSize, stride, pad) {
+    NDArrayMath.prototype.maxPoolBackprop = function (dy, x, filterSize, strides, pad) {
+        var _this = this;
         util.assert(dy.rank === 3, "Error in maxPoolBackprop: dy must be rank 3 but got rank " +
             (dy.rank + "."));
         util.assert(x.rank === 3, "Error in maxPoolBackprop: x must be rank 3 but got rank " +
             (x.rank + "."));
-        return this.track(this.maxPoolBackpropInternal(dy, x, fSize, stride, pad));
+        var _a = parseTupleParam(filterSize), filterHeight = _a[0], filterWidth = _a[1];
+        var outDepth = x.shape[2];
+        var _b = parseTupleParam(strides), strideHeight = _b[0], strideWidth = _b[1];
+        var convInfo = conv_util.computeConvInfo(x.shape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.executeOp('maxPoolBackprop', function () { return _this.maxPoolBackpropInternal(dy, x, convInfo); });
     };
-    NDArrayMath.prototype.minPool = function (x, fSize, stride, pad) {
+    NDArrayMath.prototype.minPool = function (x, filterSize, strides, pad) {
+        var _this = this;
         util.assert(x.rank === 3, "Error in minPool: x must be rank 3 but got rank " + x.rank + ".");
-        return this.track(this.minPoolInternal(x, fSize, stride, pad));
+        var _a = parseTupleParam(filterSize), filterHeight = _a[0], filterWidth = _a[1];
+        var outDepth = x.shape[2];
+        var _b = parseTupleParam(strides), strideHeight = _b[0], strideWidth = _b[1];
+        var convInfo = conv_util.computeConvInfo(x.shape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.executeOp('minPool', function () { return _this.minPoolInternal(x, convInfo); });
     };
-    NDArrayMath.prototype.avgPool = function (x, fSize, stride, pad) {
+    NDArrayMath.prototype.avgPool = function (x, filterSize, strides, pad) {
+        var _this = this;
         util.assert(x.rank === 3, "Error in avgPool: x must be rank 3 but got rank " + x.rank + ".");
-        return this.track(this.avgPoolInternal(x, fSize, stride, pad));
+        var _a = parseTupleParam(filterSize), filterHeight = _a[0], filterWidth = _a[1];
+        var outDepth = x.shape[2];
+        var _b = parseTupleParam(strides), strideHeight = _b[0], strideWidth = _b[1];
+        var convInfo = conv_util.computeConvInfo(x.shape, filterHeight, filterWidth, outDepth, strideHeight, strideWidth, pad);
+        return this.executeOp('avgPool', function () { return _this.avgPoolInternal(x, convInfo); });
     };
     NDArrayMath.prototype.resizeBilinear3D = function (x, newShape2D, alignCorners) {
+        var _this = this;
         if (alignCorners === void 0) { alignCorners = false; }
         util.assert(x.rank === 3, "Error in resizeBilinear3D: x must be rank 3 but got rank " + x.rank + ".");
         util.assert(newShape2D.length === 2, "Error in resizeBilinear3D: new shape must 2D, but got shape " +
             (newShape2D + "."));
-        return this.track(this.resizeBilinear3DInternal(x, newShape2D, alignCorners));
+        return this.executeOp('resizeBilinear3D', function () { return _this.resizeBilinear3DInternal(x, newShape2D, alignCorners); });
     };
     NDArrayMath.prototype.batchNormalization3D = function (x, mean, variance, varianceEpsilon, scale, offset) {
+        var _this = this;
         if (varianceEpsilon === void 0) { varianceEpsilon = .001; }
         util.assert(x.rank === 3, "Error in batchNormalization3D: x must be rank 3 but got rank " +
             (x.rank + "."));
@@ -2373,7 +2522,7 @@ var NDArrayMath = (function () {
             util.assert(offset.rank === 3 || offset.rank === 1, "Error in batchNormalization3D: offset must be rank 3 or rank 1 " +
                 ("but got rank " + offset.rank + "."));
         }
-        return this.track(this.batchNormalization3DInternal(x, mean, variance, varianceEpsilon, scale, offset));
+        return this.executeOp('batchNorm3D', function () { return _this.batchNormalization3DInternal(x, mean, variance, varianceEpsilon, scale, offset); });
     };
     NDArrayMath.prototype.multiRNNCell = function (lstmCells, data, c, h) {
         util.assert(data.shape[0] === 1, "Error in multiRNNCell: first dimension of data is " + data.shape[0] + ", " +
@@ -2426,8 +2575,11 @@ var MatrixOrientation;
     MatrixOrientation[MatrixOrientation["REGULAR"] = 0] = "REGULAR";
     MatrixOrientation[MatrixOrientation["TRANSPOSED"] = 1] = "TRANSPOSED";
 })(MatrixOrientation = exports.MatrixOrientation || (exports.MatrixOrientation = {}));
+function parseTupleParam(param) {
+    return typeof param === 'number' ? [param, param] : param;
+}
 
-},{"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
+},{"../util":75,"./concat3d_util":15,"./conv_util":16,"./copy2d_util":17,"./ndarray":22}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -2440,9 +2592,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var conv_util = require("../math/conv_util");
 var util = require("../util");
 var concat3d_util = require("./concat3d_util");
+var conv_util = require("./conv_util");
 var copy2D_util = require("./copy2d_util");
 var math_1 = require("./math");
 var ndarray_1 = require("./ndarray");
@@ -2743,21 +2895,23 @@ var NDArrayMathCPU = (function (_super) {
         }
         return ndarray_1.NDArray.make(ndarray.shape, { values: resultValues });
     };
-    NDArrayMathCPU.prototype.conv2dInternal = function (x, weights, biases, stride, pad) {
+    NDArrayMathCPU.prototype.conv2dInternal = function (x, filter, bias, convInfo) {
         var _a = x.shape, xRows = _a[0], xCols = _a[1], inputDepth = _a[2];
-        var fieldSize = weights.shape[0];
-        var outputDepth = weights.shape[3];
-        var outputShape = conv_util.computeOutputShape3D([xRows, xCols, inputDepth], fieldSize, outputDepth, stride, pad);
-        var y = ndarray_1.Array3D.zeros(outputShape);
-        for (var d2 = 0; d2 < outputDepth; ++d2) {
+        var filterHeight = filter.shape[0];
+        var filterWidth = filter.shape[1];
+        var outDepth = filter.shape[3];
+        var padLeft = convInfo.padInfo.left;
+        var padTop = convInfo.padInfo.top;
+        var y = ndarray_1.Array3D.zeros(convInfo.outShape);
+        for (var d2 = 0; d2 < outDepth; ++d2) {
             for (var yR = 0; yR < y.shape[0]; ++yR) {
-                var xRCorner = yR * stride - pad;
+                var xRCorner = yR * convInfo.strideHeight - padLeft;
                 var xRMin = Math.max(0, xRCorner);
-                var xRMax = Math.min(xRows, fieldSize + xRCorner);
+                var xRMax = Math.min(xRows, filterHeight + xRCorner);
                 for (var yC = 0; yC < y.shape[1]; ++yC) {
-                    var xCCorner = yC * stride - pad;
+                    var xCCorner = yC * convInfo.strideWidth - padTop;
                     var xCMin = Math.max(0, xCCorner);
-                    var xCMax = Math.min(xCols, fieldSize + xCCorner);
+                    var xCMax = Math.min(xCols, filterWidth + xCCorner);
                     var dotProd = 0;
                     for (var xR = xRMin; xR < xRMax; ++xR) {
                         var wR = xR - xRCorner;
@@ -2765,126 +2919,85 @@ var NDArrayMathCPU = (function (_super) {
                             var wC = xC - xCCorner;
                             for (var d1 = 0; d1 < inputDepth; ++d1) {
                                 var pixel = x.get(xR, xC, d1);
-                                var weight = weights.get(wR, wC, d1, d2);
+                                var weight = filter.get(wR, wC, d1, d2);
                                 dotProd += pixel * weight;
                             }
                         }
                     }
-                    var bias = (biases != null) ? biases.get(d2) : 0;
-                    y.set(dotProd + bias, yR, yC, d2);
+                    var biasVal = (bias != null) ? bias.get(d2) : 0;
+                    y.set(dotProd + biasVal, yR, yC, d2);
                 }
             }
         }
         return y;
     };
-    NDArrayMathCPU.prototype.conv2dBackPropInternal = function (x, dy, weights, stride, pad) {
-        var fSize = weights.shape[0];
-        var dw = this.conv2dDerWeights(x, dy, fSize, stride, pad);
-        var db = this.conv2dDerBias(dy);
-        var dx = this.conv2dTransposeInternal(dy, weights, null, stride, pad);
-        return { dx: dx, db: db, dw: dw };
-    };
-    NDArrayMathCPU.prototype.conv2dTransposeInternal = function (x, weights, biases, origStride, origPad) {
-        var fSize = weights.shape[0];
-        var pad = fSize - 1 - origPad;
-        var origInputDepth = weights.shape[2];
-        var origOutputDepth = weights.shape[3];
-        var xRows = x.shape[0];
-        var xCols = x.shape[1];
-        var xRowsDilated = (xRows - 1) * origStride + 1;
-        var xColsDilated = (xCols - 1) * origStride + 1;
-        var outputShape = conv_util.computeOutputShape3D([xRowsDilated, xColsDilated, origOutputDepth], fSize, origInputDepth, 1, pad);
-        var y = ndarray_1.Array3D.zeros(outputShape);
-        for (var d2 = 0; d2 < origInputDepth; ++d2) {
-            for (var yR = 0; yR < y.shape[0]; ++yR) {
-                var xRCorner = yR - pad;
-                var xRMin = Math.max(0, Math.ceil(xRCorner / origStride));
-                var xRMax = Math.min(xRows, (fSize + xRCorner) / origStride);
-                for (var yC = 0; yC < y.shape[1]; ++yC) {
-                    var xCCorner = yC - pad;
-                    var xCMin = Math.max(0, Math.ceil(xCCorner / origStride));
-                    var xCMax = Math.min(xCols, (fSize + xCCorner) / origStride);
+    NDArrayMathCPU.prototype.conv2dDerInputInternal = function (dy, filter, convInfo) {
+        var inDepth = filter.shape[2];
+        var outDepth = filter.shape[3];
+        var yRows = dy.shape[0];
+        var yCols = dy.shape[1];
+        var filterHeight = filter.shape[0];
+        var filterWidth = filter.shape[1];
+        var topPad = filterHeight - 1 - convInfo.padInfo.top;
+        var leftPad = filterWidth - 1 - convInfo.padInfo.left;
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var dx = ndarray_1.Array3D.zeros(convInfo.inShape);
+        for (var d1 = 0; d1 < inDepth; ++d1) {
+            for (var xR = 0; xR < dx.shape[0]; ++xR) {
+                var xRCorner = xR - leftPad;
+                var xRMin = Math.max(0, Math.ceil(xRCorner / strideHeight));
+                var yRMax = Math.min(yRows, (filterHeight + xRCorner) / strideHeight);
+                for (var xC = 0; xC < dx.shape[1]; ++xC) {
+                    var xCCorner = xC - topPad;
+                    var xCMin = Math.max(0, Math.ceil(xCCorner / strideWidth));
+                    var yCMax = Math.min(yCols, (filterWidth + xCCorner) / strideWidth);
                     var dotProd = 0;
-                    for (var xR = xRMin; xR < xRMax; ++xR) {
-                        var wR = xR * origStride - xRCorner;
-                        for (var xC = xCMin; xC < xCMax; ++xC) {
-                            var wC = xC * origStride - xCCorner;
-                            for (var d1 = 0; d1 < origOutputDepth; ++d1) {
-                                var pixel = x.get(xR, xC, d1);
-                                var weight = weights.get(fSize - 1 - wR, fSize - 1 - wC, d2, d1);
+                    for (var yR = xRMin; yR < yRMax; ++yR) {
+                        var wR = yR * strideHeight - xRCorner;
+                        for (var yC = xCMin; yC < yCMax; ++yC) {
+                            var wC = yC * strideWidth - xCCorner;
+                            for (var d2 = 0; d2 < outDepth; ++d2) {
+                                var pixel = dy.get(yR, yC, d2);
+                                var weight = filter.get(filterHeight - 1 - wR, filterWidth - 1 - wC, d1, d2);
                                 dotProd += pixel * weight;
                             }
                         }
                     }
-                    var bias = biases != null ? biases.get(d2) : 0;
-                    y.set(dotProd + bias, yR, yC, d2);
+                    dx.set(dotProd, xR, xC, d1);
                 }
             }
         }
-        return y;
+        return dx;
     };
-    NDArrayMathCPU.prototype.conv2dTransposeShaderLike = function (x, origWeights, origStride, origPad) {
-        var fSize = origWeights.shape[0];
-        var pad = fSize - 1 - origPad;
-        var origInputDepth = origWeights.shape[2];
-        var origOutputDepth = origWeights.shape[3];
-        var xRows = x.shape[0];
-        var xCols = x.shape[1];
-        var xRowsDilated = (xRows - 1) * origStride + 1;
-        var xColsDilated = (xCols - 1) * origStride + 1;
-        var outputShape = conv_util.computeOutputShape3D([xRowsDilated, xColsDilated, origOutputDepth], fSize, origInputDepth, 1, pad);
-        var y = ndarray_1.Array3D.zeros(outputShape);
-        for (var d2 = 0; d2 < origInputDepth; ++d2) {
-            for (var yR = 0; yR < y.shape[0]; ++yR) {
-                for (var yC = 0; yC < y.shape[1]; ++yC) {
-                    var xRCorner = yR - pad;
-                    var xCCorner = yC - pad;
-                    var dotProd = 0;
-                    for (var wR = 0; wR < fSize; ++wR) {
-                        var xR = (xRCorner + wR) / origStride;
-                        if (xR < 0 || xR >= xRows || Math.floor(xR) !== xR) {
-                            continue;
-                        }
-                        for (var wC = 0; wC < fSize; ++wC) {
-                            var xC = (xCCorner + wC) / origStride;
-                            if (xC < 0 || xC >= xCols || Math.floor(xC) !== xC) {
-                                continue;
-                            }
-                            for (var d1 = 0; d1 < origOutputDepth; ++d1) {
-                                var pixel = x.get(xR, xC, d1);
-                                var weight = origWeights.get(fSize - 1 - wR, fSize - 1 - wC, d2, d1);
-                                dotProd += pixel * weight;
-                            }
-                        }
-                    }
-                    y.set(dotProd, yR, yC, d2);
-                }
-            }
-        }
-        return y;
-    };
-    NDArrayMathCPU.prototype.conv2dDerWeights = function (x, dY, fSize, stride, zeroPad) {
+    NDArrayMathCPU.prototype.conv2dDerFilterInternal = function (x, dY, convInfo) {
         var inputDepth = x.shape[2];
         var outputDepth = dY.shape[2];
-        var weightsShape = conv_util.computeWeightsShape4D(inputDepth, outputDepth, fSize);
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var weightsShape = conv_util.computeWeightsShape4D(inputDepth, outputDepth, filterHeight, filterWidth);
         var dW = ndarray_1.Array4D.zeros(weightsShape);
         var yNumRows = dY.shape[0];
         var yNumCols = dY.shape[1];
         var xNumRows = x.shape[0];
         var xNumCols = x.shape[1];
-        for (var wR = 0; wR < fSize; ++wR) {
-            var yRMin = Math.max(0, Math.ceil((zeroPad - wR) / stride));
-            var yRMax = Math.min(yNumRows, (xNumRows + zeroPad - wR) / stride);
-            for (var wC = 0; wC < fSize; ++wC) {
-                var yCMin = Math.max(0, Math.ceil((zeroPad - wC) / stride));
-                var yCMax = Math.min(yNumCols, (xNumCols + zeroPad - wC) / stride);
+        var leftPad = convInfo.padInfo.left;
+        var topPad = convInfo.padInfo.top;
+        for (var wR = 0; wR < filterHeight; ++wR) {
+            var yRMin = Math.max(0, Math.ceil((topPad - wR) / strideHeight));
+            var yRMax = Math.min(yNumRows, (xNumRows + topPad - wR) / strideHeight);
+            for (var wC = 0; wC < filterWidth; ++wC) {
+                var yCMin = Math.max(0, Math.ceil((leftPad - wC) / strideWidth));
+                var yCMax = Math.min(yNumCols, (xNumCols + leftPad - wC) / strideWidth);
                 for (var d1 = 0; d1 < inputDepth; ++d1) {
                     for (var d2 = 0; d2 < outputDepth; ++d2) {
                         var dotProd = 0;
                         for (var yR = yRMin; yR < yRMax; ++yR) {
-                            var xR = wR + yR * stride - zeroPad;
+                            var xR = wR + yR * strideHeight - topPad;
                             for (var yC = yCMin; yC < yCMax; ++yC) {
-                                var xC = wC + yC * stride - zeroPad;
+                                var xC = wC + yC * strideWidth - leftPad;
                                 dotProd += x.get(xR, xC, d1) * dY.get(yR, yC, d2);
                             }
                         }
@@ -2895,7 +3008,7 @@ var NDArrayMathCPU = (function (_super) {
         }
         return dW;
     };
-    NDArrayMathCPU.prototype.conv2dDerBias = function (dY) {
+    NDArrayMathCPU.prototype.conv2dDerBiasInternal = function (dY) {
         var outputDepth = dY.shape[2];
         var numRows = dY.shape[0];
         var numCols = dY.shape[1];
@@ -2930,19 +3043,24 @@ var NDArrayMathCPU = (function (_super) {
         }
         return result;
     };
-    NDArrayMathCPU.prototype.pool = function (x, fSize, stride, pad, poolType) {
+    NDArrayMathCPU.prototype.pool = function (x, convInfo, poolType) {
         var _a = x.shape, xRows = _a[0], xCols = _a[1], depth = _a[2];
-        var outputShape = conv_util.computeOutputShape3D([xRows, xCols, depth], fSize, depth, stride, pad);
-        var y = ndarray_1.Array3D.zeros(outputShape);
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var y = ndarray_1.Array3D.zeros(convInfo.outShape);
+        var padTop = convInfo.padInfo.top;
+        var padLeft = convInfo.padInfo.left;
         for (var d = 0; d < depth; ++d) {
             for (var yR = 0; yR < y.shape[0]; ++yR) {
-                var xRCorner = yR * stride - pad;
+                var xRCorner = yR * strideHeight - padTop;
                 var xRMin = Math.max(0, xRCorner);
-                var xRMax = Math.min(xRows, fSize + xRCorner);
+                var xRMax = Math.min(xRows, filterHeight + xRCorner);
                 for (var yC = 0; yC < y.shape[1]; ++yC) {
-                    var xCCorner = yC * stride - pad;
+                    var xCCorner = yC * strideWidth - padLeft;
                     var xCMin = Math.max(0, xCCorner);
-                    var xCMax = Math.min(xCols, fSize + xCCorner);
+                    var xCMax = Math.min(xCols, filterWidth + xCCorner);
                     var minMaxValue = (poolType === 'max' ? Number.NEGATIVE_INFINITY :
                         Number.POSITIVE_INFINITY);
                     var avgValue = 0;
@@ -2959,7 +3077,7 @@ var NDArrayMathCPU = (function (_super) {
                                 minMaxValue = pixel;
                             }
                             else if (poolType === 'avg') {
-                                avgValue += pixel / (fSize * fSize);
+                                avgValue += pixel / (filterHeight * filterWidth);
                             }
                         }
                         if (isNaN(minMaxValue)) {
@@ -2972,22 +3090,28 @@ var NDArrayMathCPU = (function (_super) {
         }
         return y;
     };
-    NDArrayMathCPU.prototype.maxPoolInternal = function (x, fSize, stride, pad) {
-        return this.pool(x, fSize, stride, pad, 'max');
+    NDArrayMathCPU.prototype.maxPoolInternal = function (x, convInfo) {
+        return this.pool(x, convInfo, 'max');
     };
-    NDArrayMathCPU.prototype.maxPoolPositions = function (x, fSize, stride, pad) {
+    NDArrayMathCPU.prototype.maxPoolPositions = function (x, convInfo) {
         var _a = x.shape, xRows = _a[0], xCols = _a[1], depth = _a[2];
-        var outputShape = conv_util.computeOutputShape3D(x.shape, fSize, depth, stride, pad);
+        var outputShape = convInfo.outShape;
         var maxPositions = ndarray_1.Array3D.zeros(outputShape);
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var padTop = convInfo.padInfo.top;
+        var padLeft = convInfo.padInfo.left;
         for (var d = 0; d < depth; ++d) {
             for (var yR = 0; yR < outputShape[0]; ++yR) {
-                var xRCorner = yR * stride - pad;
+                var xRCorner = yR * strideHeight - padTop;
                 var xRMin = Math.max(0, xRCorner);
-                var xRMax = Math.min(xRows, fSize + xRCorner);
+                var xRMax = Math.min(xRows, filterHeight + xRCorner);
                 for (var yC = 0; yC < outputShape[1]; ++yC) {
-                    var xCCorner = yC * stride - pad;
+                    var xCCorner = yC * strideWidth - padLeft;
                     var xCMin = Math.max(0, xCCorner);
-                    var xCMax = Math.min(xCols, fSize + xCCorner);
+                    var xCMax = Math.min(xCols, filterWidth + xCCorner);
                     var maxValue = Number.NEGATIVE_INFINITY;
                     var maxPosition = -1;
                     for (var xR = xRMin; xR < xRMax; ++xR) {
@@ -2997,7 +3121,7 @@ var NDArrayMathCPU = (function (_super) {
                             var pixel = x.get(xR, xC, d);
                             if (pixel > maxValue) {
                                 maxValue = pixel;
-                                maxPosition = wR * fSize + wC;
+                                maxPosition = wR * filterWidth + wC;
                             }
                         }
                     }
@@ -3007,32 +3131,35 @@ var NDArrayMathCPU = (function (_super) {
         }
         return maxPositions;
     };
-    NDArrayMathCPU.prototype.maxPoolBackpropInternal = function (dy, x, fSize, origStride, origPad) {
-        var maxPositions = this.maxPoolPositions(x, fSize, origStride, origPad);
-        var pad = fSize - 1 - origPad;
+    NDArrayMathCPU.prototype.maxPoolBackpropInternal = function (dy, x, convInfo) {
+        var maxPositions = this.maxPoolPositions(x, convInfo);
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var padLeft = filterWidth - 1 - convInfo.padInfo.left;
+        var padTop = filterHeight - 1 - convInfo.padInfo.top;
         var _a = dy.shape, dyRows = _a[0], dyCols = _a[1], depth = _a[2];
-        var dyRowsDilated = (dyRows - 1) * origStride + 1;
-        var dxColsDilated = (dyCols - 1) * origStride + 1;
-        var outputShape = conv_util.computeOutputShape3D([dyRowsDilated, dxColsDilated, depth], fSize, depth, 1, pad);
-        var dx = ndarray_1.Array3D.zeros(outputShape);
+        var dx = ndarray_1.Array3D.zeros(x.shape);
         for (var d = 0; d < depth; ++d) {
             for (var dxR = 0; dxR < dx.shape[0]; ++dxR) {
                 for (var dxC = 0; dxC < dx.shape[1]; ++dxC) {
-                    var dyRCorner = dxR - pad;
-                    var dyCCorner = dxC - pad;
+                    var dyRCorner = dxR - padTop;
+                    var dyCCorner = dxC - padLeft;
                     var dotProd = 0;
-                    for (var wR = 0; wR < fSize; ++wR) {
-                        var dyR = (dyRCorner + wR) / origStride;
+                    for (var wR = 0; wR < filterHeight; ++wR) {
+                        var dyR = (dyRCorner + wR) / strideHeight;
                         if (dyR < 0 || dyR >= dyRows || Math.floor(dyR) !== dyR) {
                             continue;
                         }
-                        for (var wC = 0; wC < fSize; ++wC) {
-                            var dyC = (dyCCorner + wC) / origStride;
+                        for (var wC = 0; wC < filterWidth; ++wC) {
+                            var dyC = (dyCCorner + wC) / strideWidth;
                             if (dyC < 0 || dyC >= dyCols || Math.floor(dyC) !== dyC) {
                                 continue;
                             }
-                            var maxPos = fSize * fSize - 1 - maxPositions.get(dyR, dyC, d);
-                            var curPos = wR * fSize + wC;
+                            var maxPos = filterHeight * filterWidth - 1 -
+                                maxPositions.get(dyR, dyC, d);
+                            var curPos = wR * filterWidth + wC;
                             var mask = maxPos === curPos ? 1 : 0;
                             if (mask === 0) {
                                 continue;
@@ -3047,11 +3174,11 @@ var NDArrayMathCPU = (function (_super) {
         }
         return dx;
     };
-    NDArrayMathCPU.prototype.minPoolInternal = function (x, fSize, stride, pad) {
-        return this.pool(x, fSize, stride, pad, 'min');
+    NDArrayMathCPU.prototype.minPoolInternal = function (x, convInfo) {
+        return this.pool(x, convInfo, 'min');
     };
-    NDArrayMathCPU.prototype.avgPoolInternal = function (x, fSize, stride, pad) {
-        return this.pool(x, fSize, stride, pad, 'avg');
+    NDArrayMathCPU.prototype.avgPoolInternal = function (x, convInfo) {
+        return this.pool(x, convInfo, 'avg');
     };
     NDArrayMathCPU.prototype.resizeBilinear3DInternal = function (x, newShape2D, alignCorners) {
         var output = ndarray_1.Array3D.zeros([newShape2D[0], newShape2D[1], x.shape[2]]);
@@ -3103,7 +3230,7 @@ var NDArrayMathCPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathCPU = NDArrayMathCPU;
 
-},{"../math/conv_util":16,"../util":75,"./concat3d_util":15,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
+},{"../util":75,"./concat3d_util":15,"./conv_util":16,"./copy2d_util":17,"./math":19,"./ndarray":22}],21:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3221,8 +3348,10 @@ var NDArrayMathGPU = (function (_super) {
         return this.compileAndRun(program, [a, b]);
     };
     NDArrayMathGPU.prototype.batchNormalization3DInternal = function (x, mean, variance, varianceEpsilon, scale, offset) {
-        if (varianceEpsilon === void 0) { varianceEpsilon = 0.000001; }
         var inputs = [x, mean, variance];
+        if (varianceEpsilon == null) {
+            varianceEpsilon = 0.000001;
+        }
         var offsetShape = null;
         if (offset != null) {
             offsetShape = offset.shape;
@@ -3314,53 +3443,40 @@ var NDArrayMathGPU = (function (_super) {
         var program = new unaryop_gpu_1.UnaryOpProgram(a.shape, unaryop_gpu_1.UnaryOp.STEP);
         return this.compileAndRun(program, [a]);
     };
-    NDArrayMathGPU.prototype.conv2dInternal = function (x, weights, bias, stride, zeroPad) {
-        var fieldSize = weights.shape[0];
-        var outputDepth = weights.shape[3];
-        var program = new conv_gpu_1.Conv2DProgram(x.shape, fieldSize, outputDepth, stride, zeroPad, bias != null);
-        var inputs = bias != null ? [x, weights, bias] : [x, weights];
+    NDArrayMathGPU.prototype.conv2dInternal = function (x, filter, bias, convInfo) {
+        var program = new conv_gpu_1.Conv2DProgram(convInfo, bias != null);
+        var inputs = bias != null ? [x, filter, bias] : [x, filter];
         return this.compileAndRun(program, inputs);
     };
-    NDArrayMathGPU.prototype.conv2dBackPropInternal = function (x, dy, weights, stride, pad) {
-        var fSize = weights.shape[0];
-        var dw = this.conv2dDerWeights(x, dy, fSize, stride, pad);
-        var db = this.conv2dDerBias(dy);
-        var dx = this.conv2dTransposeInternal(dy, weights, null, stride, pad);
-        return { dx: dx, db: db, dw: dw };
+    NDArrayMathGPU.prototype.conv2dDerInputInternal = function (dy, filter, convInfo) {
+        var program = new conv_backprop_gpu_1.Conv2DDerInputProgram(convInfo);
+        return this.compileAndRun(program, [dy, filter]);
     };
-    NDArrayMathGPU.prototype.conv2dTransposeInternal = function (x, weights, bias, origStride, origPad) {
-        var origInputDepth = weights.shape[2];
-        var fieldSize = weights.shape[0];
-        var program = new conv_backprop_gpu_1.Conv2DTransposeProgram(x.shape, fieldSize, origInputDepth, origStride, origPad, bias != null);
-        var inputs = bias != null ? [x, weights, bias] : [x, weights];
-        return this.compileAndRun(program, inputs);
-    };
-    NDArrayMathGPU.prototype.conv2dDerWeights = function (x, dY, fSize, stride, zeroPad) {
-        var outputDepth = dY.shape[2];
-        var program = new conv_backprop_gpu_1.Conv2DDerWeightsProgram(x.shape, fSize, outputDepth, stride, zeroPad);
+    NDArrayMathGPU.prototype.conv2dDerFilterInternal = function (x, dY, convInfo) {
+        var program = new conv_backprop_gpu_1.Conv2DDerWeightsProgram(convInfo);
         return this.compileAndRun(program, [x, dY]);
     };
-    NDArrayMathGPU.prototype.conv2dDerBias = function (dY) {
+    NDArrayMathGPU.prototype.conv2dDerBiasInternal = function (dY) {
         var program = new conv_backprop_gpu_1.Conv2DDerBiasProgram(dY.shape);
         return this.compileAndRun(program, [dY]);
     };
-    NDArrayMathGPU.prototype.maxPoolInternal = function (x, fSize, stride, pad) {
-        var program = new pool_gpu_1.Pool2DProgram(x.shape, fSize, stride, pad, 'max', false);
+    NDArrayMathGPU.prototype.maxPoolInternal = function (x, convInfo) {
+        var program = new pool_gpu_1.Pool2DProgram(convInfo, 'max', false);
         return this.compileAndRun(program, [x]);
     };
-    NDArrayMathGPU.prototype.minPoolInternal = function (x, fSize, stride, pad) {
-        var program = new pool_gpu_1.Pool2DProgram(x.shape, fSize, stride, pad, 'min', false);
+    NDArrayMathGPU.prototype.minPoolInternal = function (x, convInfo) {
+        var program = new pool_gpu_1.Pool2DProgram(convInfo, 'min', false);
         return this.compileAndRun(program, [x]);
     };
-    NDArrayMathGPU.prototype.avgPoolInternal = function (x, fSize, stride, pad) {
-        var program = new pool_gpu_1.Pool2DProgram(x.shape, fSize, stride, pad, 'avg', false);
+    NDArrayMathGPU.prototype.avgPoolInternal = function (x, convInfo) {
+        var program = new pool_gpu_1.Pool2DProgram(convInfo, 'avg', false);
         return this.compileAndRun(program, [x]);
     };
-    NDArrayMathGPU.prototype.maxPoolBackpropInternal = function (dy, x, fSize, origStride, origPad) {
+    NDArrayMathGPU.prototype.maxPoolBackpropInternal = function (dy, x, convInfo) {
         var getPositions = true;
-        var maxPoolPositionsProgram = new pool_gpu_1.Pool2DProgram(x.shape, fSize, origStride, origPad, 'max', getPositions);
+        var maxPoolPositionsProgram = new pool_gpu_1.Pool2DProgram(convInfo, 'max', getPositions);
         var maxPoolPositions = this.compileAndRun(maxPoolPositionsProgram, [x]);
-        var maxPoolBackPropProgram = new max_pool_backprop_gpu_1.MaxPool2DBackpropProgram(dy.shape, fSize, origStride, origPad);
+        var maxPoolBackPropProgram = new max_pool_backprop_gpu_1.MaxPool2DBackpropProgram(convInfo);
         var result = this.compileAndRun(maxPoolBackPropProgram, [dy, maxPoolPositions]);
         maxPoolPositions.dispose();
         return result;
@@ -3864,7 +3980,7 @@ exports.ArgMaxEqualsProgram = ArgMaxEqualsProgram;
 Object.defineProperty(exports, "__esModule", { value: true });
 function getArgMinMaxSnippet(op, texName, size) {
     var compOp = (op === 'min') ? '<' : '>';
-    return "\n    float getArgMinMax" + texName + "() {\n      float bestIndex = 0.0;\n      float bestValue = get" + texName + "Flat(0.0);\n\n      for (int ii = 0; ii < " + size + "; ii++) {\n        float i = float(ii);\n        float candidate = get" + texName + "Flat(i);\n        if (isNaN(candidate)) {\n          return candidate;\n        }\n        if (candidate " + compOp + " bestValue) {\n          bestValue = candidate;\n          bestIndex = i;\n        }\n      }\n      return bestIndex;\n    }\n  ";
+    return "\n    float getArgMinMax" + texName + "() {\n      int bestIndex = 0;\n      float bestValue = get" + texName + "Flat(0);\n\n      for (int i = 0; i < " + size + "; i++) {\n        float candidate = get" + texName + "Flat(i);\n        if (isNaN(candidate)) {\n          return candidate;\n        }\n        if (candidate " + compOp + " bestValue) {\n          bestValue = candidate;\n          bestIndex = i;\n        }\n      }\n      return float(bestIndex);\n    }\n  ";
 }
 exports.getArgMinMaxSnippet = getArgMinMaxSnippet;
 var ArgMinMaxProgram = (function () {
@@ -3941,7 +4057,7 @@ var Concat3DProgram = (function () {
         this.params = [axis];
         this.outputShape =
             concat3d_util.computeConcat3DOutputShape(x1Shape, x2Shape, axis);
-        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float yD = coords.z;\n\n        float value = 0.0;\n        if (" + concatAxis + " < " + x1Shape[axis] + ".0) {\n          value = getA(yR, yC, yD);\n        } else {\n          " + concatAxis + " -= " + x1Shape[axis] + ".0;\n          value = getB(yR, yC, yD);\n        }\n\n        setOutput(value);\n      }\n    ";
+        this.userCode = "\n      void main() {\n        ivec3 coords = getOutputCoords();\n        int yR = coords.x;\n        int yC = coords.y;\n        int yD = coords.z;\n\n        float value = 0.0;\n        if (" + concatAxis + " < " + x1Shape[axis] + ") {\n          value = getA(yR, yC, yD);\n        } else {\n          " + concatAxis + " -= " + x1Shape[axis] + ";\n          value = getB(yR, yC, yD);\n        }\n\n        setOutput(value);\n      }\n    ";
     }
     return Concat3DProgram;
 }());
@@ -3952,43 +4068,45 @@ exports.Concat3DProgram = Concat3DProgram;
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
 var Conv2DDerWeightsProgram = (function () {
-    function Conv2DDerWeightsProgram(xShape, fSize, outputDepth, stride, zeroPad) {
+    function Conv2DDerWeightsProgram(convInfo) {
         this.variableNames = ['x', 'dy'];
-        var yShape = conv_util.computeOutputShape3D(xShape, fSize, outputDepth, stride, zeroPad);
-        var yNumRows = yShape[0];
-        var yNumCols = yShape[1];
-        var xNumRows = xShape[0];
-        var xNumCols = xShape[1];
-        this.outputShape =
-            conv_util.computeWeightsShape4D(xShape[2], outputDepth, fSize);
-        this.params = [stride, zeroPad];
-        this.userCode = "\n      void main() {\n        vec4 coords = getOutputCoords();\n        float wR = coords.x;\n        float wC = coords.y;\n        float d1 = coords.z;\n        float d2 = coords.w;\n\n        // Convolve x(?, ?, d1) with dy(:, :, d2) to get dw(wR, wC, d1, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iyR = 0; iyR < " + yNumRows + "; iyR++) {\n          float yR = float(iyR);\n          float xR = wR + yR * " + stride + ".0 - " + zeroPad + ".0;\n\n          if (xR < 0.0 || xR >= " + xNumRows + ".0) {\n            continue;\n          }\n\n          for (int iyC = 0; iyC < " + yNumCols + "; iyC++) {\n            float yC = float(iyC);\n            float xC = wC + yC * " + stride + ".0 - " + zeroPad + ".0;\n\n            if (xC < 0.0 || xC >= " + xNumCols + ".0) {\n              continue;\n            }\n\n            float dyValue = getDy(yR, yC, d2);\n            float xValue = getX(xR, xC, d1);\n            dotProd += (xValue * dyValue);\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
+        var _a = convInfo.outShape, yNumRows = _a[0], yNumCols = _a[1], outDepth = _a[2];
+        var _b = convInfo.inShape, xNumRows = _b[0], xNumCols = _b[1], inDepth = _b[2];
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        this.outputShape = conv_util.computeWeightsShape4D(inDepth, outDepth, convInfo.filterHeight, convInfo.filterWidth);
+        var padTop = convInfo.padInfo.top;
+        var padLeft = convInfo.padInfo.left;
+        this.params = [strideHeight, strideWidth, padLeft, padTop];
+        this.userCode = "\n      void main() {\n        ivec4 coords = getOutputCoords();\n        int wR = coords.x;\n        int wC = coords.y;\n        int d1 = coords.z;\n        int d2 = coords.w;\n\n        // Convolve x(?, ?, d1) with dy(:, :, d2) to get dw(wR, wC, d1, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int yR = 0; yR < " + yNumRows + "; yR++) {\n          int xR = wR + yR * " + strideHeight + " - " + padTop + ";\n\n          if (xR < 0 || xR >= " + xNumRows + ") {\n            continue;\n          }\n\n          for (int yC = 0; yC < " + yNumCols + "; yC++) {\n            int xC = wC + yC * " + strideWidth + " - " + padLeft + ";\n\n            if (xC < 0 || xC >= " + xNumCols + ") {\n              continue;\n            }\n\n            float dyValue = getDy(yR, yC, d2);\n            float xValue = getX(xR, xC, d1);\n            dotProd += (xValue * dyValue);\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
     }
     return Conv2DDerWeightsProgram;
 }());
 exports.Conv2DDerWeightsProgram = Conv2DDerWeightsProgram;
-var Conv2DTransposeProgram = (function () {
-    function Conv2DTransposeProgram(xShape, fSize, origInputDepth, origStride, origPad, hasBias) {
-        this.variableNames = ['x', 'W', 'bias'];
-        var xRows = xShape[0], xCols = xShape[1], origOutputDepth = xShape[2];
-        var biasSnippet = hasBias ? 'dotProd += getBias(d2);' : '';
-        var xRowsDilated = (xRows - 1) * origStride + 1;
-        var xColsDilated = (xCols - 1) * origStride + 1;
-        var pad = fSize - 1 - origPad;
-        this.outputShape = conv_util.computeOutputShape3D([xRowsDilated, xColsDilated, origOutputDepth], fSize, origInputDepth, 1, pad);
-        this.params = [pad, fSize, origStride, hasBias];
-        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float d2 = coords.z;\n\n        vec2 xRCCorner = vec2(yR, yC) - vec2(" + pad + ".0, " + pad + ".0);\n        float xRCorner = xRCCorner.x;\n        float xCCorner = xRCCorner.y;\n\n        // Convolve x(?, ?, d1) with w(:, :, d2, d1) to get y(yR, yC, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iwR = 0; iwR < " + fSize + "; iwR++) {\n          float wR = float(iwR);\n          float xR = (xRCorner + wR) / " + origStride + ".0;\n\n          if (xR < 0.0 || xR >= " + xRows + ".0 || fract(xR) > 0.0) {\n            continue;\n          }\n\n          float wRPerm = " + fSize + ".0 - 1.0 - wR;\n\n          for (int iwC = 0; iwC < " + fSize + "; iwC++) {\n            float wC = float(iwC);\n            float xC = (xCCorner + wC) / " + origStride + ".0;\n\n            if (xC < 0.0 || xC >= " + xCols + ".0 || fract(xC) > 0.0) {\n              continue;\n            }\n\n            float wCPerm = " + fSize + ".0 - 1.0 - wC;\n\n            for (int id1 = 0; id1 < " + origOutputDepth + "; id1++) {\n              float d1 = float(id1);\n              float xValue = getX(xR, xC, d1);\n              float wValue = getW(wRPerm, wCPerm, d2, d1);\n              dotProd += xValue * wValue;\n            }\n          }\n        }\n        " + biasSnippet + "\n        setOutput(dotProd);\n      }\n    ";
+var Conv2DDerInputProgram = (function () {
+    function Conv2DDerInputProgram(convInfo) {
+        this.variableNames = ['dy', 'W'];
+        var _a = convInfo.outShape, yRows = _a[0], yCols = _a[1], outDepth = _a[2];
+        this.outputShape = convInfo.inShape;
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var padTop = filterHeight - 1 - convInfo.padInfo.top;
+        var padLeft = filterWidth - 1 - convInfo.padInfo.left;
+        this.params = [strideHeight, strideWidth, padLeft, padTop];
+        this.userCode = "\n      const ivec2 pads = ivec2(" + padTop + ", " + padLeft + ");\n\n      void main() {\n        ivec3 coords = getOutputCoords();\n        int d1 = coords.z;\n\n        ivec2 dyCorner = coords.xy - pads;\n        int dyRCorner = dyCorner.x;\n        int dyCCorner = dyCorner.y;\n\n        // Convolve dy(?, ?, d2) with w(:, :, d1, d2) to compute dx(xR, xC, d1).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int wR = 0; wR < " + filterHeight + "; wR++) {\n          float dyR = float(dyRCorner + wR) / " + strideHeight + ".0;\n\n          if (dyR < 0.0 || dyR >= " + yRows + ".0 || fract(dyR) > 0.0) {\n            continue;\n          }\n          int idyR = int(dyR);\n\n          int wRPerm = " + filterHeight + " - 1 - wR;\n\n          for (int wC = 0; wC < " + filterWidth + "; wC++) {\n            float dyC = float(dyCCorner + wC) / " + strideWidth + ".0;\n\n            if (dyC < 0.0 || dyC >= " + yCols + ".0 || fract(dyC) > 0.0) {\n              continue;\n            }\n            int idyC = int(dyC);\n\n            int wCPerm = " + filterWidth + " - 1 - wC;\n\n            for (int d2 = 0; d2 < " + outDepth + "; d2++) {\n              float xValue = getDy(idyR, idyC, d2);\n              float wValue = getW(wRPerm, wCPerm, d1, d2);\n              dotProd += xValue * wValue;\n            }\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
     }
-    return Conv2DTransposeProgram;
+    return Conv2DDerInputProgram;
 }());
-exports.Conv2DTransposeProgram = Conv2DTransposeProgram;
+exports.Conv2DDerInputProgram = Conv2DDerInputProgram;
 var Conv2DDerBiasProgram = (function () {
     function Conv2DDerBiasProgram(yShape) {
         this.variableNames = ['dy'];
         this.params = [];
         var yNumRows = yShape[0], yNumCols = yShape[1], outputDepth = yShape[2];
         this.outputShape = [outputDepth];
-        this.userCode = "\n      void main() {\n        float d2 = getOutputCoords();\n\n        float derBias = 0.0;\n        for (int iyR = 0; iyR < " + yNumRows + "; iyR++) {\n          float yR = float(iyR);\n          for (int iyC = 0; iyC < " + yNumCols + "; iyC++) {\n            float yC = float(iyC);\n            derBias += getDy(yR, yC, d2);\n          }\n        }\n        setOutput(derBias);\n      }\n    ";
+        this.userCode = "\n      void main() {\n        int d2 = getOutputCoords();\n\n        float derBias = 0.0;\n        for (int yR = 0; yR < " + yNumRows + "; yR++) {\n          for (int yC = 0; yC < " + yNumCols + "; yC++) {\n            derBias += getDy(yR, yC, d2);\n          }\n        }\n        setOutput(derBias);\n      }\n    ";
     }
     return Conv2DDerBiasProgram;
 }());
@@ -3997,23 +4115,26 @@ exports.Conv2DDerBiasProgram = Conv2DDerBiasProgram;
 },{"../conv_util":16}],30:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var conv_util = require("../conv_util");
 var Conv2DProgram = (function () {
-    function Conv2DProgram(xShape, fieldSize, outputDepth, stride, pad, hasBias) {
+    function Conv2DProgram(convInfo, hasBias) {
         this.variableNames = ['x', 'W', 'bias'];
-        this.outputShape = conv_util.computeOutputShape3D(xShape, fieldSize, outputDepth, stride, pad);
-        var inputDepth = xShape[2];
-        this.params = [fieldSize, stride, pad, hasBias];
+        this.outputShape = convInfo.outShape;
         var biasSnippet = hasBias ? 'dotProd += getBias(d2);' : '';
-        var xNumRows = xShape[0];
-        var xNumCols = xShape[1];
-        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float d2 = coords.z;\n\n        vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ".0, " + stride + ".0) -\n            vec2(" + pad + ".0, " + pad + ".0);\n        float xRCorner = xRCCorner.x;\n        float xCCorner = xRCCorner.y;\n\n        // Convolve x(?, ?, d1) with w(:, :, d1, d2) to get y(yR, yC, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iwR = 0; iwR < " + fieldSize + "; iwR++) {\n          float wR = float(iwR);\n          float xR = xRCorner + wR;\n\n          if (xR < 0.0 || xR >= " + xNumRows + ".0) {\n            continue;\n          }\n\n          for (int iwC = 0; iwC < " + fieldSize + "; iwC++) {\n            float wC = float(iwC);\n            float xC = xCCorner + wC;\n\n            if (xC < 0.0 || xC >= " + xNumCols + ".0) {\n              continue;\n            }\n\n            for (int id1 = 0; id1 < " + inputDepth + "; id1++) {\n              float d1 = float(id1);\n              float xValue = getX(xR, xC, d1);\n              float wValue = getW(wR, wC, d1, d2);\n              dotProd += xValue * wValue;\n            }\n          }\n        }\n        " + biasSnippet + "\n        setOutput(dotProd);\n      }\n    ";
+        var _a = convInfo.inShape, xNumRows = _a[0], xNumCols = _a[1], inputDepth = _a[2];
+        var padTop = convInfo.padInfo.top;
+        var padLeft = convInfo.padInfo.left;
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        this.params = [strideHeight, strideWidth, hasBias, padLeft, padTop];
+        this.userCode = "\n      const ivec2 strides = ivec2(" + strideHeight + ", " + strideWidth + ");\n      const ivec2 pads = ivec2(" + padTop + ", " + padLeft + ");\n\n      void main() {\n        ivec3 coords = getOutputCoords();\n        int d2 = coords.z;\n\n        ivec2 xRCCorner = coords.xy * strides - pads;\n        int xRCorner = xRCCorner.x;\n        int xCCorner = xRCCorner.y;\n\n        // Convolve x(?, ?, d1) with w(:, :, d1, d2) to get y(yR, yC, d2).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int wR = 0; wR < " + filterHeight + "; wR++) {\n          int xR = xRCorner + wR;\n\n          if (xR < 0 || xR >= " + xNumRows + ") {\n            continue;\n          }\n\n          for (int wC = 0; wC < " + filterWidth + "; wC++) {\n            int xC = xCCorner + wC;\n\n            if (xC < 0 || xC >= " + xNumCols + ") {\n              continue;\n            }\n\n            for (int d1 = 0; d1 < " + inputDepth + "; d1++) {\n              float xValue = getX(xR, xC, d1);\n              float wValue = getW(wR, wC, d1, d2);\n              dotProd += xValue * wValue;\n            }\n          }\n        }\n        " + biasSnippet + "\n        setOutput(dotProd);\n      }\n    ";
     }
     return Conv2DProgram;
 }());
 exports.Conv2DProgram = Conv2DProgram;
 
-},{"../conv_util":16}],31:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Copy2DProgram = (function () {
@@ -4021,15 +4142,15 @@ var Copy2DProgram = (function () {
         this.variableNames = ['source'];
         this.outputShape = null;
         this.params = [srcNumCols, destNumCols];
-        this.userCode = "\n      uniform vec2 sourceStart;\n      uniform vec2 destStart;\n\n      void main() {\n        vec2 destCoords = getOutputCoords() - destStart;\n        float index = dot(destCoords, vec2(" + destNumCols + ".0, 1.0));\n        vec2 sourceCoords = sourceStart + vec2(\n          floor(index / " + srcNumCols + ".0),\n          mod(index, " + srcNumCols + ".0)\n        );\n        setOutput(getSource(sourceCoords.x, sourceCoords.y));\n      }\n    ";
+        this.userCode = "\n      uniform ivec2 sourceStart;\n      uniform ivec2 destStart;\n\n      void main() {\n        ivec2 destCoords = getOutputCoords() - destStart;\n        int index = destCoords.x * " + destNumCols + " + destCoords.y;\n        int r = index / " + srcNumCols + ";\n        ivec2 sourceCoords = sourceStart + ivec2(r, index - r * " + srcNumCols + ");\n        setOutput(getSource(sourceCoords.x, sourceCoords.y));\n      }\n    ";
     }
     Copy2DProgram.prototype.getCustomSetupFunc = function (sourceStart, destStart, destSize) {
         return function (gpgpu) {
             gpgpu.setOutputMatrixWriteRegion(destStart[0], destSize[0], destStart[1], destSize[1]);
             var sourceStartCRLoc = gpgpu.getUniformLocation('sourceStart');
-            gpgpu.gl.uniform2f(sourceStartCRLoc, sourceStart[0], sourceStart[1]);
+            gpgpu.gl.uniform2i(sourceStartCRLoc, sourceStart[0], sourceStart[1]);
             var destStartCRLoc = gpgpu.getUniformLocation('destStart');
-            gpgpu.gl.uniform2f(destStartCRLoc, destStart[0], destStart[1]);
+            gpgpu.gl.uniform2i(destStartCRLoc, destStart[0], destStart[1]);
         };
     };
     return Copy2DProgram;
@@ -4057,13 +4178,14 @@ var GPGPUContext = (function () {
         if (!webgl_util.isWebGL2Enabled()) {
             this.textureFloatExtension =
                 webgl_util.getExtensionOrThrow(this.gl, 'OES_texture_float');
+            this.colorBufferFloatExtension =
+                this.gl.getExtension('WEBGL_color_buffer_float');
         }
         else {
             this.colorBufferFloatExtension =
                 webgl_util.getExtensionOrThrow(this.gl, 'EXT_color_buffer_float');
         }
-        this.loseContextExtension =
-            webgl_util.getExtensionOrThrow(this.gl, 'WEBGL_lose_context');
+        this.loseContextExtension = webgl_util.getExtensionOrThrow(this.gl, 'WEBGL_lose_context');
         this.vertexBuffer = gpgpu_util.createVertexBuffer(this.gl);
         this.indexBuffer = gpgpu_util.createIndexBuffer(this.gl);
         this.framebuffer = webgl_util.createFramebuffer(this.gl);
@@ -4218,6 +4340,9 @@ var GPGPUContext = (function () {
     GPGPUContext.prototype.downloadMatrixDriver = function (texture, downloadAndDecode) {
         this.throwIfDisposed();
         webgl_util.bindColorTextureToFramebuffer(this.gl, texture, this.framebuffer);
+        if (this.autoDebugValidate) {
+            webgl_util.validateFramebuffer(this.gl);
+        }
         var result = downloadAndDecode();
         if (this.outputTexture != null) {
             webgl_util.bindColorTextureToFramebuffer(this.gl, this.outputTexture, this.framebuffer);
@@ -4328,7 +4453,7 @@ exports.runProgram = runProgram;
 function makeShaderKey(program, inputs, output) {
     var params = program.params;
     var keyStart = inputs.concat(output).map(function (x) { return x.shape + '_' + x.getTextureShapeRC(); });
-    var keyEnd = params.map(function (p) { return p.toString(); });
+    var keyEnd = params.map(String);
     var key = [program.constructor.name];
     key.push((program.supportsBroadcasting === true).toString());
     key = key.concat(keyStart, keyEnd);
@@ -4399,7 +4524,10 @@ function getTextureInternalFormat(gl, numChannels) {
     return gl.RGBA;
 }
 function getTextureFormat(gl, numChannels) {
-    if (webgl_util.isWebGL2Enabled() && numChannels === 1) {
+    if (webgl_util.isWebGL2Enabled()) {
+        if (numChannels === 4) {
+            return gl.RGBA;
+        }
         return gl.RED;
     }
     return gl.RGBA;
@@ -4471,8 +4599,15 @@ function uploadDataToTexture(gl, texture, width, height, data, numChannels) {
 function uploadMatrixToTexture(gl, texture, rows, columns, matrix, numChannels) {
     var _a = tex_util.getUnpackedMatrixTextureShapeWidthHeight(rows, columns), w = _a[0], h = _a[1];
     var channelsPerTexture = numChannels === 1 ? webgl_util.getChannelsPerTexture() : numChannels;
-    var unpackedArray = new Float32Array(tex_util.getUnpackedArraySizeFromMatrixSize(matrix.length, channelsPerTexture));
-    tex_util.encodeMatrixToUnpackedArray(matrix, unpackedArray, channelsPerTexture);
+    var unpackedArray;
+    if (channelsPerTexture === 1) {
+        unpackedArray = matrix;
+    }
+    else {
+        unpackedArray =
+            new Float32Array(tex_util.getUnpackedArraySizeFromMatrixSize(matrix.length, channelsPerTexture));
+        tex_util.encodeMatrixToUnpackedArray(matrix, unpackedArray, channelsPerTexture);
+    }
     uploadDataToTexture(gl, texture, w, h, unpackedArray, numChannels);
 }
 exports.uploadMatrixToTexture = uploadMatrixToTexture;
@@ -4511,7 +4646,7 @@ var LogSumExpProgram = (function () {
         this.variableNames = ['A'];
         this.params = [];
         this.outputShape = [];
-        this.userCode = "\n      void main() {\n        float aMax = getAFlat(0.0);\n        for (int i = 0; i < " + aSize + "; i++) {\n          aMax = max(aMax, getAFlat(float(i)));\n        }\n\n        float expSum = 0.0;\n        for (int i = 0; i < " + aSize + "; i++) {\n          expSum += exp(getAFlat(float(i)) - aMax);\n        }\n\n        setOutput(aMax + log(expSum));\n      }\n    ";
+        this.userCode = "\n      void main() {\n        float aMax = getAFlat(0);\n        for (int i = 0; i < " + aSize + "; i++) {\n          aMax = max(aMax, getAFlat(i));\n        }\n\n        float expSum = 0.0;\n        for (int i = 0; i < " + aSize + "; i++) {\n          expSum += exp(getAFlat(i) - aMax);\n        }\n\n        setOutput(aMax + log(expSum));\n      }\n    ";
     }
     return LogSumExpProgram;
 }());
@@ -4520,23 +4655,28 @@ exports.LogSumExpProgram = LogSumExpProgram;
 },{}],36:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var conv_util = require("../conv_util");
 var MaxPool2DBackpropProgram = (function () {
-    function MaxPool2DBackpropProgram(dyShape, fSize, origStride, origPad) {
+    function MaxPool2DBackpropProgram(convInfo) {
         this.variableNames = ['dy', 'maxPos'];
-        var pad = fSize - 1 - origPad;
-        var dyRows = dyShape[0];
-        var dyCols = dyShape[1];
-        this.params = [fSize, origStride, origPad];
-        var dilatedDyRC = conv_util.computeDilatedRC([dyShape[0], dyShape[1]], origStride);
-        this.outputShape = conv_util.computeOutputShape3D([dilatedDyRC[0], dilatedDyRC[1], dyShape[2]], fSize, dyShape[2], 1, pad);
-        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float dxR = coords.x;\n        float dxC = coords.y;\n        float d = coords.z;\n\n        vec2 dyRCCorner = vec2(dxR, dxC) - vec2(" + pad + ".0, " + pad + ".0);\n        float dyRCorner = dyRCCorner.x;\n        float dyCCorner = dyRCCorner.y;\n\n        // Convolve dy(?, ?, d) with pos mask(:, :, d) to get dx(yR, dxC, d).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int iwR = 0; iwR < " + fSize + "; iwR++) {\n          float wR = float(iwR);\n          float dyR = (dyRCorner + wR) / " + origStride + ".0;\n\n          if (dyR < 0.0 || dyR >= " + dyRows + ".0 || fract(dyR) > 0.0) {\n            continue;\n          }\n\n          for (int iwC = 0; iwC < " + fSize + "; iwC++) {\n            float wC = float(iwC);\n            float dyC = (dyCCorner + wC) / " + origStride + ".0;\n\n            if (dyC < 0.0 || dyC >= " + dyCols + ".0 || fract(dyC) > 0.0) {\n              continue;\n            }\n\n            float dyValue = getDy(dyR, dyC, d);\n            float maxPosValue =\n                " + (fSize * fSize - 1) + ".0 - getMaxPos(dyR, dyC, d);\n\n            // Get the current value, check it against the value from the\n            // position matrix.\n            float curPosValue = wR * " + fSize + ".0 + wC;\n            float mask = float(maxPosValue == curPosValue ? 1.0 : 0.0);\n\n            dotProd += dyValue * mask;\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
+        this.outputShape = convInfo.inShape;
+        var dyRows = convInfo.outShape[0];
+        var dyCols = convInfo.outShape[1];
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
+        var padTop = filterHeight - 1 - convInfo.padInfo.top;
+        var padLeft = filterWidth - 1 - convInfo.padInfo.left;
+        this.params =
+            [filterHeight, filterWidth, strideHeight, strideWidth, padTop, padLeft];
+        var lastIndex = filterHeight * filterWidth - 1;
+        this.userCode = "\n      const ivec2 pads = ivec2(" + padTop + ", " + padLeft + ");\n\n      void main() {\n        ivec3 coords = getOutputCoords();\n        int d = coords.z;\n\n        ivec2 dyRCCorner = coords.xy - pads;\n        int dyRCorner = dyRCCorner.x;\n        int dyCCorner = dyRCCorner.y;\n\n        // Convolve dy(?, ?, d) with pos mask(:, :, d) to get dx(xR, xC, d).\n        // ? = to be determined. : = across all values in that axis.\n        float dotProd = 0.0;\n        for (int wR = 0; wR < " + filterHeight + "; wR++) {\n          float dyR = float(dyRCorner + wR) / " + strideHeight + ".0;\n\n          if (dyR < 0.0 || dyR >= " + dyRows + ".0 || fract(dyR) > 0.0) {\n            continue;\n          }\n          int idyR = int(dyR);\n\n          for (int wC = 0; wC < " + filterWidth + "; wC++) {\n            float dyC = float(dyCCorner + wC) / " + strideWidth + ".0;\n\n            if (dyC < 0.0 || dyC >= " + dyCols + ".0 || fract(dyC) > 0.0) {\n              continue;\n            }\n            int idyC = int(dyC);\n\n            float dyValue = getDy(idyR, idyC, d);\n            int maxPosValue = " + lastIndex + " - int(getMaxPos(idyR, idyC, d));\n\n            // Get the current value, check it against the value from the\n            // position matrix.\n            int curPosValue = wR * " + filterWidth + " + wC;\n            float mask = float(maxPosValue == curPosValue ? 1.0 : 0.0);\n\n            dotProd += dyValue * mask;\n          }\n        }\n        setOutput(dotProd);\n      }\n    ";
     }
     return MaxPool2DBackpropProgram;
 }());
 exports.MaxPool2DBackpropProgram = MaxPool2DBackpropProgram;
 
-},{"../conv_util":16}],37:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var MinMaxProgram = (function () {
@@ -4544,7 +4684,7 @@ var MinMaxProgram = (function () {
         this.variableNames = ['A'];
         this.outputShape = [];
         this.params = [opType];
-        this.userCode = "\n      void main() {\n        float value = getAFlat(0.0);\n        for (int i = 0; i < " + aSize + "; i++) {\n          float candidate = getAFlat(float(i));\n          if (isNaN(candidate)) {\n            setOutput(candidate);\n            return;\n          }\n          value = " + opType + "(value, candidate);\n        }\n        setOutput(value);\n      }\n    ";
+        this.userCode = "\n      void main() {\n        float value = getAFlat(0);\n        for (int i = 0; i < " + aSize + "; i++) {\n          float candidate = getAFlat(i);\n          if (isNaN(candidate)) {\n            setOutput(candidate);\n            return;\n          }\n          value = " + opType + "(value, candidate);\n        }\n        setOutput(value);\n      }\n    ";
     }
     return MinMaxProgram;
 }());
@@ -4566,7 +4706,7 @@ var MatMulProgram = (function () {
         var sharedDim = (aOrient === math_1.MatrixOrientation.REGULAR ? aShape[1] : aShape[0]);
         var aSnippet = (aOrient === math_1.MatrixOrientation.REGULAR) ? 'aRow, i' : 'i, aRow';
         var bSnippet = (bOrient === math_1.MatrixOrientation.REGULAR) ? 'i, bCol' : 'bCol, i';
-        this.userCode = "\n      const int sharedDim = " + sharedDim + ";\n\n      float dotARowBCol(float aRow, float bCol) {\n        float result = 0.0;\n        for (int ii = 0; ii < sharedDim; ii++) {\n          float i = float(ii);\n          float a = getMatrixA(" + aSnippet + ");\n          float b = getMatrixB(" + bSnippet + ");\n          result += (a * b);\n        }\n        return result;\n      }\n\n      void main() {\n        vec2 resRC = getOutputCoords();\n        setOutput(dotARowBCol(resRC.x, resRC.y));\n      }\n    ";
+        this.userCode = "\n      const int sharedDim = " + sharedDim + ";\n\n      float dotARowBCol(int aRow, int bCol) {\n        float result = 0.0;\n        for (int i = 0; i < sharedDim; i++) {\n          float a = getMatrixA(" + aSnippet + ");\n          float b = getMatrixB(" + bSnippet + ");\n          result += (a * b);\n        }\n        return result;\n      }\n\n      void main() {\n        ivec2 resRC = getOutputCoords();\n        setOutput(dotARowBCol(resRC.x, resRC.y));\n      }\n    ";
     }
     return MatMulProgram;
 }());
@@ -4575,32 +4715,40 @@ exports.MatMulProgram = MatMulProgram;
 },{"../math":19}],39:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var conv_util = require("../conv_util");
 var Pool2DProgram = (function () {
-    function Pool2DProgram(xShape, fSize, stride, pad, poolType, computePositions) {
+    function Pool2DProgram(convInfo, poolType, computePositions) {
         this.variableNames = ['x'];
         if (poolType === 'avg' && computePositions) {
             throw new Error('Cannot compute positions for average pool.');
         }
+        var filterHeight = convInfo.filterHeight;
+        var filterWidth = convInfo.filterWidth;
+        var strideHeight = convInfo.strideHeight;
+        var strideWidth = convInfo.strideWidth;
         var returnValue = 'minMaxValue';
         if (computePositions) {
-            returnValue = 'minMaxPosition';
+            returnValue = 'float(minMaxPosition)';
         }
         else if (poolType === 'avg') {
-            returnValue = "avgValue / " + fSize * fSize + ".0";
+            returnValue = "avgValue / " + filterHeight * filterWidth + ".0";
         }
-        var xRowsLimit = xShape[0] - 0.5;
-        var xColsLimit = xShape[1] - 0.5;
-        this.params = [stride, pad, fSize, poolType, computePositions];
-        this.outputShape =
-            conv_util.computeOutputShape3D(xShape, fSize, xShape[2], stride, pad);
-        this.userCode = "\n      void main() {\n        vec3 coords = getOutputCoords();\n        float yR = coords.x;\n        float yC = coords.y;\n        float d = coords.z;\n\n        vec2 xRCCorner = vec2(yR, yC) * vec2(" + stride + ".0, " + stride + ".0) -\n            vec2(" + pad + ".0, " + pad + ".0);\n        float xRCorner = xRCCorner.x;\n        float xCCorner = xRCCorner.y;\n\n        // max/min x(?, ?, d) to get y(yR, yC, d).\n        // ? = to be determined\n        float minMaxValue = 0.0;\n        float minMaxValueFound = 0.0;\n        float minMaxPosition = 0.0;\n        float avgValue = 0.0;\n\n        for (int iwR = 0; iwR < " + fSize + "; iwR++) {\n          float wR = float(iwR);\n          float xR = xRCorner + wR;\n\n          if (xR < 0.0 || xR > " + xRowsLimit + ") {\n            continue;\n          }\n\n          for (int iwC = 0; iwC < " + fSize + "; iwC++) {\n            float wC = float(iwC);\n            float xC = xCCorner + wC;\n\n            if (xC < 0.0 || xC > " + xColsLimit + ") {\n              continue;\n            }\n\n            float value = getX(xR, xC, d);\n\n            if (isNaN(value)) {\n              setOutput(value);\n              return;\n            }\n\n            if (" + (poolType === 'avg') + ") {\n              avgValue += value;\n            } else {\n              // If a min / max value has already been found, use it. If not,\n              // use the current value.\n              float currMinMaxValue = mix(\n                  value, minMaxValue, minMaxValueFound);\n              if (value " + (poolType === 'min' ? '<=' : '>=') + " currMinMaxValue) {\n                minMaxValue = value;\n                minMaxValueFound = 1.0;\n                if (" + computePositions + ") {\n                  minMaxPosition = wR * " + fSize + ".0 + wC;\n                }\n              }\n            }\n          }\n        }\n        setOutput(" + returnValue + ");\n      }\n    ";
+        var xNumRows = convInfo.inShape[0];
+        var xNumCols = convInfo.inShape[1];
+        var padTop = convInfo.padInfo.top;
+        var padLeft = convInfo.padInfo.left;
+        this.params = [
+            strideHeight, strideWidth, padLeft, padTop, poolType, computePositions
+        ];
+        this.outputShape = convInfo.outShape;
+        var isAvgPool = poolType === 'avg';
+        var compareOp = poolType === 'min' ? '<=' : '>=';
+        this.userCode = "\n      const ivec2 strides = ivec2(" + strideHeight + ", " + strideWidth + ");\n      const ivec2 pads = ivec2(" + padTop + ", " + padLeft + ");\n\n      void main() {\n        ivec3 coords = getOutputCoords();\n        int d = coords.z;\n\n        ivec2 xRCCorner = coords.xy * strides - pads;\n        int xRCorner = xRCCorner.x;\n        int xCCorner = xRCCorner.y;\n\n        // max/min x(?, ?, d) to get y(yR, yC, d).\n        // ? = to be determined\n        float minMaxValue = 0.0;\n        float minMaxValueFound = 0.0;\n        int minMaxPosition = 0;\n        float avgValue = 0.0;\n\n        for (int wR = 0; wR < " + filterHeight + "; wR++) {\n          int xR = xRCorner + wR;\n\n          if (xR < 0 || xR >= " + xNumRows + ") {\n            continue;\n          }\n\n          for (int wC = 0; wC < " + filterWidth + "; wC++) {\n            int xC = xCCorner + wC;\n\n            if (xC < 0 || xC >= " + xNumCols + ") {\n              continue;\n            }\n\n            float value = getX(xR, xC, d);\n\n            if (isNaN(value)) {\n              setOutput(value);\n              return;\n            }\n\n            if (" + isAvgPool + ") {\n              avgValue += value;\n            } else {\n              // If a min / max value has already been found, use it. If not,\n              // use the current value.\n              float currMinMaxValue = mix(\n                  value, minMaxValue, minMaxValueFound);\n              if (value " + compareOp + " currMinMaxValue) {\n                minMaxValue = value;\n                minMaxValueFound = 1.0;\n                if (" + computePositions + ") {\n                  minMaxPosition = wR * " + filterWidth + " + wC;\n                }\n              }\n            }\n          }\n        }\n        setOutput(" + returnValue + ");\n      }\n    ";
     }
     return Pool2DProgram;
 }());
 exports.Pool2DProgram = Pool2DProgram;
 
-},{"../conv_util":16}],40:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ReduceSumProgram = (function () {
@@ -4609,7 +4757,7 @@ var ReduceSumProgram = (function () {
         this.variableNames = ['A'];
         this.params = [];
         this.outputShape = [];
-        this.userCode = "\n      void main() {\n        float sum = 0.0;\n        for (int i = 0; i < " + aSize + "; i++) {\n          sum += getAFlat(float(i));\n        }\n        setOutput(sum);\n      }\n    ";
+        this.userCode = "\n      void main() {\n        float sum = 0.0;\n        for (int i = 0; i < " + aSize + "; i++) {\n          sum += getAFlat(i);\n        }\n        setOutput(sum);\n      }\n    ";
     }
     return ReduceSumProgram;
 }());
@@ -4654,7 +4802,9 @@ var ResizeBilinear3DProgram = (function () {
         var effectiveOutputShape = alignCorners ?
             [this.outputShape[0] - 1, this.outputShape[1] - 1, depth] :
             this.outputShape;
-        this.userCode = "\n      const vec2 effectiveInputOverOutputRatioRC = vec2(\n          " + effectiveInputShape[0] / effectiveOutputShape[0] + ",\n          " + effectiveInputShape[1] / effectiveOutputShape[1] + ");\n      const vec2 inputShapeRC = vec2(" + inputShape[0] + ".0, " + inputShape[1] + ".0);\n\n      void main() {\n        vec3 coords = getOutputCoords();\n        vec2 yRC = coords.xy;\n        float d = coords.z;\n\n        // Fractional source index.\n        vec2 sourceFracIndexRC = yRC * effectiveInputOverOutputRatioRC;\n\n        // Compute the four integer indices.\n        vec2 sourceFloorRC = floor(sourceFracIndexRC);\n        vec2 sourceCeilRC = min(inputShapeRC - 1.0, ceil(sourceFracIndexRC));\n\n        float topLeft = getA(sourceFloorRC[0], sourceFloorRC[1], d);\n        float bottomLeft = getA(sourceCeilRC[0], sourceFloorRC[1], d);\n        float topRight = getA(sourceFloorRC[0], sourceCeilRC[1], d);\n        float bottomRight = getA(sourceCeilRC[0], sourceCeilRC[1], d);\n\n        vec2 fracRC = sourceFracIndexRC - sourceFloorRC;\n\n        float top = topLeft + (topRight - topLeft) * fracRC[1];\n        float bottom = bottomLeft + (bottomRight - bottomLeft) * fracRC[1];\n        float newValue = top + (bottom - top) * fracRC[0];\n\n        setOutput(newValue);\n      }\n    ";
+        this.userCode = "\n      const vec2 effectiveInputOverOutputRatioRC = vec2(\n          " + effectiveInputShape[0] /
+            effectiveOutputShape[0] + ",\n          " + effectiveInputShape[1] /
+            effectiveOutputShape[1] + ");\n      const vec2 inputShapeRC = vec2(" + inputShape[0] + ".0, " + inputShape[1] + ".0);\n\n      void main() {\n        ivec3 coords = getOutputCoords();\n        ivec2 yRC = coords.xy;\n        int d = coords.z;\n\n        // Fractional source index.\n        vec2 sourceFracIndexRC = vec2(yRC) * effectiveInputOverOutputRatioRC;\n\n        // Compute the four integer indices.\n        ivec2 sourceFloorRC = ivec2(sourceFracIndexRC);\n        ivec2 sourceCeilRC = ivec2(\n          min(inputShapeRC - 1.0, ceil(sourceFracIndexRC)));\n\n        float topLeft = getA(sourceFloorRC.x, sourceFloorRC.y, d);\n        float bottomLeft = getA(sourceCeilRC.x, sourceFloorRC.y, d);\n        float topRight = getA(sourceFloorRC.x, sourceCeilRC.y, d);\n        float bottomRight = getA(sourceCeilRC.x, sourceCeilRC.y, d);\n\n        vec2 fracRC = sourceFracIndexRC - vec2(sourceFloorRC);\n\n        float top = topLeft + (topRight - topLeft) * fracRC.y;\n        float bottom = bottomLeft + (bottomRight - bottomLeft) * fracRC.y;\n        float newValue = top + (bottom - top) * fracRC.x;\n\n        setOutput(newValue);\n      }\n    ";
     }
     return ResizeBilinear3DProgram;
 }());
@@ -4726,36 +4876,42 @@ function getOutputSamplingSnippet(outShape, outTexShape) {
             throw new Error(outShape.length + "-D output sampling is not yet supported");
     }
 }
-var SAMPLE_1D_SNIPPET = "\nvec2 UVfrom1D(float texNumR, float texNumC, float index) {\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
-var SAMPLE_2D_SNIPPET = "\nvec2 UVfrom2D(float texNumR, float texNumC, float numC, float row,\n    float col) {\n  float index = dot(vec2(row, col), vec2(numC, 1.0));\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
-var SAMPLE_3D_SNIPPET = "\nvec2 UVfrom3D(float texNumR, float texNumC, float stride0,\n    float stride1, float row, float col, float depth) {\n  float index = dot(vec3(row, col, depth), vec3(stride0, stride1, 1.0));\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
-var SAMPLE_4D_SNIPPET = "\nvec2 UVfrom4D(float texNumR, float texNumC, float stride0,\n    float stride1, float stride2, float row, float col, float depth,\n    float depth2) {\n  float index = dot(vec4(row, col, depth, depth2),\n                    vec4(stride0, stride1, stride2, 1.0));\n  float texR = floor(index / texNumC);\n  float texC = mod(index, texNumC);\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_1D_SNIPPET = "\nvec2 UVfrom1D(int texNumR, int texNumC, int index) {\n  int texR = index / texNumC;\n  int texC = index - texR * texNumC;\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_2D_SNIPPET = "\nvec2 UVfrom2D(int texNumR, int texNumC, int numC, int row, int col) {\n  int index = row * numC + col;\n  int texR = index / texNumC;\n  int texC = index - texR * texNumC;\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_3D_SNIPPET = "\nvec2 UVfrom3D(int texNumR, int texNumC, int stride0,\n    int stride1, int row, int col, int depth) {\n  int index = row * stride0 + col * stride1 + depth;\n  int texR = index / texNumC;\n  int texC = index - texR * texNumC;\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
+var SAMPLE_4D_SNIPPET = "\nvec2 UVfrom4D(int texNumR, int texNumC, int stride0,\n    int stride1, int stride2, int row, int col, int depth,\n    int depth2) {\n  int index = row * stride0 + col * stride1 + depth * stride2 + depth2;\n  int texR = index / texNumC;\n  int texC = index - texR * texNumC;\n  return (vec2(texC, texR) + halfCR) / vec2(texNumC, texNumR);\n}\n";
 var SHADER_PREFIX = "\n  precision highp float;\n  varying vec2 resultUV;\n  const vec2 halfCR = vec2(0.5, 0.5);\n\n  float sample(sampler2D texture, vec2 uv) {\n    return texture2D(texture, uv).r;\n  }\n\n  void setOutput(float val) {\n    gl_FragColor = vec4(val, 0, 0, 0);\n  }\n\n  bool isNaN(float val) {\n    return val == val ? false : true;\n  }\n  " + SAMPLE_1D_SNIPPET + "\n  " + SAMPLE_2D_SNIPPET + "\n  " + SAMPLE_3D_SNIPPET + "\n  " + SAMPLE_4D_SNIPPET + "\n";
 function getOutput1DCoords(shape, texShape) {
     if (texShape[0] === 1) {
-        return "\n      float getOutputCoords() {\n        return floor(gl_FragCoord.x);\n      }\n    ";
+        return "\n      int getOutputCoords() {\n        return int(gl_FragCoord.x);\n      }\n    ";
     }
     if (texShape[1] === 1) {
-        return "\n      float getOutputCoords() {\n        return floor(gl_FragCoord.y);\n      }\n    ";
+        return "\n      int getOutputCoords() {\n        return int(gl_FragCoord.y);\n      }\n    ";
     }
-    return "\n    float getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      return dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n    }\n  ";
+    return "\n    int getOutputCoords() {\n      ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n      return resTexRC.x * " + texShape[1] + " + resTexRC.y;\n    }\n  ";
 }
 function getOutput3DCoords(shape, texShape) {
     var stride0 = shape[1] * shape[2];
     var stride1 = shape[2];
-    return "\n    vec3 getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n      float r = floor(index / " + stride0 + ".0);\n      index -= r * " + stride0 + ".0;\n      float c = floor(index / " + stride1 + ".0);\n      float d = mod(index, " + stride1 + ".0);\n      return vec3(r, c, d);\n    }\n  ";
+    return "\n    ivec3 getOutputCoords() {\n      ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n      int index = resTexRC.x * " + texShape[1] + " + resTexRC.y;\n      int r = index / " + stride0 + ";\n      index -= r * " + stride0 + ";\n      int c = index / " + stride1 + ";\n      int d = index - c * " + stride1 + ";\n      return ivec3(r, c, d);\n    }\n  ";
 }
 function getOutput4DCoords(shape, texShape) {
     var stride2 = shape[3];
     var stride1 = shape[2] * stride2;
     var stride0 = shape[1] * stride1;
-    return "\n    vec4 getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n\n      float r = floor(index / " + stride0 + ".0);\n      index -= r * " + stride0 + ".0;\n\n      float c = floor(index / " + stride1 + ".0);\n      index -= c * " + stride1 + ".0;\n\n      float d = floor(index / " + stride2 + ".0);\n      float d2 = mod(index, " + stride2 + ".0);\n\n      return vec4(r, c, d, d2);\n    }\n  ";
+    return "\n    ivec4 getOutputCoords() {\n      ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n      int index = resTexRC.x * " + texShape[1] + " + resTexRC.y;\n\n      int r = index / " + stride0 + ";\n      index -= r * " + stride0 + ";\n\n      int c = index / " + stride1 + ";\n      index -= c * " + stride1 + ";\n\n      int d = index / " + stride2 + ";\n      int d2 = index - d * " + stride2 + ";\n\n      return ivec4(r, c, d, d2);\n    }\n  ";
 }
 function getOutput2DCoords(shape, texShape) {
     if (util.arraysEqual(shape, texShape)) {
-        return "\n      vec2 getOutputCoords() {\n        return floor(gl_FragCoord.yx);\n      }\n    ";
+        return "\n      ivec2 getOutputCoords() {\n        return ivec2(gl_FragCoord.yx);\n      }\n    ";
     }
-    return "\n    vec2 getOutputCoords() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + texShape[1] + ".0, 1.0));\n      float r = floor(index / " + shape[1] + ".0);\n      float c = mod(index, " + shape[1] + ".0);\n      return vec2(r, c);\n    }\n  ";
+    if (shape[1] === 1) {
+        return "\n      ivec2 getOutputCoords() {\n        ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n        int index = resTexRC.x * " + texShape[1] + " + resTexRC.y;\n        return ivec2(index, 0);\n      }\n    ";
+    }
+    if (shape[0] === 1) {
+        return "\n      ivec2 getOutputCoords() {\n        ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n        int index = resTexRC.x * " + texShape[1] + " + resTexRC.y;\n        return ivec2(0, index);\n      }\n    ";
+    }
+    return "\n    ivec2 getOutputCoords() {\n      ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n      int index = resTexRC.x * " + texShape[1] + " + resTexRC.y;\n      int r = index / " + shape[1] + ";\n      int c = index - r * " + shape[1] + ";\n      return ivec2(r, c);\n    }\n  ";
 }
 function getSamplerScalar(texName) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
@@ -4766,15 +4922,15 @@ function getSampler1D(texName, texShape) {
     var tR = texShape[0];
     var tC = texShape[1];
     if (texShape[0] === 1 && texShape[1] === 1) {
-        return "\n      float " + funcName + "(float index) {\n        return sample(" + texName + ", halfCR);\n      }\n    ";
+        return "\n      float " + funcName + "(int index) {\n        return sample(" + texName + ", halfCR);\n      }\n    ";
     }
     if (texShape[1] === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int index) {\n        vec2 uv = vec2(0.5, (float(index) + 0.5) / " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
     if (texShape[0] === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int index) {\n        vec2 uv = vec2((float(index) + 0.5) / " + tC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float index) {\n      vec2 uv = UVfrom1D(" + tR + ".0, " + tC + ".0, index);\n      return sample(" + texName + ", uv);\n    }\n  ";
+    return "\n    float " + funcName + "(int index) {\n      vec2 uv = UVfrom1D(" + tR + ", " + tC + ", index);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSampler3D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
@@ -4783,9 +4939,9 @@ function getSampler3D(texName, shape, texShape) {
     var stride0 = shape[1] * shape[2];
     var stride1 = shape[2];
     if (tC === stride0) {
-        return "\n      float " + funcName + "(float row, float col, float depth) {\n        float texR = row;\n        float texC = dot(vec2(col, depth), vec2(" + stride1 + ", 1.0));\n        vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int row, int col, int depth) {\n        int texR = row;\n        int texC = col * " + stride1 + " + depth;\n        vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float row, float col, float depth) {\n      vec2 uv = UVfrom3D(" + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0, row,\n        col, depth);\n      return sample(" + texName + ", uv);\n    }\n  ";
+    return "\n    float " + funcName + "(int row, int col, int depth) {\n      vec2 uv = UVfrom3D(" + tR + ", " + tC + ", " + stride0 + ", " + stride1 + ", row, col, depth);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSampler4D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
@@ -4795,39 +4951,45 @@ function getSampler4D(texName, shape, texShape) {
     var stride1 = shape[2] * stride2;
     var stride0 = shape[1] * stride1;
     if (tC === stride0) {
-        return "\n      float " + funcName + "(float row, float col, float depth, float depth2) {\n        float texR = row;\n        float texC = dot(vec3(col, depth, depth2),\n                         vec3(" + stride1 + ".0, " + stride2 + ".0, 1.0));\n        vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int row, int col, int depth, int depth2) {\n        int texR = row;\n        int texC = col * " + stride1 + " + depth * " + stride2 + " + depth2;\n        vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float row, float col, float depth, float depth2) {\n      vec2 uv = UVfrom4D(" + tR + ".0, " + tC + ".0, " + stride0 + ".0, " + stride1 + ".0,\n          " + stride2 + ".0, row, col, depth, depth2);\n      return sample(" + texName + ", uv);\n    }\n  ";
+    return "\n    float " + funcName + "(int row, int col, int depth, int depth2) {\n      vec2 uv = UVfrom4D(" + tR + ", " + tC + ", " + stride0 + ", " + stride1 + ", " + stride2 + ",\n          row, col, depth, depth2);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSampler2D(texName, shape, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1);
     var tR = texShape[0];
     var tC = texShape[1];
     if (util.arraysEqual(shape, texShape)) {
-        return "\n      float " + funcName + "(float row, float col) {\n        vec2 uv = (vec2(col, row) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int row, int col) {\n        vec2 uv = (vec2(col, row) + halfCR) / vec2(" + tC + ".0, " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
     if (tC === 1) {
-        return "\n      float " + funcName + "(float row, float col) {\n        float index = dot(vec2(row, col), vec2(" + shape[1] + ".0, 1.0));\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        if (shape[0] === 1) {
+            return "\n        float " + funcName + "(int row, int col) {\n          vec2 uv = vec2(0.5, (float(col) + 0.5) / " + tR + ".0);\n          return sample(" + texName + ", uv);\n        }\n      ";
+        }
+        if (shape[1] === 1) {
+            return "\n        float " + funcName + "(int row, int col) {\n          vec2 uv = vec2(0.5, (float(row) + 0.5) / " + tR + ".0);\n          return sample(" + texName + ", uv);\n        }\n      ";
+        }
+        return "\n      float " + funcName + "(int row, int col) {\n        int index = row * " + shape[1] + " + col;\n        vec2 uv = vec2(0.5, (float(index) + 0.5) / " + tR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
     if (tR === 1) {
-        return "\n      float " + funcName + "(float row, float col) {\n        float index = dot(vec2(row, col), vec2(" + shape[1] + ".0, 1.0));\n        vec2 uv = vec2((index + 0.5) / " + tC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int row, int col) {\n        int index = row * " + shape[1] + " + col;\n        vec2 uv = vec2((float(index) + 0.5) / " + tC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float row, float col) {\n      vec2 uv = UVfrom2D(" + tR + ".0, " + tC + ".0, " + shape[1] + ".0, row, col);\n      return sample(" + texName + ", uv);\n    }\n  ";
+    return "\n    float " + funcName + "(int row, int col) {\n      vec2 uv = UVfrom2D(" + tR + ", " + tC + ", " + shape[1] + ", row, col);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSamplerFlat(texName, texShape) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) + 'Flat';
     var tNumR = texShape[0];
     var tNumC = texShape[1];
     if (tNumC === 1 && tNumR === 1) {
-        return "\n      float " + funcName + "(float index) {\n        return sample(" + texName + ", halfCR);\n      }\n    ";
+        return "\n      float " + funcName + "(int index) {\n        return sample(" + texName + ", halfCR);\n      }\n    ";
     }
     if (tNumC === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2(0.5, (index + 0.5) / " + tNumR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int index) {\n        vec2 uv = vec2(0.5, (float(index) + 0.5) / " + tNumR + ".0);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
     if (tNumR === 1) {
-        return "\n      float " + funcName + "(float index) {\n        vec2 uv = vec2((index + 0.5) / " + tNumC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
+        return "\n      float " + funcName + "(int index) {\n        vec2 uv = vec2((float(index) + 0.5) / " + tNumC + ".0, 0.5);\n        return sample(" + texName + ", uv);\n      }\n    ";
     }
-    return "\n    float " + funcName + "(float index) {\n      float texR = floor(index / " + tNumC + ".0);\n      float texC = mod(index, " + tNumC + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tNumC + ".0, " + tNumR + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
+    return "\n    float " + funcName + "(int index) {\n      int texR = index / " + tNumC + ";\n      int texC = index - texR * " + tNumC + ";\n      vec2 uv = (vec2(texC, texR) + halfCR) / vec2(" + tNumC + ".0, " + tNumR + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
     var funcName = 'get' + texName.charAt(0).toUpperCase() + texName.slice(1) +
@@ -4836,8 +4998,11 @@ function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
         return "\n      float " + funcName + "() {\n        return sample(" + texName + ", resultUV);\n      }\n    ";
     }
     var inSize = util.sizeFromShape(inTexShape);
-    var broadcastSnippet = broadcast ? "index = mod(index, " + inSize + ".0);" : '';
-    return "\n    float " + funcName + "() {\n      vec2 resTexRC = floor(gl_FragCoord.yx);\n      float index = dot(resTexRC, vec2(" + outTexShape[1] + ".0, 1.0));\n      " + broadcastSnippet + "\n      float texR = floor(index / " + inTexShape[1] + ".0);\n      float texC = mod(index, " + inTexShape[1] + ".0);\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
+    var broadcastSnippet = '';
+    if (broadcast) {
+        broadcastSnippet = "\n      int mainPart = index / " + inSize + ";\n      index -= mainPart * " + inSize + ";\n    ";
+    }
+    return "\n    float " + funcName + "() {\n      ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n      int index = resTexRC.x * " + outTexShape[1] + " + resTexRC.y;\n      " + broadcastSnippet + "\n      int texR = index / " + inTexShape[1] + ";\n      int texC = index - texR * " + inTexShape[1] + ";\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 
 },{"../../util":75}],44:[function(require,module,exports){
@@ -5181,8 +5346,9 @@ function createWebGLRenderingContextFromCanvas(canvas, attributes) {
         gl = canvas.getContext('webgl2', attributes);
     }
     else {
-        gl = (canvas.getContext('webgl', attributes) ||
-            canvas.getContext('experimental-webgl', attributes));
+        gl =
+            (canvas.getContext('webgl', attributes) ||
+                canvas.getContext('experimental-webgl', attributes));
     }
     if (gl == null) {
         throw new Error('This browser does not support WebGL.');
@@ -5251,6 +5417,7 @@ function createFragmentShader(gl, fragmentShaderSource) {
     callAndCheck(gl, function () { return gl.shaderSource(fragmentShader, fragmentShaderSource); });
     callAndCheck(gl, function () { return gl.compileShader(fragmentShader); });
     if (gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS) === false) {
+        console.log(fragmentShaderSource);
         console.log(gl.getShaderInfoLog(fragmentShader));
         throw new Error('Failed to compile fragment shader.');
     }
@@ -7554,5 +7721,12 @@ function assertAndGetBroadcastedShape(shapeA, shapeB) {
     return result.reverse();
 }
 exports.assertAndGetBroadcastedShape = assertAndGetBroadcastedShape;
+function rightPad(a, size) {
+    if (size <= a.length) {
+        return a;
+    }
+    return a + ' '.repeat(size - a.length);
+}
+exports.rightPad = rightPad;
 
 },{}]},{},[2]);

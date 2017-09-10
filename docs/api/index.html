@@ -112,6 +112,9 @@ math.scope(<span class="hljs-function"><span class="hljs-keyword">function</span
 $ <span class="hljs-built_in">cd</span> deeplearnjs
 $ npm run prep <span class="hljs-comment"># Installs node modules and bower components.</span>
 </code></pre>
+				<p>We recommend using <a href="https://code.visualstudio.com/">Visual Studio Code</a> for
+					development. Make sure to install the <code>clang-format</code> command line tool as
+				well as the <a href="https://marketplace.visualstudio.com/items?itemName=xaver.clang-format">Clang-Format VSCode extension</a> for auto-formatting.</p>
 				<p>To interactively develop any of the demos (e.g. <code>demos/nn-art/</code>):</p>
 				<pre><code class="lang-bash">$ ./scripts/watch-demo demos/nn-art/nn-art.ts
 &gt;&gt; Starting up http-server, serving ./
@@ -133,10 +136,11 @@ $ npm run lint
 				<pre><code class="lang-bash">$ ./scripts/build-standalone.sh VERSION <span class="hljs-comment"># Builds standalone library.</span>
 &gt;&gt; Stored standalone library at dist/deeplearn-VERSION(.min).js
 </code></pre>
-				<p>To build an npm package/es6 module:</p>
-				<pre><code class="lang-bash">$ ./scripts/build-npm.sh <span class="hljs-comment"># Builds npm package.</span>
+				<p>To do a dry run and test building an npm package:</p>
+				<pre><code class="lang-bash">$ ./scripts/build-npm.sh
 &gt;&gt; Stored npm package at dist/deeplearn-VERSION.tgz
 </code></pre>
+				<p>To install it locally, run <code>npm install ./dist/deeplearn-VERSION.tgz</code>.</p>
 				<blockquote>
 					<p>On Windows, use bash (available through git) to use the scripts above.</p>
 				</blockquote>
@@ -289,6 +293,9 @@ $ npm run lint
 						<a href="interfaces/webgllosecontextextension.html" class="tsd-kind-icon">WebGLLose<wbr>Context<wbr>Extension</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#convinfo" class="tsd-kind-icon">Conv<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#feedentry" class="tsd-kind-icon">Feed<wbr>Entry</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -335,6 +342,9 @@ $ npm run lint
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#clamp" class="tsd-kind-icon">clamp</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#computeconvinfo" class="tsd-kind-icon">compute<wbr>Conv<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#computedefaultpad" class="tsd-kind-icon">compute<wbr>Default<wbr>Pad</a>
@@ -473,6 +483,9 @@ $ npm run lint
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#rendertoframebuffer" class="tsd-kind-icon">render<wbr>ToFramebuffer</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#rightpad" class="tsd-kind-icon">right<wbr>Pad</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#shuffle" class="tsd-kind-icon">shuffle</a>

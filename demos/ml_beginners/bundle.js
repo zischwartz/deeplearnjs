@@ -6,286 +6,68 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("../src/index"));
 
-},{"../src/index":14}],2:[function(require,module,exports){
-Polymer({ is: 'demo-footer' });
-
-},{}],3:[function(require,module,exports){
-Polymer({ is: 'demo-header' });
-
-},{}],4:[function(require,module,exports){
+},{"../src/index":9}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var deeplearnjs_1 = require("../deeplearnjs");
-var nn_art_util = require("./nn_art_util");
-var MAX_LAYERS = 10;
-var colorModeOutputDimensions = {
-    'rgb': 3,
-    'rgba': 4,
-    'hsv': 3,
-    'hsva': 4,
-    'yuv': 3,
-    'yuva': 4,
-    'bw': 1
-};
-var activationFunctionMap = {
-    'tanh': function (math, ndarray) { return math.tanh(ndarray); },
-    'sin': function (math, ndarray) { return math.sin(ndarray); },
-    'relu': function (math, ndarray) { return math.relu(ndarray); },
-    'step': function (math, ndarray) { return math.step(ndarray); }
-};
-var NUM_IMAGE_SPACE_VARIABLES = 3;
-var NUM_LATENT_VARIABLES = 2;
-var CPPN = (function () {
-    function CPPN(inferenceCanvas) {
-        this.inferenceCanvas = inferenceCanvas;
-        this.weights = [];
-        this.z1Counter = 0;
-        this.z2Counter = 0;
-        this.colorModeNames = ['rgb', 'rgba', 'hsv', 'hsva', 'yuv', 'yuva', 'bw'];
-        this.isInferring = false;
-        this.gl = deeplearnjs_1.gpgpu_util.createWebGLContext(this.inferenceCanvas);
-        this.gpgpu = new deeplearnjs_1.GPGPUContext(this.gl);
-        this.math = new deeplearnjs_1.NDArrayMathGPU(this.gpgpu);
-        var maxTextureSize = deeplearnjs_1.webgl_util.queryMaxTextureSize(this.gl);
-        var canvasSize = Math.floor(Math.sqrt(maxTextureSize));
-        this.inferenceCanvas.width = canvasSize;
-        this.inferenceCanvas.height = canvasSize;
-        this.renderShader = nn_art_util.getRenderShader(this.gpgpu, canvasSize);
-        this.addLatentVariablesShader = nn_art_util.getAddLatentVariablesShader(this.gpgpu, NUM_IMAGE_SPACE_VARIABLES);
-        this.inputAtlas = nn_art_util.createInputAtlas(canvasSize, NUM_IMAGE_SPACE_VARIABLES, NUM_LATENT_VARIABLES);
-    }
-    CPPN.prototype.generateWeights = function (neuronsPerLayer, weightsStdev) {
-        for (var i = 0; i < this.weights.length; i++) {
-            this.weights[i].dispose();
+{
+    var math_1 = new deeplearnjs_1.NDArrayMathGPU();
+    math_1.scope(function (keep, track) {
+        var matrixShape = [2, 3];
+        var matrix = track(deeplearnjs_1.Array2D.new(matrixShape, [10, 20, 30, 40, 50, 60]));
+        var vector = track(deeplearnjs_1.Array1D.new([0, 1, 2]));
+        var result = math_1.matrixTimesVector(matrix, vector);
+        console.log("result shape:", result.shape);
+        console.log("result", result.getValues());
+    });
+}
+{
+    var graph = new deeplearnjs_1.Graph();
+    var x_1 = graph.placeholder('x', []);
+    var a = graph.variable('a', deeplearnjs_1.Scalar.new(Math.random()));
+    var b = graph.variable('b', deeplearnjs_1.Scalar.new(Math.random()));
+    var c = graph.variable('c', deeplearnjs_1.Scalar.new(Math.random()));
+    var order2 = graph.multiply(a, graph.square(x_1));
+    var order1 = graph.multiply(b, x_1);
+    var y_1 = graph.add(graph.add(order2, order1), c);
+    var yLabel_1 = graph.placeholder('y label', []);
+    var cost_1 = graph.meanSquaredCost(y_1, yLabel_1);
+    var math = new deeplearnjs_1.NDArrayMathGPU();
+    var session_1 = new deeplearnjs_1.Session(graph, math);
+    math.scope(function (keep, track) {
+        var result = session_1.eval(y_1, [{ tensor: x_1, data: track(deeplearnjs_1.Scalar.new(4)) }]);
+        console.log(result.shape);
+        console.log(result.getValues());
+        var xs = [
+            track(deeplearnjs_1.Scalar.new(0)),
+            track(deeplearnjs_1.Scalar.new(1)),
+            track(deeplearnjs_1.Scalar.new(2)),
+            track(deeplearnjs_1.Scalar.new(3))
+        ];
+        var ys = [
+            track(deeplearnjs_1.Scalar.new(1.1)),
+            track(deeplearnjs_1.Scalar.new(5.9)),
+            track(deeplearnjs_1.Scalar.new(16.8)),
+            track(deeplearnjs_1.Scalar.new(33.9))
+        ];
+        var shuffledInputProviderBuilder = new deeplearnjs_1.InCPUMemoryShuffledInputProviderBuilder([xs, ys]);
+        var _a = shuffledInputProviderBuilder.getInputProviders(), xProvider = _a[0], yProvider = _a[1];
+        var NUM_BATCHES = 20;
+        var BATCH_SIZE = xs.length;
+        var LEARNING_RATE = .01;
+        var optimizer = new deeplearnjs_1.SGDOptimizer(LEARNING_RATE);
+        for (var i = 0; i < NUM_BATCHES; i++) {
+            var costValue = session_1.train(cost_1, [{ tensor: x_1, data: xProvider }, { tensor: yLabel_1, data: yProvider }], BATCH_SIZE, optimizer, deeplearnjs_1.CostReduction.MEAN);
+            console.log('average cost: ' + costValue.get());
         }
-        this.weights = [];
-        this.weights.push(deeplearnjs_1.Array2D.randTruncatedNormal([neuronsPerLayer, NUM_IMAGE_SPACE_VARIABLES + NUM_LATENT_VARIABLES], 0, weightsStdev));
-        for (var i = 0; i < MAX_LAYERS; i++) {
-            this.weights.push(deeplearnjs_1.Array2D.randTruncatedNormal([neuronsPerLayer, neuronsPerLayer], 0, weightsStdev));
-        }
-        this.weights.push(deeplearnjs_1.Array2D.randTruncatedNormal([4, neuronsPerLayer], 0, weightsStdev));
-    };
-    CPPN.prototype.setColorMode = function (colorMode) {
-        this.selectedColorModeName = colorMode;
-    };
-    CPPN.prototype.setActivationFunction = function (activationFunction) {
-        this.selectedActivationFunctionName = activationFunction;
-    };
-    CPPN.prototype.setNumLayers = function (numLayers) {
-        this.numLayers = numLayers;
-    };
-    CPPN.prototype.setZ1Scale = function (z1Scale) {
-        this.z1Scale = z1Scale;
-    };
-    CPPN.prototype.setZ2Scale = function (z2Scale) {
-        this.z2Scale = z2Scale;
-    };
-    CPPN.prototype.start = function () {
-        this.isInferring = true;
-        this.runInferenceLoop();
-    };
-    CPPN.prototype.runInferenceLoop = function () {
-        var _this = this;
-        if (!this.isInferring) {
-            return;
-        }
-        var colorModeIndex = this.colorModeNames.indexOf(this.selectedColorModeName);
-        var outputDimensions = colorModeOutputDimensions[this.selectedColorModeName];
-        this.z1Counter += 1 / this.z1Scale;
-        this.z2Counter += 1 / this.z2Scale;
-        var z1 = Math.sin(this.z1Counter);
-        var z2 = Math.cos(this.z2Counter);
-        var intermediateResults = [];
-        var addLatentVariablesResultTex = this.math.getTextureManager().acquireTexture(this.inputAtlas.shape);
-        nn_art_util.addLatentVariables(this.gpgpu, this.addLatentVariablesShader, this.inputAtlas.getTexture(), addLatentVariablesResultTex, this.inputAtlas.shape, z1, z2);
-        var inputAtlasWithLatentVariables = deeplearnjs_1.Array2D.make(this.inputAtlas.shape, {
-            texture: addLatentVariablesResultTex,
-            textureShapeRC: this.inputAtlas.shape
-        });
-        intermediateResults.push(inputAtlasWithLatentVariables);
-        var lastOutput = inputAtlasWithLatentVariables;
-        this.math.scope(function () {
-            for (var i = 0; i < _this.numLayers; i++) {
-                var matmulResult = _this.math.matMul(_this.weights[i], lastOutput);
-                lastOutput = (i === _this.numLayers - 1) ?
-                    _this.math.sigmoid(matmulResult) :
-                    activationFunctionMap[_this.selectedActivationFunctionName](_this.math, matmulResult);
-            }
-            nn_art_util.render(_this.gpgpu, _this.renderShader, lastOutput.getTexture(), outputDimensions, colorModeIndex);
-        });
-        inputAtlasWithLatentVariables.dispose();
-        requestAnimationFrame(function () { return _this.runInferenceLoop(); });
-    };
-    CPPN.prototype.stopInferenceLoop = function () {
-        this.isInferring = false;
-    };
-    return CPPN;
-}());
-exports.CPPN = CPPN;
+        result = session_1.eval(y_1, [{ tensor: x_1, data: track(deeplearnjs_1.Scalar.new(4)) }]);
+        console.log('result should be ~57.0:');
+        console.log(result.shape);
+        console.log(result.getValues());
+    });
+}
 
-},{"../deeplearnjs":1,"./nn_art_util":6}],5:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-require("../demo-header");
-require("../demo-footer");
-var polymer_spec_1 = require("../polymer-spec");
-var cppn_1 = require("./cppn");
-var CANVAS_UPSCALE_FACTOR = 3;
-var MAT_WIDTH = 30;
-var WEIGHTS_STDEV = .6;
-var NNArtPolymer = polymer_spec_1.PolymerElement({ is: 'nn-art', properties: {
-        colorModeNames: Array,
-        selectedColorModeName: String,
-        activationFunctionNames: Array,
-        selectedActivationFunctionName: String
-    } });
-var NNArt = (function (_super) {
-    __extends(NNArt, _super);
-    function NNArt() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    NNArt.prototype.ready = function () {
-        var _this = this;
-        this.inferenceCanvas =
-            this.querySelector('#inference');
-        this.cppn = new cppn_1.CPPN(this.inferenceCanvas);
-        this.inferenceCanvas.style.width =
-            this.inferenceCanvas.width * CANVAS_UPSCALE_FACTOR + 'px';
-        this.inferenceCanvas.style.height =
-            this.inferenceCanvas.height * CANVAS_UPSCALE_FACTOR + 'px';
-        this.colorModeNames = ['rgb', 'rgba', 'hsv', 'hsva', 'yuv', 'yuva', 'bw'];
-        this.selectedColorModeName = 'rgb';
-        this.cppn.setColorMode(this.selectedColorModeName);
-        this.querySelector('#color-mode-dropdown').addEventListener('iron-activate', function (event) {
-            _this.selectedColorModeName = event.detail.selected;
-            _this.cppn.setColorMode(_this.selectedColorModeName);
-        });
-        this.activationFunctionNames = ['tanh', 'sin', 'relu', 'step'];
-        this.selectedActivationFunctionName = 'tanh';
-        this.cppn.setActivationFunction(this.selectedActivationFunctionName);
-        this.querySelector('#activation-function-dropdown').addEventListener('iron-activate', function (event) {
-            _this.selectedActivationFunctionName = event.detail.selected;
-            _this.cppn.setActivationFunction(_this.selectedActivationFunctionName);
-        });
-        var layersSlider = this.querySelector('#layers-slider');
-        var layersCountElement = this.querySelector('#layers-count');
-        layersSlider.addEventListener('immediate-value-changed', function (event) {
-            _this.numLayers = parseInt(event.target.immediateValue, 10);
-            layersCountElement.innerText = '' + _this.numLayers;
-            _this.cppn.setNumLayers(_this.numLayers);
-        });
-        this.numLayers = parseInt(layersSlider.value, 10);
-        layersCountElement.innerText = '' + this.numLayers;
-        this.cppn.setNumLayers(this.numLayers);
-        var z1Slider = this.querySelector('#z1-slider');
-        z1Slider.addEventListener('immediate-value-changed', function (event) {
-            _this.z1Scale = parseInt(event.target.immediateValue, 10);
-            _this.cppn.setZ1Scale(convertZScale(_this.z1Scale));
-        });
-        this.z1Scale = parseInt(z1Slider.value, 10);
-        this.cppn.setZ1Scale(convertZScale(this.z1Scale));
-        var z2Slider = this.querySelector('#z2-slider');
-        z2Slider.addEventListener('immediate-value-changed', function (event) {
-            _this.z2Scale = parseInt(event.target.immediateValue, 10);
-            _this.cppn.setZ2Scale(convertZScale(_this.z2Scale));
-        });
-        this.z2Scale = parseInt(z2Slider.value, 10);
-        this.cppn.setZ2Scale(convertZScale(this.z2Scale));
-        var randomizeButton = this.querySelector('#random');
-        randomizeButton.addEventListener('click', function () {
-            _this.cppn.generateWeights(MAT_WIDTH, WEIGHTS_STDEV);
-        });
-        this.cppn.generateWeights(MAT_WIDTH, WEIGHTS_STDEV);
-        this.cppn.start();
-    };
-    return NNArt;
-}(NNArtPolymer));
-function convertZScale(z) {
-    return (103 - z);
-}
-document.registerElement(NNArt.prototype.is, NNArt);
-
-},{"../demo-footer":2,"../demo-header":3,"../polymer-spec":7,"./cppn":4}],6:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var deeplearnjs_1 = require("../deeplearnjs");
-function createInputAtlas(imageSize, inputNumDimensions, numLatentVariables) {
-    var coords = new Float32Array(imageSize * imageSize * (inputNumDimensions + numLatentVariables));
-    var dst = 0;
-    for (var d = 0; d < inputNumDimensions + numLatentVariables; d++) {
-        for (var i = 0; i < imageSize * imageSize; i++) {
-            var x = i % imageSize;
-            var y = Math.floor(i / imageSize);
-            var coord = imagePixelToNormalizedCoord(x, y, imageSize, imageSize, numLatentVariables);
-            coords[dst++] = coord[d];
-        }
-    }
-    return deeplearnjs_1.Array2D.new([inputNumDimensions + numLatentVariables, imageSize * imageSize], coords);
-}
-exports.createInputAtlas = createInputAtlas;
-function getAddLatentVariablesShader(gpgpu, inputNumDimensions) {
-    var fragmentShaderSource = "\n    precision highp float;\n    uniform sampler2D source;\n    varying vec2 resultUV;\n\n    uniform vec2 z;\n\n    const vec2 halfCR = vec2(0.5, 0.5);\n\n    void main() {\n      vec2 outputCR = floor(gl_FragCoord.xy);\n      if (outputCR[1] == " + inputNumDimensions + ".0) {\n        gl_FragColor = vec4(z[0], 0, 0, 0);\n      } else if (outputCR[1] > " + inputNumDimensions + ".0) {\n        gl_FragColor = vec4(z[1], 0, 0, 0);\n      } else {\n        gl_FragColor = texture2D(source, resultUV);\n      }\n    }";
-    return gpgpu.createProgram(fragmentShaderSource);
-}
-exports.getAddLatentVariablesShader = getAddLatentVariablesShader;
-function addLatentVariables(gpgpu, addZShader, sourceTex, resultTex, shapeRowCol, z1, z2) {
-    gpgpu.setOutputMatrixTexture(resultTex, shapeRowCol[0], shapeRowCol[1]);
-    gpgpu.setProgram(addZShader);
-    gpgpu.setInputMatrixTexture(sourceTex, 'source', 0);
-    var zLoc = gpgpu.getUniformLocation('z');
-    gpgpu.gl.uniform2f(zLoc, z1, z2);
-    gpgpu.executeProgram();
-}
-exports.addLatentVariables = addLatentVariables;
-function getRenderShader(gpgpu, imageSize) {
-    var fragmentShaderSource = "\n    precision highp float;\n    uniform sampler2D source;\n    varying vec2 resultUV;\n\n    uniform int colorMode;\n    uniform float outputNumDimensions;\n\n    const float destinationSize = " + imageSize + ".0;\n\n    const mat3 yuv2rgb = mat3(\n          1,       1,     1,\n          0, -.34413, 1.772,\n      1.402, -.71414,     0);\n\n    vec3 hsv2rgb(vec3 c) {\n      vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);\n      vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);\n      return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);\n    }\n\n    void main() {\n      vec2 outputCR = floor(gl_FragCoord.xy);\n      float inputC = outputCR.y * destinationSize + outputCR.x;\n      float u = (inputC + 0.5) / " + imageSize * imageSize + ".0;\n\n      vec4 inputR = vec4(0.0, 1.0, 2.0, 3.0);\n      vec4 v = (inputR + 0.5) / outputNumDimensions;\n\n      vec4 values = vec4(\n        texture2D(source, vec2(u, v[0])).r,\n        texture2D(source, vec2(u, v[1])).r,\n        texture2D(source, vec2(u, v[2])).r,\n        texture2D(source, vec2(u, v[3])).r);\n\n      if (colorMode == 0) {\n        // RGB\n        gl_FragColor = vec4(values.rgb, 1.0);\n      } else if (colorMode == 1) {\n        // RGBA\n        gl_FragColor = values;\n      } else if (colorMode == 2) {\n        // HSV\n        vec3 rgb = hsv2rgb(values.rgb);\n        gl_FragColor = vec4(rgb, 1.0);\n      } else if (colorMode == 3) {\n        // HSVA\n        vec3 rgb = hsv2rgb(values.rgb);\n        gl_FragColor = vec4(rgb, values[3]);\n      } else if (colorMode == 4 || colorMode == 5) {\n        // YUV\n        values[0] = clamp(values[0], 0.2, 0.8);\n        values[1] = values[1] - 0.5;\n        values[2] = values[2] - 0.5;\n        vec3 rgb = yuv2rgb * values.rgb;\n        if (colorMode == 4) {\n          // YUV\n          gl_FragColor = vec4(rgb, 1.0);\n        } else if (colorMode == 5) {\n          // YUVA\n          gl_FragColor = vec4(rgb, values.a);\n        }\n      } else if (colorMode == 6) {\n        gl_FragColor = vec4(values[0], values[0], values[0], 1.0);\n      }\n    }";
-    return gpgpu.createProgram(fragmentShaderSource);
-}
-exports.getRenderShader = getRenderShader;
-function render(gpgpu, renderShader, sourceTex, outputNumDimensions, colorMode) {
-    deeplearnjs_1.webgl_util.bindCanvasToFramebuffer(gpgpu.gl);
-    gpgpu.setProgram(renderShader);
-    gpgpu.setInputMatrixTexture(sourceTex, 'source', 0);
-    var colorModeLoc = gpgpu.getUniformLocation('colorMode');
-    gpgpu.gl.uniform1i(colorModeLoc, colorMode);
-    var outputNumDimensionsLoc = gpgpu.getUniformLocation('outputNumDimensions');
-    gpgpu.gl.uniform1f(outputNumDimensionsLoc, outputNumDimensions);
-    gpgpu.executeProgram();
-}
-exports.render = render;
-function imagePixelToNormalizedCoord(x, y, imageWidth, imageHeight, zSize) {
-    var halfWidth = imageWidth * 0.5;
-    var halfHeight = imageHeight * 0.5;
-    var normX = (x - halfWidth) / imageWidth;
-    var normY = (y - halfHeight) / imageHeight;
-    var r = Math.sqrt(normX * normX + normY * normY);
-    var result = [normX, normY, r];
-    for (var i = 0; i < zSize; i++) {
-        result.push(0);
-    }
-    return result;
-}
-exports.imagePixelToNormalizedCoord = imagePixelToNormalizedCoord;
-
-},{"../deeplearnjs":1}],7:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-function PolymerElement(spec) {
-    return Polymer.Class(spec);
-}
-exports.PolymerElement = PolymerElement;
-
-},{}],8:[function(require,module,exports){
+},{"../deeplearnjs":1}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -382,7 +164,7 @@ var CheckpointLoader = (function () {
 }());
 exports.CheckpointLoader = CheckpointLoader;
 
-},{"./math/ndarray":25}],9:[function(require,module,exports){
+},{"./math/ndarray":20}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -547,7 +329,7 @@ var InMemoryDataset = (function () {
 }());
 exports.InMemoryDataset = InMemoryDataset;
 
-},{"./math/ndarray":25,"./util":78}],10:[function(require,module,exports){
+},{"./math/ndarray":20,"./util":73}],5:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -1121,7 +903,7 @@ var ArgMaxEqualsNode = (function (_super) {
 }(Node));
 exports.ArgMaxEqualsNode = ArgMaxEqualsNode;
 
-},{"./graph_layers":11,"./math/concat3d_util":18,"./math/conv_util":19,"./math/ndarray":25,"./util":78}],11:[function(require,module,exports){
+},{"./graph_layers":6,"./math/concat3d_util":13,"./math/conv_util":14,"./math/ndarray":20,"./util":73}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var initializers_1 = require("./initializers");
@@ -1149,7 +931,7 @@ var GraphLayers = (function () {
 }());
 exports.GraphLayers = GraphLayers;
 
-},{"./initializers":15}],12:[function(require,module,exports){
+},{"./initializers":10}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1372,7 +1154,7 @@ var GraphRunner = (function () {
 }());
 exports.GraphRunner = GraphRunner;
 
-},{"./math/ndarray":25,"./session":74}],13:[function(require,module,exports){
+},{"./math/ndarray":20,"./session":69}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -1449,7 +1231,7 @@ function isPassthroughNode(node, map) {
 }
 exports.isPassthroughNode = isPassthroughNode;
 
-},{"./graph":10,"./priority_queue":73}],14:[function(require,module,exports){
+},{"./graph":5,"./priority_queue":68}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("./math/conv_util");
@@ -1510,7 +1292,7 @@ exports.SGDOptimizer = sgd_optimizer_1.SGDOptimizer;
 var momentum_optimizer_1 = require("./momentum_optimizer");
 exports.MomentumOptimizer = momentum_optimizer_1.MomentumOptimizer;
 
-},{"./checkpoint_loader":8,"./dataset":9,"./graph":10,"./graph_runner":12,"./initializers":15,"./input_provider":16,"./math/conv_util":19,"./math/math":22,"./math/math_cpu":23,"./math/math_gpu":24,"./math/ndarray":25,"./math/webgl/gpgpu_context":35,"./math/webgl/gpgpu_util":37,"./math/webgl/render_ndarray_gpu_util":44,"./math/webgl/webgl_util":50,"./momentum_optimizer":51,"./optimizer":72,"./session":74,"./sgd_optimizer":76,"./util":78}],15:[function(require,module,exports){
+},{"./checkpoint_loader":3,"./dataset":4,"./graph":5,"./graph_runner":7,"./initializers":10,"./input_provider":11,"./math/conv_util":14,"./math/math":17,"./math/math_cpu":18,"./math/math_gpu":19,"./math/ndarray":20,"./math/webgl/gpgpu_context":30,"./math/webgl/gpgpu_util":32,"./math/webgl/render_ndarray_gpu_util":39,"./math/webgl/webgl_util":45,"./momentum_optimizer":46,"./optimizer":67,"./session":69,"./sgd_optimizer":71,"./util":73}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -1634,7 +1416,7 @@ var RandomUniformInitializer = (function () {
 }());
 exports.RandomUniformInitializer = RandomUniformInitializer;
 
-},{"./math/ndarray":25}],16:[function(require,module,exports){
+},{"./math/ndarray":20}],11:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -1737,7 +1519,7 @@ var InGPUMemoryShuffledInputProviderBuilder = (function (_super) {
 }(InMemoryShuffledInputProviderBuilder));
 exports.InGPUMemoryShuffledInputProviderBuilder = InGPUMemoryShuffledInputProviderBuilder;
 
-},{"./math/ndarray":25,"./util":78}],17:[function(require,module,exports){
+},{"./math/ndarray":20,"./util":73}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./ndarray");
@@ -1808,7 +1590,7 @@ var SquareFunc = (function () {
 }());
 exports.SquareFunc = SquareFunc;
 
-},{"./ndarray":25}],18:[function(require,module,exports){
+},{"./ndarray":20}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -1833,7 +1615,7 @@ function computeConcat3DOutputShape(x1Shape, x2Shape, axis) {
 }
 exports.computeConcat3DOutputShape = computeConcat3DOutputShape;
 
-},{"../util":78}],19:[function(require,module,exports){
+},{"../util":73}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -1920,7 +1702,7 @@ function computeDilatedRC(rc, origStride) {
 }
 exports.computeDilatedRC = computeDilatedRC;
 
-},{"../util":78}],20:[function(require,module,exports){
+},{"../util":73}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function validateShapes(sourceSize, destSize) {
@@ -1935,7 +1717,7 @@ function validateShapes(sourceSize, destSize) {
 }
 exports.validateShapes = validateShapes;
 
-},{}],21:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./ndarray");
@@ -1961,7 +1743,7 @@ var SquareCostFunc = (function () {
 }());
 exports.SquareCostFunc = SquareCostFunc;
 
-},{"./ndarray":25}],22:[function(require,module,exports){
+},{"./ndarray":20}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../util");
@@ -2543,7 +2325,7 @@ function parseTupleParam(param) {
     return typeof param === 'number' ? [param, param] : param;
 }
 
-},{"../util":78,"./concat3d_util":18,"./conv_util":19,"./copy2d_util":20,"./ndarray":25}],23:[function(require,module,exports){
+},{"../util":73,"./concat3d_util":13,"./conv_util":14,"./copy2d_util":15,"./ndarray":20}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3194,7 +2976,7 @@ var NDArrayMathCPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathCPU = NDArrayMathCPU;
 
-},{"../util":78,"./concat3d_util":18,"./conv_util":19,"./copy2d_util":20,"./math":22,"./ndarray":25}],24:[function(require,module,exports){
+},{"../util":73,"./concat3d_util":13,"./conv_util":14,"./copy2d_util":15,"./math":17,"./ndarray":20}],19:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3471,7 +3253,7 @@ var NDArrayMathGPU = (function (_super) {
 }(math_1.NDArrayMath));
 exports.NDArrayMathGPU = NDArrayMathGPU;
 
-},{"./math":22,"./ndarray":25,"./webgl/addscaledmat_gpu":26,"./webgl/argmaxequals_gpu":27,"./webgl/argminmax_gpu":28,"./webgl/batchnorm_gpu":29,"./webgl/binaryop_gpu":30,"./webgl/concat3d_gpu":31,"./webgl/conv_backprop_gpu":32,"./webgl/conv_gpu":33,"./webgl/copy_gpu":34,"./webgl/gpgpu_context":35,"./webgl/gpgpu_math":36,"./webgl/gpgpu_util":37,"./webgl/logsumexp_gpu":38,"./webgl/max_pool_backprop_gpu":39,"./webgl/minmax_gpu":40,"./webgl/mulmat_gpu":41,"./webgl/pool_gpu":42,"./webgl/reducesum_gpu":43,"./webgl/resize_bilinear_gpu":45,"./webgl/texture_manager":48,"./webgl/unaryop_gpu":49,"./webgl/webgl_util":50}],25:[function(require,module,exports){
+},{"./math":17,"./ndarray":20,"./webgl/addscaledmat_gpu":21,"./webgl/argmaxequals_gpu":22,"./webgl/argminmax_gpu":23,"./webgl/batchnorm_gpu":24,"./webgl/binaryop_gpu":25,"./webgl/concat3d_gpu":26,"./webgl/conv_backprop_gpu":27,"./webgl/conv_gpu":28,"./webgl/copy_gpu":29,"./webgl/gpgpu_context":30,"./webgl/gpgpu_math":31,"./webgl/gpgpu_util":32,"./webgl/logsumexp_gpu":33,"./webgl/max_pool_backprop_gpu":34,"./webgl/minmax_gpu":35,"./webgl/mulmat_gpu":36,"./webgl/pool_gpu":37,"./webgl/reducesum_gpu":38,"./webgl/resize_bilinear_gpu":40,"./webgl/texture_manager":43,"./webgl/unaryop_gpu":44,"./webgl/webgl_util":45}],20:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3906,7 +3688,7 @@ function toTypedArray(a) {
     return (a instanceof Float32Array) ? a : new Float32Array(util.flatten(a));
 }
 
-},{"../util":78,"./webgl/webgl_util":50}],26:[function(require,module,exports){
+},{"../util":73,"./webgl/webgl_util":45}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -3922,7 +3704,7 @@ var AddScaledMatProgram = (function () {
 }());
 exports.AddScaledMatProgram = AddScaledMatProgram;
 
-},{"../../util":78}],27:[function(require,module,exports){
+},{"../../util":73}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var argminmax_gpu = require("./argminmax_gpu");
@@ -3939,7 +3721,7 @@ var ArgMaxEqualsProgram = (function () {
 }());
 exports.ArgMaxEqualsProgram = ArgMaxEqualsProgram;
 
-},{"./argminmax_gpu":28}],28:[function(require,module,exports){
+},{"./argminmax_gpu":23}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getArgMinMaxSnippet(op, texName, size) {
@@ -3959,7 +3741,7 @@ var ArgMinMaxProgram = (function () {
 }());
 exports.ArgMinMaxProgram = ArgMinMaxProgram;
 
-},{}],29:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -3991,7 +3773,7 @@ var BatchNormProgram = (function () {
 }());
 exports.BatchNormProgram = BatchNormProgram;
 
-},{"../../util":78}],30:[function(require,module,exports){
+},{"../../util":73}],25:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -4007,7 +3789,7 @@ var BinaryOpProgram = (function () {
 }());
 exports.BinaryOpProgram = BinaryOpProgram;
 
-},{"../../util":78}],31:[function(require,module,exports){
+},{"../../util":73}],26:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var concat3d_util = require("../concat3d_util");
@@ -4027,7 +3809,7 @@ var Concat3DProgram = (function () {
 }());
 exports.Concat3DProgram = Concat3DProgram;
 
-},{"../concat3d_util":18}],32:[function(require,module,exports){
+},{"../concat3d_util":13}],27:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var conv_util = require("../conv_util");
@@ -4076,7 +3858,7 @@ var Conv2DDerBiasProgram = (function () {
 }());
 exports.Conv2DDerBiasProgram = Conv2DDerBiasProgram;
 
-},{"../conv_util":19}],33:[function(require,module,exports){
+},{"../conv_util":14}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Conv2DProgram = (function () {
@@ -4098,7 +3880,7 @@ var Conv2DProgram = (function () {
 }());
 exports.Conv2DProgram = Conv2DProgram;
 
-},{}],34:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Copy2DProgram = (function () {
@@ -4121,7 +3903,7 @@ var Copy2DProgram = (function () {
 }());
 exports.Copy2DProgram = Copy2DProgram;
 
-},{}],35:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var gpgpu_util = require("./gpgpu_util");
@@ -4349,7 +4131,7 @@ var GPGPUContext = (function () {
 }());
 exports.GPGPUContext = GPGPUContext;
 
-},{"./gpgpu_util":37,"./tex_util":47,"./webgl_util":50}],36:[function(require,module,exports){
+},{"./gpgpu_util":32,"./tex_util":42,"./webgl_util":45}],31:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -4425,7 +4207,7 @@ function makeShaderKey(program, inputs, output) {
 }
 exports.makeShaderKey = makeShaderKey;
 
-},{"../../util":78,"./shader_compiler":46}],37:[function(require,module,exports){
+},{"../../util":73,"./shader_compiler":41}],32:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tex_util = require("./tex_util");
@@ -4602,7 +4384,7 @@ function downloadMatrixFromPackedOutputTexture(gl, rows, columns) {
 }
 exports.downloadMatrixFromPackedOutputTexture = downloadMatrixFromPackedOutputTexture;
 
-},{"./tex_util":47,"./webgl_util":50}],38:[function(require,module,exports){
+},{"./tex_util":42,"./webgl_util":45}],33:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var LogSumExpProgram = (function () {
@@ -4616,7 +4398,7 @@ var LogSumExpProgram = (function () {
 }());
 exports.LogSumExpProgram = LogSumExpProgram;
 
-},{}],39:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var MaxPool2DBackpropProgram = (function () {
@@ -4640,7 +4422,7 @@ var MaxPool2DBackpropProgram = (function () {
 }());
 exports.MaxPool2DBackpropProgram = MaxPool2DBackpropProgram;
 
-},{}],40:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var MinMaxProgram = (function () {
@@ -4654,7 +4436,7 @@ var MinMaxProgram = (function () {
 }());
 exports.MinMaxProgram = MinMaxProgram;
 
-},{}],41:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var math_1 = require("../math");
@@ -4676,7 +4458,7 @@ var MatMulProgram = (function () {
 }());
 exports.MatMulProgram = MatMulProgram;
 
-},{"../math":22}],42:[function(require,module,exports){
+},{"../math":17}],37:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Pool2DProgram = (function () {
@@ -4712,7 +4494,7 @@ var Pool2DProgram = (function () {
 }());
 exports.Pool2DProgram = Pool2DProgram;
 
-},{}],43:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ReduceSumProgram = (function () {
@@ -4727,7 +4509,7 @@ var ReduceSumProgram = (function () {
 }());
 exports.ReduceSumProgram = ReduceSumProgram;
 
-},{}],44:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var webgl_util = require("./webgl_util");
@@ -4748,7 +4530,7 @@ function renderToFramebuffer(gpgpu, renderShader, sourceTex) {
 }
 exports.renderToFramebuffer = renderToFramebuffer;
 
-},{"./webgl_util":50}],45:[function(require,module,exports){
+},{"./webgl_util":45}],40:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ResizeBilinear3DProgram = (function () {
@@ -4774,7 +4556,7 @@ var ResizeBilinear3DProgram = (function () {
 }());
 exports.ResizeBilinear3DProgram = ResizeBilinear3DProgram;
 
-},{}],46:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var util = require("../../util");
@@ -4969,7 +4751,7 @@ function getSamplerAtOutputCoords(texName, inTexShape, outTexShape, broadcast) {
     return "\n    float " + funcName + "() {\n      ivec2 resTexRC = ivec2(gl_FragCoord.yx);\n      int index = resTexRC.x * " + outTexShape[1] + " + resTexRC.y;\n      " + broadcastSnippet + "\n      int texR = index / " + inTexShape[1] + ";\n      int texC = index - texR * " + inTexShape[1] + ";\n      vec2 uv = (vec2(texC, texR) + halfCR) /\n                 vec2(" + inTexShape[1] + ".0, " + inTexShape[0] + ".0);\n      return sample(" + texName + ", uv);\n    }\n  ";
 }
 
-},{"../../util":78}],47:[function(require,module,exports){
+},{"../../util":73}],42:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getUnpackedMatrixTextureShapeWidthHeight(rows, columns) {
@@ -5137,7 +4919,7 @@ function decodeMatrixFromPackedRGBA(packedRGBA, rows, columns, matrix) {
 }
 exports.decodeMatrixFromPackedRGBA = decodeMatrixFromPackedRGBA;
 
-},{}],48:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TextureManager = (function () {
@@ -5208,7 +4990,7 @@ function getKeyFromTextureShape(shapeRowsCol) {
     return shapeRowsCol[0] + '_' + shapeRowsCol[1];
 }
 
-},{}],49:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var UnaryOp;
@@ -5261,7 +5043,7 @@ function getOpSnippet(op) {
     }
 }
 
-},{}],50:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var USE_WEBGL2_WHEN_AVAILABLE = true;
@@ -5580,7 +5362,7 @@ function getTextureShapeFromLogicalShape(gl, logShape, preferredTexShape) {
 }
 exports.getTextureShapeFromLogicalShape = getTextureShapeFromLogicalShape;
 
-},{"../../util":78}],51:[function(require,module,exports){
+},{"../../util":73}],46:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5651,7 +5433,7 @@ var MomentumOptimizer = (function (_super) {
 }(sgd_optimizer_1.SGDOptimizer));
 exports.MomentumOptimizer = MomentumOptimizer;
 
-},{"./math/ndarray":25,"./sgd_optimizer":76,"./tensor_array_map":77}],52:[function(require,module,exports){
+},{"./math/ndarray":20,"./sgd_optimizer":71,"./tensor_array_map":72}],47:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -5765,7 +5547,7 @@ function emitOpFromNode(node) {
     }
 }
 
-},{"./graph":10,"./graph_util":13,"./ops/add":53,"./ops/argmax":54,"./ops/argmaxequals":55,"./ops/concat3d":56,"./ops/convolution":57,"./ops/divide":58,"./ops/element_wise_activation":59,"./ops/element_wise_cost":60,"./ops/exp":61,"./ops/linear_combination":62,"./ops/log":63,"./ops/matmul":64,"./ops/max_pool":65,"./ops/multiply":66,"./ops/reduce_sum":68,"./ops/reshape":69,"./ops/softmax":70,"./ops/subtract":71}],53:[function(require,module,exports){
+},{"./graph":5,"./graph_util":8,"./ops/add":48,"./ops/argmax":49,"./ops/argmaxequals":50,"./ops/concat3d":51,"./ops/convolution":52,"./ops/divide":53,"./ops/element_wise_activation":54,"./ops/element_wise_cost":55,"./ops/exp":56,"./ops/linear_combination":57,"./ops/log":58,"./ops/matmul":59,"./ops/max_pool":60,"./ops/multiply":61,"./ops/reduce_sum":63,"./ops/reshape":64,"./ops/softmax":65,"./ops/subtract":66}],48:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5852,7 +5634,7 @@ var Add = (function (_super) {
 }(op_1.Operation));
 exports.Add = Add;
 
-},{"../graph_util":13,"../math/ndarray":25,"../util":78,"./op":67}],54:[function(require,module,exports){
+},{"../graph_util":8,"../math/ndarray":20,"../util":73,"./op":62}],49:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5888,7 +5670,7 @@ var ArgMax = (function (_super) {
 }(op_1.Operation));
 exports.ArgMax = ArgMax;
 
-},{"./op":67}],55:[function(require,module,exports){
+},{"./op":62}],50:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5926,7 +5708,7 @@ var ArgMaxEquals = (function (_super) {
 }(op_1.Operation));
 exports.ArgMaxEquals = ArgMaxEquals;
 
-},{"./op":67}],56:[function(require,module,exports){
+},{"./op":62}],51:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -5968,7 +5750,7 @@ var Concat3D = (function (_super) {
 }(op_1.Operation));
 exports.Concat3D = Concat3D;
 
-},{"../math/concat3d_util":18,"./op":67}],57:[function(require,module,exports){
+},{"../math/concat3d_util":13,"./op":62}],52:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6037,7 +5819,7 @@ var Convolution2D = (function (_super) {
 }(op_1.Operation));
 exports.Convolution2D = Convolution2D;
 
-},{"../math/conv_util":19,"../util":78,"./op":67}],58:[function(require,module,exports){
+},{"../math/conv_util":14,"../util":73,"./op":62}],53:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6132,7 +5914,7 @@ var Divide = (function (_super) {
 }(op_1.Operation));
 exports.Divide = Divide;
 
-},{"../graph_util":13,"../util":78,"./op":67}],59:[function(require,module,exports){
+},{"../graph_util":8,"../util":73,"./op":62}],54:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6210,7 +5992,7 @@ var Square = (function (_super) {
 }(ElementWiseActivation));
 exports.Square = Square;
 
-},{"../math/activation_functions":17,"./op":67}],60:[function(require,module,exports){
+},{"../math/activation_functions":12,"./op":62}],55:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6279,7 +6061,7 @@ var MeanSquaredCost = (function (_super) {
 }(ElementWiseCost));
 exports.MeanSquaredCost = MeanSquaredCost;
 
-},{"../graph_util":13,"../math/cost_functions":21,"../math/ndarray":25,"../util":78,"./op":67}],61:[function(require,module,exports){
+},{"../graph_util":8,"../math/cost_functions":16,"../math/ndarray":20,"../util":73,"./op":62}],56:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6323,7 +6105,7 @@ var Exp = (function (_super) {
 }(op_1.Operation));
 exports.Exp = Exp;
 
-},{"../graph_util":13,"./op":67}],62:[function(require,module,exports){
+},{"../graph_util":8,"./op":62}],57:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6387,7 +6169,7 @@ var LinearCombination = (function (_super) {
 }(op_1.Operation));
 exports.LinearCombination = LinearCombination;
 
-},{"../graph_util":13,"./op":67}],63:[function(require,module,exports){
+},{"../graph_util":8,"./op":62}],58:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6431,7 +6213,7 @@ var Log = (function (_super) {
 }(op_1.Operation));
 exports.Log = Log;
 
-},{"../graph_util":13,"./op":67}],64:[function(require,module,exports){
+},{"../graph_util":8,"./op":62}],59:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6500,7 +6282,7 @@ var MatMul = (function (_super) {
 }(op_1.Operation));
 exports.MatMul = MatMul;
 
-},{"../graph_util":13,"../math/math":22,"./op":67}],65:[function(require,module,exports){
+},{"../graph_util":8,"../math/math":17,"./op":62}],60:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6554,7 +6336,7 @@ var MaxPool = (function (_super) {
 }(op_1.Operation));
 exports.MaxPool = MaxPool;
 
-},{"../math/conv_util":19,"../util":78,"./op":67}],66:[function(require,module,exports){
+},{"../math/conv_util":14,"../util":73,"./op":62}],61:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6637,7 +6419,7 @@ var Multiply = (function (_super) {
 }(op_1.Operation));
 exports.Multiply = Multiply;
 
-},{"../graph_util":13,"../util":78,"./op":67}],67:[function(require,module,exports){
+},{"../graph_util":8,"../util":73,"./op":62}],62:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Operation = (function () {
@@ -6649,7 +6431,7 @@ var Operation = (function () {
 }());
 exports.Operation = Operation;
 
-},{}],68:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6701,7 +6483,7 @@ var ReduceSum = (function (_super) {
 }(op_1.Operation));
 exports.ReduceSum = ReduceSum;
 
-},{"../graph_util":13,"../math/ndarray":25,"../util":78,"./op":67}],69:[function(require,module,exports){
+},{"../graph_util":8,"../math/ndarray":20,"../util":73,"./op":62}],64:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6745,7 +6527,7 @@ var Reshape = (function (_super) {
 }(op_1.Operation));
 exports.Reshape = Reshape;
 
-},{"../util":78,"./op":67}],70:[function(require,module,exports){
+},{"../util":73,"./op":62}],65:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6833,7 +6615,7 @@ function crossEntropyCost(math, y, target, epsilon) {
 }
 exports.crossEntropyCost = crossEntropyCost;
 
-},{"../graph":10,"../math/ndarray":25,"../util":78,"./op":67}],71:[function(require,module,exports){
+},{"../graph":5,"../math/ndarray":20,"../util":73,"./op":62}],66:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -6921,7 +6703,7 @@ var Subtract = (function (_super) {
 }(op_1.Operation));
 exports.Subtract = Subtract;
 
-},{"../graph_util":13,"../math/ndarray":25,"../util":78,"./op":67}],72:[function(require,module,exports){
+},{"../graph_util":8,"../math/ndarray":20,"../util":73,"./op":62}],67:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Optimizer = (function () {
@@ -6934,7 +6716,7 @@ var Optimizer = (function () {
 }());
 exports.Optimizer = Optimizer;
 
-},{}],73:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function defaultCompare(a, b) {
@@ -7065,7 +6847,7 @@ var PriorityQueue = (function () {
 }());
 exports.PriorityQueue = PriorityQueue;
 
-},{}],74:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ndarray_1 = require("./math/ndarray");
@@ -7203,7 +6985,7 @@ var Session = (function () {
 }());
 exports.Session = Session;
 
-},{"./math/ndarray":25,"./operation_emitter":52,"./session_util":75,"./tensor_array_map":77,"./util":78}],75:[function(require,module,exports){
+},{"./math/ndarray":20,"./operation_emitter":47,"./session_util":70,"./tensor_array_map":72,"./util":73}],70:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var graph_1 = require("./graph");
@@ -7331,7 +7113,7 @@ function throwErrorIfEvaluationSetContainsPlaceholderNodes(evaluationSet) {
 }
 exports.throwErrorIfEvaluationSetContainsPlaceholderNodes = throwErrorIfEvaluationSetContainsPlaceholderNodes;
 
-},{"./graph":10,"./graph_util":13,"./math/ndarray":25,"./util":78}],76:[function(require,module,exports){
+},{"./graph":5,"./graph_util":8,"./math/ndarray":20,"./util":73}],71:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7407,7 +7189,7 @@ var SGDOptimizer = (function (_super) {
 }(optimizer_1.Optimizer));
 exports.SGDOptimizer = SGDOptimizer;
 
-},{"./math/ndarray":25,"./optimizer":72,"./session_util":75,"./tensor_array_map":77}],77:[function(require,module,exports){
+},{"./math/ndarray":20,"./optimizer":67,"./session_util":70,"./tensor_array_map":72}],72:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -7507,7 +7289,7 @@ var SummedTensorArrayMap = (function (_super) {
 }(TensorArrayMapBase));
 exports.SummedTensorArrayMap = SummedTensorArrayMap;
 
-},{}],78:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function shuffle(array) {
@@ -7693,4 +7475,4 @@ function rightPad(a, size) {
 }
 exports.rightPad = rightPad;
 
-},{}]},{},[5]);
+},{}]},{},[2]);
