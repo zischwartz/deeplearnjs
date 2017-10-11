@@ -48,10 +48,10 @@ class Encoder {
     this.presigVars = presigVars;
   }
 
-  private runLstm(inputs: Array2D, lstmVars: LayerVars, reverse: boolean) {
+  private runLstm(inputs: Array2D, lstmVars: LayerVars, reverse: boolean, track: Function) {
     let state = [
-      Array2D.zeros([1, lstmVars.bias.shape[0] / 4]),
-      Array2D.zeros([1, lstmVars.bias.shape[0] / 4])
+      track(Array2D.zeros([1, lstmVars.bias.shape[0] / 4])),
+      track(Array2D.zeros([1, lstmVars.bias.shape[0] / 4]))
     ]
     let lstm = math.basicLSTMCell.bind(math, forgetBias, lstmVars.kernel, lstmVars.bias);
     for (let i = 0; i < inputs.shape[0]; i++) {
@@ -63,11 +63,11 @@ class Encoder {
   }
 
   encode(sequence: Array2D, track: Function) {
-    const fw_state = this.runLstm(sequence, this.lstmFwVars, false)
-    track(fw_state)
-    const bw_state = this.runLstm(sequence, this.lstmBwVars, true)
-    track(bw_state)
-    const final_state = math.concat2D(fw_state[1], bw_state[1], -1)
+    const fw_state = this.runLstm(sequence, this.lstmFwVars, false, track);
+    //track(fw_state)
+    const bw_state = this.runLstm(sequence, this.lstmBwVars, true, track);
+    //track(bw_state)
+    const final_state = math.concat2D(fw_state[1], bw_state[1], 1)
     const mu = dense(this.muVars, final_state) as Array2D;
     const presig = dense(this.presigVars, final_state) as Array2D;
     const sigma = math.exp(math.arrayDividedByScalar(presig, presigDivisor));
@@ -128,8 +128,9 @@ function initialize() {
 
 function encode(encoder: Encoder) {
   const result = math.scope((keep, track) => {
-    const rand_labels = track(Array1D.randUniform([16], 0, 129));
-    const rand_inputs = math.oneHot(rand_labels, 131);
+    //const rand_labels = track(Array1D.randUniform([16], 0, 129));
+    //const rand_inputs = math.oneHot(rand_labels, 131);
+    const rand_inputs = track(Array2D.zeros([10, 131]));
     console.log(rand_inputs.getValues());
     const outputs = encoder.encode(rand_inputs, track)
     console.log(outputs[0].getValues());
