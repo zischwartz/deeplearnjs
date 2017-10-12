@@ -18,8 +18,10 @@ import { Array1D, Array2D, CheckpointLoader, NDArray, NDArrayMathGPU, Scalar } f
 import { LSTMCell } from '../../src/math/math'
 import * as demo_util from '../util';
 
+const DECODER_CELL_FORMAT = "decoder/multi_rnn_cell/cell_%d/lstm_cell/"
+
 const forgetBias = Scalar.new(1.0);
-const presigDivisor = Scalar.new(2.0)
+const presigDivisor = Scalar.new(2.0);
 
 class LayerVars {
   kernel: Array2D;
@@ -159,12 +161,20 @@ function initialize() {
       const encPresig = new LayerVars(
         vars['encoder/sigma/kernel'] as Array2D,
         vars['encoder/sigma/bias'] as Array1D);
-      const decLstm0 = new LayerVars(
-        vars['decoder/multi_rnn_cell/cell_0/lstm_cell/kernel'] as Array2D,
-        vars['decoder/multi_rnn_cell/cell_0/lstm_cell/bias'] as Array1D);
-      const decLstm1 = new LayerVars(
-        vars['decoder/multi_rnn_cell/cell_1/lstm_cell/kernel'] as Array2D,
-        vars['decoder/multi_rnn_cell/cell_1/lstm_cell/bias'] as Array1D);
+
+      let decLstmLayers: LayerVars[] = [];
+      let l = 0;
+      while (true) {
+        const cell_prefix = DECODER_CELL_FORMAT.replace('%d', l.toString());
+        if (!(cell_prefix + 'kernel' in vars)) {
+          break;
+        }
+        decLstmLayers.push(new LayerVars(
+          vars[cell_prefix + 'kernel'] as Array2D,
+          vars[cell_prefix + 'bias'] as Array1D));
+        ++l;
+      }
+
       const decZtoInitState = new LayerVars(
         vars['decoder/z_to_initial_state/kernel'] as Array2D,
         vars['decoder/z_to_initial_state/bias'] as Array1D);
@@ -173,7 +183,7 @@ function initialize() {
         vars['decoder/output_projection/bias'] as Array1D);
       return [
         new Encoder(encLstmFw, encLstmBw, encMu, encPresig),
-        new Decoder([decLstm0, decLstm1], decZtoInitState, decOutputProjection)];
+        new Decoder(decLstmLayers, decZtoInitState, decOutputProjection)];
     })
 }
 
@@ -189,9 +199,8 @@ function encodeAndDecode(encoder: Encoder, decoder: Decoder) {
     console.log(rand_labels.getValues());
     const outputs = encoder.encode(rand_inputs, track)
     const mu = outputs[1];
-    const sampled_labels = decoder.decode(mu, 32, track);
-    sampled_labels.forEach((sample: Array2D) => console.log(sample.getValues()));
-    // return sampled_labels;
+    const sampledLabels = decoder.decode(mu, 32, track);
+    sampledLabels.forEach((sample: Array2D) => console.log(sample.getValues()));
   });
   // document.getElementById('results').innerHTML = '' + result.getValues();
 }
