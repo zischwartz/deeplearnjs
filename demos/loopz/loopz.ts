@@ -14,10 +14,11 @@ limitations under the License.
 ==============================================================================*/
 
 // tslint:disable-next-line:max-line-length
-import { Array1D, Array2D, CheckpointLoader, NDArray, NDArrayMathGPU, Scalar } from '../deeplearn';
+import { Array1D, Array2D, Array3D, CheckpointLoader, NDArray, NDArrayMathGPU, Scalar } from '../deeplearn';
 import { LSTMCell } from '../../src/math/math'
 import * as demo_util from '../util';
 
+const CHECKPOINT_URL = '.';
 const DECODER_CELL_FORMAT = "decoder/multi_rnn_cell/cell_%d/lstm_cell/"
 
 const forgetBias = Scalar.new(1.0);
@@ -50,26 +51,30 @@ class Encoder {
     this.presigVars = presigVars;
   }
 
-  private runLstm(inputs: Array2D, lstmVars: LayerVars, reverse: boolean, track: Function) {
-    let state = [
-      track(Array2D.zeros([1, lstmVars.bias.shape[0] / 4])),
-      track(Array2D.zeros([1, lstmVars.bias.shape[0] / 4]))
+  private runLstm(inputs: Array3D, lstmVars: LayerVars, reverse: boolean, track: Function) {
+    const batchSize = inputs.shape[0];
+    const length = inputs.shape[1];
+    const outputSize = inputs.shape[2];
+    let state: Array2D[] = [
+      track(Array2D.zeros([batchSize, lstmVars.bias.shape[0] / 4])),
+      track(Array2D.zeros([batchSize, lstmVars.bias.shape[0] / 4]))
     ]
     let lstm = math.basicLSTMCell.bind(math, forgetBias, lstmVars.kernel, lstmVars.bias);
-    for (let i = 0; i < inputs.shape[0]; i++) {
-      let index = reverse ? inputs.shape[0] - 1 - i : i;
+    for (let i = 0; i < length; i++) {
+      let index = reverse ? length - 1 - i : i;
       state = lstm(
-        math.slice2D(inputs, [index, 0], [1, inputs.shape[1]]), state[0], state[1]);
+        math.slice3D(inputs, [0, index, 0], [batchSize, 1, outputSize]).as2D(batchSize, outputSize),
+        state[0], state[1]);
     }
     return state;
   }
 
-  encode(sequence: Array2D, track: Function) {
-    const fw_state = this.runLstm(sequence, this.lstmFwVars, false, track);
-    const bw_state = this.runLstm(sequence, this.lstmBwVars, true, track);
-    const final_state = math.concat2D(fw_state[1], bw_state[1], 1)
-    const mu = dense(this.muVars, final_state);
-    const presig = dense(this.presigVars, final_state);
+  encode(sequence: Array3D, track: Function) {
+    const fwState = this.runLstm(sequence, this.lstmFwVars, false, track);
+    const bwState = this.runLstm(sequence, this.lstmBwVars, true, track);
+    const finalState = math.concat2D(fwState[1], bwState[1], 1)
+    const mu = dense(this.muVars, finalState);
+    const presig = dense(this.presigVars, finalState);
     const sigma = math.exp(math.arrayDividedByScalar(presig, presigDivisor));
     const z = math.addStrict(
       mu,
@@ -89,48 +94,49 @@ class Decoder {
     this.outputProjectVars = outputProjectVars;
   }
 
-  decode(z: Array2D, length: Number, track: Function) {
+  decode(z: Array2D, length: number, track: Function) {
     const batchSize = z.shape[0];
-    const eventDepth = this.outputProjectVars.bias.shape[0];
+    const outputSize = this.outputProjectVars.bias.shape[0];
 
     // Initialize LSTMCells.
     let lstmCells: LSTMCell[] = []
     let c: Array2D[] = [];
     let h: Array2D[] = [];
-    const initial_states = dense(this.zToInitStateVars, z);
+    const initialStates = dense(this.zToInitStateVars, z);
     let stateOffset = 0;
     for (let i = 0; i < this.lstmCellVars.length; ++i) {
       const lv = this.lstmCellVars[i];
       const stateWidth = lv.bias.shape[0] / 4;
       lstmCells.push(math.basicLSTMCell.bind(math, forgetBias, lv.kernel, lv.bias))
-      c.push(math.slice2D(initial_states, [0, stateOffset], [batchSize, stateWidth]));
+      c.push(math.slice2D(initialStates, [0, stateOffset], [batchSize, stateWidth]));
       stateOffset += stateWidth;
-      h.push(math.slice2D(initial_states, [0, stateOffset], [batchSize, stateWidth]));
+      h.push(math.slice2D(initialStates, [0, stateOffset], [batchSize, stateWidth]));
       stateOffset += stateWidth;
     }
 
     // Generate samples.
-    let samples: Array2D[] = [];
-    let nextInput = track(Array2D.zeros([1, eventDepth]));
+    let samples: Array2D;
+    let nextInput: Array2D = track(Array2D.zeros([batchSize, outputSize]));
     for (let i = 0; i < length; ++i) {
       let output = math.multiRNNCell(lstmCells, math.concat2D(nextInput, z, 1), c, h);
       c = output[0];
       h = output[1];
       const logits = dense(this.outputProjectVars, h[h.length - 1]);
 
-      // Add batching support.
-      const softmax = math.softmax(logits.as1D());
-      // const sample = math.multinomial(softmax, 1);
-      const sample = math.argMax(softmax).as1D();
-      nextInput = math.oneHot(sample, eventDepth).as2D(1, -1);
-      samples.push(sample.as2D(1, -1));
+      let timeSamples: Array1D;
+      for (let j = 0; j < batchSize; ++j) {
+        // const softmax = math.softmax(math.slice2D(logits, [j, 0], [1, outputSize]).as1D());
+        const softmax = math.slice2D(logits, [j, 0], [1, outputSize]);
+        let sample = math.argMax(softmax).as1D();
+        timeSamples = j ? math.concat1D(timeSamples, sample) : sample;
+      }
+      samples = i ? math.concat2D(samples, timeSamples.as2D(-1, 1), 1) : timeSamples.as2D(-1, 1);
+      nextInput = math.oneHot(timeSamples, outputSize);
     }
     return samples;
   }
 
 }
-
-const CHECKPOINT_URL = '.';
 
 const isDeviceSupported = demo_util.isWebGLSupported() && !demo_util.isSafari();
 const math = new NDArrayMathGPU();
@@ -187,20 +193,36 @@ function initialize() {
     })
 }
 
+const BATCH_SIZE = 5;
+const ITERATIONS = 1;
+const LENGTH = 32;
+const OUTPUT_SIZE = 131;
+console.log('checkpoint: ' + CHECKPOINT_URL);
+console.log('batch size: ' + BATCH_SIZE);
+console.log('iterations: ' + ITERATIONS);
 function encodeAndDecode(encoder: Encoder, decoder: Decoder) {
-  math.scope((keep, track) => {
-    let rand_labels = track(Array1D.randUniform([32], 0, 129));
-    const teaPot = [71, 0, 73, 0, 75, 0, 76, 0, 78, 0, 1, 0, 83, 0, 0, 0, 80, 0, 0, 0, 83, 0, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0]
-    for (let i = 0; i < rand_labels.shape[0]; ++i) {
-      // rand_labels.set(Math.trunc(rand_labels.get(i) + 2), i);
-      rand_labels.set(teaPot[i] + 1, i);
+  const teaPot = [71, 0, 73, 0, 75, 0, 76, 0, 78, 0, 1, 0, 83, 0, 0, 0, 80, 0, 0, 0, 83, 0, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0]
+  console.log(teaPot);
+  let inputs = Array3D.zeros([BATCH_SIZE, LENGTH, OUTPUT_SIZE])
+  for (let i = 0; i < inputs.shape[0]; ++i) {
+    for (let j = 0; j < inputs.shape[1]; ++j) {
+      inputs.set(1, i, j, teaPot[j] + 1);
     }
-    const rand_inputs = math.oneHot(rand_labels, 131);
-    console.log(rand_labels.getValues());
-    const outputs = encoder.encode(rand_inputs, track)
-    const mu = outputs[1];
-    const sampledLabels = decoder.decode(mu, 32, track);
-    sampledLabels.forEach((sample: Array2D) => console.log(sample.getValues()));
+  }
+  //const mu = Array2D.randNormal([BATCH_SIZE, 256]);
+  var start = Date.now()
+
+  let allLabels = math.scope((keep, track) => {
+    const outputs = encoder.encode(inputs, track)
+    const z = outputs[0];
+    let allLabels: Array2D[] = [];
+    for (let i = 0; i < ITERATIONS; ++i) {
+      allLabels.push(decoder.decode(z, LENGTH, track))
+      // sampledLabels.forEach((sample: Array2D) => console.log(sample.getValues()));
+    }
+    return allLabels;
   });
+  console.log((Date.now() - start) / 1000.)
+  console.log(allLabels[0].getValues())
   // document.getElementById('results').innerHTML = '' + result.getValues();
 }
