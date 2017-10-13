@@ -102,7 +102,7 @@ class Decoder {
     let lstmCells: LSTMCell[] = []
     let c: Array2D[] = [];
     let h: Array2D[] = [];
-    const initialStates = dense(this.zToInitStateVars, z);
+    const initialStates = math.tanh(dense(this.zToInitStateVars, z));
     let stateOffset = 0;
     for (let i = 0; i < this.lstmCellVars.length; ++i) {
       const lv = this.lstmCellVars[i];
@@ -193,8 +193,8 @@ function initialize() {
     })
 }
 
-const BATCH_SIZE = 5;
-const ITERATIONS = 1;
+const BATCH_SIZE = 20;
+const ITERATIONS = 5;
 const LENGTH = 32;
 const OUTPUT_SIZE = 131;
 console.log('checkpoint: ' + CHECKPOINT_URL);
