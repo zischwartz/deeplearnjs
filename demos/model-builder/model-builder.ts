@@ -22,7 +22,7 @@ import '../demo-header';
 import '../demo-footer';
 
 // tslint:disable-next-line:max-line-length
-import {Array1D, Array3D, DataStats, FeedEntry, Graph, GraphRunner, GraphRunnerEventObserver, InCPUMemoryShuffledInputProviderBuilder, InMemoryDataset, MetricReduction, MomentumOptimizer, SGDOptimizer, RMSPropOptimizer, AdagradOptimizer, NDArray, NDArrayMath, NDArrayMathCPU, NDArrayMathGPU, Optimizer, Scalar, Session, Tensor, util, xhr_dataset, XhrDataset, XhrDatasetConfig} from '../deeplearn';
+import {AdadeltaOptimizer, AdagradOptimizer, AdamOptimizer, Array1D, Array3D, DataStats, FeedEntry, Graph, GraphRunner, GraphRunnerEventObserver, InCPUMemoryShuffledInputProviderBuilder, InMemoryDataset, MetricReduction, MomentumOptimizer, NDArray, NDArrayMath, NDArrayMathCPU, NDArrayMathGPU, Optimizer, RMSPropOptimizer, Scalar, Session, SGDOptimizer, Tensor, util, xhr_dataset, XhrDataset, XhrDatasetConfig} from '../deeplearn';
 import {NDArrayImageVisualizer} from '../ndarray-image-visualizer';
 import {NDArrayLogitsVisualizer} from '../ndarray-logits-visualizer';
 import {PolymerElement, PolymerHTMLElement} from '../polymer-spec';
@@ -30,7 +30,6 @@ import {PolymerElement, PolymerHTMLElement} from '../polymer-spec';
 import {LayerBuilder, LayerWeightsDict} from './layer_builder';
 import {ModelLayer} from './model-layer';
 import * as model_builder_util from './model_builder_util';
-import {Normalization} from './tensorflow';
 
 const DATASETS_CONFIG_JSON = 'model-builder-datasets-config.json';
 
@@ -54,6 +53,12 @@ const TRAIN_TEST_RATIO = 5 / 6;
 
 const IMAGE_DATA_INDEX = 0;
 const LABEL_DATA_INDEX = 1;
+
+enum Normalization {
+  NORMALIZATION_NEGATIVE_ONE_TO_ONE,
+  NORMALIZATION_ZERO_TO_ONE,
+  NORMALIZATION_NONE
+}
 
 // tslint:disable-next-line:variable-name
 export let ModelBuilderPolymer: new () => PolymerHTMLElement = PolymerElement({
@@ -80,6 +85,10 @@ export let ModelBuilderPolymer: new () => PolymerHTMLElement = PolymerElement({
     needMomentum: Boolean,
     gamma: Number,
     needGamma: Boolean,
+    beta1: Number,
+    needBeta1: Boolean,
+    beta2: Number,
+    needBeta2: Boolean,
     batchSize: Number,
     selectedModelName: String,
     selectedNormalizationOption:
@@ -136,6 +145,10 @@ export class ModelBuilder extends ModelBuilderPolymer {
   private needMomentum: boolean;
   private gamma: number;
   private needGamma: boolean;
+  private beta1: number;
+  private needBeta1: boolean;
+  private beta2: number;
+  private needBeta2: boolean;
   private batchSize: number;
 
   // Stats.
@@ -233,7 +246,7 @@ export class ModelBuilder extends ModelBuilderPolymer {
         this.setupDatasetStats();
       });
     }
-    this.querySelector("#optimizer-dropdown .dropdown-content")
+    this.querySelector('#optimizer-dropdown .dropdown-content')
         // tslint:disable-next-line:no-any
         .addEventListener('iron-activate', (event: any) => {
           // Activate, deactivate hyper parameter inputs.
@@ -244,10 +257,15 @@ export class ModelBuilder extends ModelBuilderPolymer {
     this.needMomentum = true;
     this.gamma = 0.1;
     this.needGamma = false;
+    this.beta1 = 0.9;
+    this.needBeta1 = false;
+    this.beta2 = 0.999;
+    this.needBeta2 = false;
     this.batchSize = 64;
     // Default optimizer is momentum
-    this.selectedOptimizerName = "momentum";
-    this.optimizerNames = ["sgd", "momentum", "rmsprop", "adagrad"];
+    this.selectedOptimizerName = 'momentum';
+    this.optimizerNames =
+        ['sgd', 'momentum', 'rmsprop', 'adagrad', 'adadelta', 'adam'];
 
     this.applicationState = ApplicationState.IDLE;
     this.loadedWeights = null;
@@ -347,6 +365,8 @@ export class ModelBuilder extends ModelBuilderPolymer {
   private resetHyperParamRequirements() {
     this.needMomentum = false;
     this.needGamma = false;
+    this.needBeta1 = false;
+    this.needBeta2 = false;
   }
 
   /**
@@ -355,20 +375,29 @@ export class ModelBuilder extends ModelBuilderPolymer {
   private refreshHyperParamRequirements(optimizerName: string) {
     this.resetHyperParamRequirements();
     switch (optimizerName) {
-      case "sgd": {
+      case 'sgd': {
         // No additional hyper parameters
         break;
       }
-      case "momentum": {
+      case 'momentum': {
         this.needMomentum = true;
         break;
       }
-      case "rmsprop": {
+      case 'rmsprop': {
         this.needMomentum = true;
         this.needGamma = true;
         break;
       }
-      case "adagrad": {
+      case 'adagrad': {
+        break;
+      }
+      case 'adadelta': {
+        this.needGamma = true;
+        break;
+      }
+      case 'adam': {
+        this.needBeta1 = true;
+        this.needBeta2 = true;
         break;
       }
       default: {
@@ -390,6 +419,12 @@ export class ModelBuilder extends ModelBuilderPolymer {
       }
       case 'adagrad': {
         return new AdagradOptimizer(+this.learningRate);
+      }
+      case 'adadelta': {
+        return new AdadeltaOptimizer(+this.learningRate, +this.gamma);
+      }
+      case 'adam': {
+        return new AdamOptimizer(+this.learningRate, +this.beta1, +this.beta2);
       }
       default: {
         throw new Error(`Unknown optimizer "${this.selectedOptimizerName}"`);
@@ -496,7 +531,7 @@ export class ModelBuilder extends ModelBuilderPolymer {
               this.updateSelectedDataset(this.datasetNames[0]);
             },
             error => {
-              throw new Error('Dataset config could not be loaded: ' + error);
+              throw new Error(`Dataset config could not be loaded: ${error}`);
             });
   }
 
@@ -618,8 +653,7 @@ export class ModelBuilder extends ModelBuilderPolymer {
       this.loadModelFromJson(xhr.responseText);
     };
     xhr.onerror = (error) => {
-      throw new Error(
-          'Model could not be fetched from ' + modelPath + ': ' + error);
+      throw new Error(`Model could not be fetched from ${modelPath}: ${error}`);
     };
     xhr.send();
   }
@@ -627,8 +661,9 @@ export class ModelBuilder extends ModelBuilderPolymer {
   private setupDatasetStats() {
     this.datasetStats = this.dataSet.getStats();
     this.statsExampleCount = this.datasetStats[IMAGE_DATA_INDEX].exampleCount;
-    this.statsInputRange = '[' + this.datasetStats[IMAGE_DATA_INDEX].inputMin +
-        ', ' + this.datasetStats[IMAGE_DATA_INDEX].inputMax + ']';
+    this.statsInputRange =
+        `[${this.datasetStats[IMAGE_DATA_INDEX].inputMin}, ` +
+        `${this.datasetStats[IMAGE_DATA_INDEX].inputMax}]`;
     this.statsInputShapeDisplay = model_builder_util.getDisplayShape(
         this.datasetStats[IMAGE_DATA_INDEX].shape);
     this.statsLabelShapeDisplay = model_builder_util.getDisplayShape(

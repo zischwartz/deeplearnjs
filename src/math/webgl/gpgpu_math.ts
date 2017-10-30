@@ -31,6 +31,7 @@ export interface GPGPUProgram {
   params: Array<{}>;
   userCode: string;
   supportsBroadcasting?: boolean;
+  numBatchDims?: number;
 }
 
 export interface GPGPUBinary {
@@ -57,18 +58,20 @@ export function compileProgram<T extends NDArray, K extends NDArray>(
   const inputInfos = inputs.map((input, i) => {
     const shapeInfo = {
       logicalShape: input.shape,
-      texShape: input.getTextureShapeRC()
+      texShape: input.getTextureShapeRC(),
+      textureType: input.getData().textureType
     };
     return {name: program.variableNames[i], shapeInfo};
   });
   const inShapeInfos = inputInfos.map(x => x.shapeInfo);
   const outShapeInfo = {
     logicalShape: output.shape,
-    texShape: output.getTextureShapeRC()
+    texShape: output.getTextureShapeRC(),
+    textureType: output.getData().textureType
   };
   const source = shader_compiler.makeShader(
-      inputInfos, outShapeInfo, userCode,
-      program.supportsBroadcasting === true);
+      inputInfos, outShapeInfo, userCode, program.supportsBroadcasting === true,
+      program.numBatchDims);
 
   const webGLProgram = gpgpu.createProgram(source);
 
@@ -101,7 +104,8 @@ export function compileProgram<T extends NDArray, K extends NDArray>(
   };
 }
 
-function validateBinaryAndProgram(shapeInfos: ShapeInfo[], inputs: NDArray[]) {
+function validateBinaryAndProgram(
+    shapeInfos: ShapeInfo[], inputs: NDArray[], numBatchDims: number) {
   if (shapeInfos.length !== inputs.length) {
     throw Error(
         `Binary was compiled with ${shapeInfos.length} inputs, but ` +
@@ -114,12 +118,12 @@ function validateBinaryAndProgram(shapeInfos: ShapeInfo[], inputs: NDArray[]) {
     const shapeB = inputs[i].shape;
     const texShapeB = inputs[i].getTextureShapeRC();
 
-    if (!util.arraysEqual(shapeA, shapeB)) {
+    if (!numBatchDims && !util.arraysEqual(shapeA, shapeB)) {
       throw Error(
           `Binary was compiled with different shapes than ` +
           `the current args. Shapes ${shapeA} and ${shapeB} must match`);
     }
-    if (!util.arraysEqual(texShapeA, texShapeB)) {
+    if (!numBatchDims && !util.arraysEqual(texShapeA, texShapeB)) {
       throw Error(
           `Binary was compiled with different texture shapes than the` +
           ` current args. Shape ${texShapeA} and ${texShapeB} must match`);
@@ -131,8 +135,10 @@ export function runProgram<T extends NDArray, K extends NDArray>(
     binary: GPGPUBinary, inputs: T[], output: K,
     customSetup?: (gpgpu: GPGPUContext, webGLProgram: WebGLProgram) =>
         void): void {
-  validateBinaryAndProgram(binary.inShapeInfos, inputs);
-  validateBinaryAndProgram([binary.outShapeInfo], [output]);
+  validateBinaryAndProgram(
+      binary.inShapeInfos, inputs, binary.program.numBatchDims);
+  validateBinaryAndProgram(
+      [binary.outShapeInfo], [output], binary.program.numBatchDims);
 
   const outTex = output.getTexture();
   const outTexShape = output.getTextureShapeRC();
@@ -160,7 +166,7 @@ export function makeShaderKey(
     program: GPGPUProgram, inputs: NDArray[], output: NDArray): string {
   const params = program.params;
   const keyStart =
-      inputs.concat(output).map(x => x.shape + '_' + x.getTextureShapeRC());
+      inputs.concat(output).map(x => `${x.shape}_${x.getTextureShapeRC()}`);
   const keyEnd = params.map(String);
   let key = [program.constructor.name];
   key.push((program.supportsBroadcasting === true).toString());

@@ -55,12 +55,30 @@ export const RELU = `
   return (x < 0.0) ? 0.0 : x;
 `;
 
+export const ELU = `
+  return (x >= 0.0) ? x : (exp(x) - 1.0);
+`;
+
+export function LEAKY_RELU(alpha:number){
+  return `
+  return (x >= 0.0) ? x : ${alpha} * x;
+  `;
+}
+
 export const STEP = `
   return (x == x) ? (x > 0.0 ? 1.0 : 0.0) : x;
 `;
 
 export const NEG = `
   return -x;
+`;
+
+export const CEIL = `
+  return ceil(x);
+`;
+
+export const FLOOR = `
+  return floor(x);
 `;
 
 export const EXP = `
