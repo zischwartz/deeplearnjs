@@ -123,13 +123,7 @@ class Decoder {
       h = output[1];
       const logits = dense(this.outputProjectVars, h[h.length - 1]);
 
-      let timeSamples: Array1D;
-      for (let j = 0; j < batchSize; ++j) {
-        // const softmax = math.softmax(math.slice2D(logits, [j, 0], [1, outputSize]).as1D());
-        const softmax = math.slice2D(logits, [j, 0], [1, outputSize]);
-        let sample = math.argMax(softmax).as1D();
-        timeSamples = j ? math.concat1D(timeSamples, sample) : sample;
-      }
+      let timeSamples = math.argMax(logits, 1).as1D();
       samples = i ? math.concat2D(samples, timeSamples.as2D(-1, 1), 1) : timeSamples.as2D(-1, 1);
       nextInput = math.oneHot(timeSamples, outputSize);
     }
@@ -193,8 +187,8 @@ function initialize() {
     })
 }
 
-const BATCH_SIZE = 20;
-const ITERATIONS = 5;
+const BATCH_SIZE = 25;
+const ITERATIONS = 4;
 const LENGTH = 32;
 const OUTPUT_SIZE = 131;
 console.log('checkpoint: ' + CHECKPOINT_URL);
