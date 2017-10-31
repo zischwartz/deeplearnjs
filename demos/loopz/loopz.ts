@@ -18,7 +18,7 @@ import { Array1D, Array2D, Array3D, CheckpointLoader, NDArray, NDArrayMathGPU, S
 import { LSTMCell } from '../../src/math/math'
 import * as demo_util from '../util';
 
-const CHECKPOINT_URL = '.';
+const CHECKPOINT_URL = './drums';
 const DECODER_CELL_FORMAT = "decoder/multi_rnn_cell/cell_%d/lstm_cell/"
 
 const forgetBias = Scalar.new(1.0);
@@ -43,12 +43,14 @@ class Encoder {
   lstmBwVars: LayerVars;
   muVars: LayerVars;
   presigVars: LayerVars;
+  zDims: number;
 
   constructor(lstmFwVars: LayerVars, lstmBwVars: LayerVars, muVars: LayerVars, presigVars: LayerVars) {
     this.lstmFwVars = lstmFwVars;
     this.lstmBwVars = lstmBwVars;
     this.muVars = muVars;
     this.presigVars = presigVars;
+    this.zDims = this.muVars.bias.shape[0];
   }
 
   private runLstm(inputs: Array3D, lstmVars: LayerVars, reverse: boolean, track: Function) {
@@ -87,11 +89,15 @@ class Decoder {
   lstmCellVars: LayerVars[];
   zToInitStateVars: LayerVars;
   outputProjectVars: LayerVars;
+  zDims: number;
+  outputDims: number;
 
   constructor(lstmCellVars: LayerVars[], zToInitStateVars: LayerVars, outputProjectVars: LayerVars) {
     this.lstmCellVars = lstmCellVars;
     this.zToInitStateVars = zToInitStateVars;
     this.outputProjectVars = outputProjectVars;
+    this.zDims = this.zToInitStateVars.kernel.shape[0];
+    this.outputDims = outputProjectVars.bias.shape[0];
   }
 
   decode(z: Array2D, length: number, track: Function) {
@@ -190,20 +196,19 @@ function initialize() {
 const BATCH_SIZE = 25;
 const ITERATIONS = 4;
 const LENGTH = 32;
-const OUTPUT_SIZE = 131;
 console.log('checkpoint: ' + CHECKPOINT_URL);
 console.log('batch size: ' + BATCH_SIZE);
 console.log('iterations: ' + ITERATIONS);
 function encodeAndDecode(encoder: Encoder, decoder: Decoder) {
   const teaPot = [71, 0, 73, 0, 75, 0, 76, 0, 78, 0, 1, 0, 83, 0, 0, 0, 80, 0, 0, 0, 83, 0, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0]
   console.log(teaPot);
-  let inputs = Array3D.zeros([BATCH_SIZE, LENGTH, OUTPUT_SIZE])
+  let inputs = Array3D.zeros([BATCH_SIZE, LENGTH, decoder.outputDims])
   for (let i = 0; i < inputs.shape[0]; ++i) {
     for (let j = 0; j < inputs.shape[1]; ++j) {
       inputs.set(1, i, j, teaPot[j] + 1);
     }
   }
-  //const mu = Array2D.randNormal([BATCH_SIZE, 256]);
+  //const mu = Array2D.randNormal([BATCH_SIZE, encoder.zDims]);
   var start = Date.now()
 
   let allLabels = math.scope((keep, track) => {
