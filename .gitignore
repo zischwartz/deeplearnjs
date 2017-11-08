@@ -7,5 +7,5 @@ index.ts
 
 npm-debug.log
 .DS_Store
-dist/
+# dist/
 .idea/

@@ -1,0 +1,31 @@
+export declare type ColorMode = 'rgb' | 'rgba' | 'hsv' | 'hsva' | 'yuv' | 'yuva' | 'bw';
+export declare type ActivationFunction = 'tanh' | 'sin' | 'relu' | 'step';
+export declare class CPPN {
+    private inferenceCanvas;
+    private math;
+    private gl;
+    private gpgpu;
+    private renderShader;
+    private addLatentVariablesShader;
+    private inputAtlas;
+    private weights;
+    private z1Counter;
+    private z2Counter;
+    private z1Scale;
+    private z2Scale;
+    private numLayers;
+    private colorModeNames;
+    private selectedColorModeName;
+    private selectedActivationFunctionName;
+    private isInferring;
+    constructor(inferenceCanvas: HTMLCanvasElement);
+    generateWeights(neuronsPerLayer: number, weightsStdev: number): void;
+    setColorMode(colorMode: ColorMode): void;
+    setActivationFunction(activationFunction: ActivationFunction): void;
+    setNumLayers(numLayers: number): void;
+    setZ1Scale(z1Scale: number): void;
+    setZ2Scale(z2Scale: number): void;
+    start(): void;
+    private runInferenceLoop();
+    stopInferenceLoop(): void;
+}

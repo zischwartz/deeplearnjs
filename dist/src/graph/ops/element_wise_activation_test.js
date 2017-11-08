@@ -1,0 +1,96 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var math_cpu_1 = require("../../math/math_cpu");
+var ndarray_1 = require("../../math/ndarray");
+var graph_1 = require("../graph");
+var tensor_array_map_1 = require("../tensor_array_map");
+var element_wise_activation_1 = require("./element_wise_activation");
+describe('Element wise activation', function () {
+    var math;
+    var xTensor;
+    var yTensor;
+    var activations;
+    var gradients;
+    beforeEach(function () {
+        math = new math_cpu_1.NDArrayMathCPU();
+        activations = new tensor_array_map_1.TensorArrayMap();
+        gradients = new tensor_array_map_1.SummedTensorArrayMap(math);
+    });
+    afterEach(function () {
+        activations.disposeArray(xTensor);
+        activations.disposeArray(yTensor);
+        gradients.disposeArray(xTensor);
+        gradients.disposeArray(yTensor);
+    });
+    it('ReLU', function () {
+        var x = ndarray_1.Array2D.new([2, 3], [3, 0, -1, 2, 9, -5]);
+        xTensor = new graph_1.Tensor(x.shape);
+        yTensor = new graph_1.Tensor(x.shape);
+        activations.set(xTensor, x);
+        var op = new element_wise_activation_1.ReLU(xTensor, yTensor);
+        op.feedForward(math, activations);
+        var y = activations.get(yTensor);
+        expect(y.getValues()).toEqual(new Float32Array([3, 0, 0, 2, 9, 0]));
+        var dy = ndarray_1.Array2D.new([2, 3], [1, 2, 3, 4, 5, 6]);
+        gradients.add(yTensor, dy);
+        op.backProp(math, activations, gradients);
+        var dx = gradients.get(xTensor);
+        expect(dx.getValues()).toEqual(new Float32Array([1, 0, 0, 4, 5, 0]));
+    });
+    it('TanH', function () {
+        var x = ndarray_1.Array1D.new([3, 0, -3]);
+        xTensor = new graph_1.Tensor(x.shape);
+        yTensor = new graph_1.Tensor(x.shape);
+        activations.set(xTensor, x);
+        var op = new element_wise_activation_1.TanH(xTensor, yTensor);
+        op.feedForward(math, activations);
+        var y = activations.get(yTensor);
+        expect(y.get(0)).toBeCloseTo(0.99505475, 6);
+        expect(y.get(1)).toBeCloseTo(0, 6);
+        expect(y.get(2)).toBeCloseTo(-0.99505475, 6);
+        var dy = ndarray_1.Array1D.new([2, 4, 3]);
+        gradients.add(yTensor, dy);
+        op.backProp(math, activations, gradients);
+        var dx = gradients.get(xTensor);
+        expect(dx.get(0)).toBeCloseTo(2 * (1 - 0.99505475 * 0.99505475), 6);
+        expect(dx.get(1)).toBeCloseTo(4, 6);
+        expect(dx.get(2)).toBeCloseTo(3 * (1 - 0.99505475 * 0.99505475), 6);
+    });
+    it('Sigmoid', function () {
+        var x = ndarray_1.Array1D.new([3, 0, -3]);
+        xTensor = new graph_1.Tensor(x.shape);
+        yTensor = new graph_1.Tensor(x.shape);
+        activations.set(xTensor, x);
+        var op = new element_wise_activation_1.Sigmoid(xTensor, yTensor);
+        op.feedForward(math, activations);
+        var y = activations.get(yTensor);
+        expect(y.get(0)).toBeCloseTo(0.9525741268, 6);
+        expect(y.get(1)).toBeCloseTo(0.5, 6);
+        expect(y.get(2)).toBeCloseTo(0.0474258731, 6);
+        var dy = ndarray_1.Array1D.new([2, 4, 3]);
+        gradients.add(yTensor, dy);
+        op.backProp(math, activations, gradients);
+        var dx = gradients.get(xTensor);
+        expect(dx.get(0)).toBeCloseTo(2 * 0.9525741268 * (1 - 0.9525741268), 6);
+        expect(dx.get(1)).toBeCloseTo(4 * 0.5 * 0.5, 6);
+        expect(dx.get(2)).toBeCloseTo(3 * 0.0474258731 * (1 - 0.0474258731), 6);
+    });
+    it('Square', function () {
+        var x = ndarray_1.Array1D.new([2, 0, -3]);
+        xTensor = new graph_1.Tensor(x.shape);
+        yTensor = new graph_1.Tensor(x.shape);
+        activations.set(xTensor, x);
+        var op = new element_wise_activation_1.Square(xTensor, yTensor);
+        op.feedForward(math, activations);
+        var y = activations.get(yTensor);
+        expect(y.getValues()).toEqual(new Float32Array([4, 0, 9]));
+        var dy = ndarray_1.Array1D.new([1, 2, 3]);
+        gradients.add(yTensor, dy);
+        op.backProp(math, activations, gradients);
+        var dx = gradients.get(xTensor);
+        expect(dx.get(0)).toBe(2 * x.get(0) * dy.get(0));
+        expect(dx.get(1)).toBe(2 * x.get(1) * dy.get(1));
+        expect(dx.get(2)).toBe(2 * x.get(2) * dy.get(2));
+    });
+});
+//# sourceMappingURL=element_wise_activation_test.js.map
